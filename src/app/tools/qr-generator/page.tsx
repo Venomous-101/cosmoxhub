@@ -24,10 +24,6 @@ export default function QRGeneratorPage() {
         return data || "https://cosmoxhub.com";
       case "wifi":
         return `WIFI:S:${ssid};T:${encryption};P:${password};;`;
-      case "email":
-        return `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      case "sms":
-        return `smsto:${to}:${body}`;
       default:
         return "https://cosmoxhub.com";
     }
