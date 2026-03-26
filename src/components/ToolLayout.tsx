@@ -3,6 +3,7 @@ import { ArrowLeft, Lock } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import type { LucideIcon } from "lucide-react";
+import AdBanner from "./AdBanner";
 
 interface ToolLayoutProps {
   title: string;
@@ -57,6 +58,8 @@ export default function ToolLayout({ title, description, icon: Icon, color = "#6
               </p>
             </div>
           </div>
+          
+          <AdBanner type="native" label="Sponsored Tool" className="mb-8" />
 
           {/* Tool content */}
           <div className="bg-[#0f111a] border border-indigo-500/10 rounded-2xl shadow-xl overflow-hidden">
@@ -72,6 +75,8 @@ export default function ToolLayout({ title, description, icon: Icon, color = "#6
               <strong className="text-slate-200 font-semibold">100% Private.</strong> All processing happens in your browser. No files are uploaded to any server. Your data never leaves your device.
             </p>
           </div>
+
+          <AdBanner type="leaderboard" label="Discover More Tools" className="mt-12" />
         </div>
       </main>
       <Footer />

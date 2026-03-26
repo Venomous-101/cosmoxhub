@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://cosmoxhub.com';
+  const baseUrl = 'https://cosmoxhub.vercel.app';
 
   const routes = [
     '',

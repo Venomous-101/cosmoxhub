@@ -8,6 +8,7 @@ import {
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ToolCard from "@/components/ToolCard";
+import AdBanner from "@/components/AdBanner";
 
 export const metadata: Metadata = {
   title: "CosmoxHub — 15+ Free Online Tools | PDF, Image, Text & More",
@@ -121,6 +122,11 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Ad Placement: Top Leaderboard */}
+        <div className="container mx-auto px-4 mt-8">
+          <AdBanner type="leaderboard" label="Top Trending Tools" />
+        </div>
+
         {/* Organized Tool Categories */}
         <div className="container mx-auto px-4 pb-24">
           <div className="max-w-7xl mx-auto flex flex-col gap-24">
@@ -144,6 +150,11 @@ export default function HomePage() {
                 </div>
               </section>
             ))}
+          </div>
+
+          {/* Ad Placement: Middle Native Banner */}
+          <div className="mt-20">
+            <AdBanner type="native" label="Recommended for you" />
           </div>
 
           {/* Bottom Clean CTA */}

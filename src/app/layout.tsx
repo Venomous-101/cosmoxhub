@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import AdScripts from "@/components/AdScripts";
+import AdBanner from "@/components/AdBanner";
 
 export const metadata: Metadata = {
   title: {
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "CosmoxHub" }],
   creator: "CosmoxHub",
-  metadataBase: new URL("https://cosmoxhub.com"),
+  metadataBase: new URL("https://cosmoxhub.vercel.app"),
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -75,6 +76,7 @@ export default function RootLayout({
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ""} />
         {children}
         <AdScripts />
+        <AdBanner type="social-bar" />
       </body>
     </html>
   );
