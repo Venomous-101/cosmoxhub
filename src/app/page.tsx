@@ -68,67 +68,80 @@ export default function HomePage() {
   return (
     <>
       <Navbar />
-      <main>
-        {/* Hero */}
-        <section className="pt-20 pb-16 text-center relative overflow-hidden">
-          {/* Glow orb */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] pointer-events-none bg-[radial-gradient(ellipse,rgba(99,102,241,0.12)_0%,transparent_70%)]" />
+      <main className="min-h-screen">
+        {/* Sleek Premium Hero */}
+        <section className="pt-24 pb-20 md:pt-32 md:pb-28 text-center relative overflow-hidden">
+          {/* Subtle Glows */}
+          <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[800px] h-[400px] pointer-events-none bg-[radial-gradient(ellipse,rgba(99,102,241,0.15)_0%,transparent_60%)]" />
+          <div className="absolute top-[20%] right-[-10%] w-[500px] h-[500px] pointer-events-none bg-[radial-gradient(ellipse,rgba(239,68,68,0.05)_0%,transparent_60%)]" />
 
-          <div className="container mx-auto px-4 relative z-10">
-            <div className="inline-flex items-center gap-2 mb-6">
-              <span className="badge badge-purple">✦ 100% Free — No Signup Required</span>
+          <div className="container mx-auto px-4 relative z-10 max-w-4xl">
+            {/* Minimalist Badge */}
+            <div className="inline-flex items-center gap-2 mb-8 bg-[#050510] border border-indigo-500/20 text-indigo-400 px-5 py-2 rounded-full text-sm font-medium shadow-[0_0_15px_rgba(99,102,241,0.1)]">
+              <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
+              100% Free Utilities • No Signup Required
             </div>
 
-            <h1 className="font-space font-extrabold text-[clamp(2.2rem,5vw,3.8rem)] text-slate-100 leading-[1.15] mb-5 tracking-tight">
-              All the Tools You Need,<br />
-              <span className="gradient-text">In One Place.</span>
+            {/* Typography focused Header */}
+            <h1 className="font-space font-bold text-5xl md:text-7xl text-slate-100 leading-[1.1] mb-6 tracking-tight">
+              The ultimate toolkit, <br className="hidden md:block" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400">
+                all in one place.
+              </span>
             </h1>
 
-            <p className="text-slate-500 text-[clamp(1rem,2vw,1.2rem)] max-w-[550px] mx-auto mb-10 leading-relaxed">
-              15+ powerful online tools for PDF, images, text, and productivity.
-              No account needed. Works in your browser. Always free.
+            <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
+              CosmoxHub provides 15+ powerful, completely free online tools for PDF manipulation, text formatting, image conversion, and productivity. Processed securely in your browser.
             </p>
 
-            {/* Stats */}
-            <div className="flex items-center justify-center gap-10 flex-wrap">
-              {[
-                { value: "15+", label: "Free Tools" },
-                { value: "0", label: "Signup Required" },
-                { value: "100%", label: "Browser-Based" },
-              ].map((stat) => (
-                <div key={stat.label} className="text-center">
-                  <div className="stat-value">{stat.value}</div>
-                  <div className="text-slate-600 text-sm font-medium">{stat.label}</div>
-                </div>
-              ))}
+            {/* Clean CTA Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <a href="#pdf-tools" className="px-8 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-medium transition-all shadow-[0_0_20px_rgba(99,102,241,0.2)] hover:shadow-[0_0_25px_rgba(99,102,241,0.3)] hover:-translate-y-0.5">
+                Explore Tools
+              </a>
+              <a href="#utilities" className="px-8 py-3.5 bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 rounded-xl font-medium transition-all hover:text-white">
+                View Utilities
+              </a>
             </div>
           </div>
         </section>
 
-        {/* Tool Categories */}
-        <div className="container mx-auto px-4 pb-20">
-          {categories.map((cat) => (
-            <section key={cat.id} id={cat.id} className="mb-16">
-              <div className="mb-7">
-                <h2 className="section-title mb-1.5">{cat.label}</h2>
-                <p className="text-slate-500 text-sm">{cat.description}</p>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {cat.tools.map((tool) => (
-                  <ToolCard key={tool.title} {...tool} />
-                ))}
-              </div>
-            </section>
-          ))}
+        {/* Organized Tool Categories */}
+        <div className="container mx-auto px-4 pb-24">
+          <div className="max-w-7xl mx-auto space-y-24">
+            {categories.map((cat) => (
+              <section key={cat.id} id={cat.id} className="scroll-mt-24">
+                {/* Clean Section Header */}
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 pb-4 border-b border-white/5">
+                  <div>
+                    <h2 className="font-space text-3xl font-bold text-slate-100 flex items-center gap-3">
+                      {cat.label}
+                    </h2>
+                    <p className="text-slate-400 mt-2 font-light">{cat.description}</p>
+                  </div>
+                </div>
 
-          {/* Bottom CTA */}
-          <div className="text-center p-12 bg-gradient-to-br from-indigo-500/10 to-violet-500/5 border border-indigo-500/15 rounded-[20px]">
-            <h3 className="font-space text-2xl font-bold text-slate-100 mb-3">
-              ⚡ More tools coming every week
+                {/* Grid with improved gap and sizing */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {cat.tools.map((tool) => (
+                    <ToolCard key={tool.title} {...tool} />
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+
+          {/* Bottom Clean CTA */}
+          <div className="mt-24 max-w-4xl mx-auto text-center p-12 bg-gradient-to-b from-white/[0.03] to-transparent border border-white/5 rounded-3xl">
+            <h3 className="font-space text-2xl md:text-3xl font-bold text-slate-100 mb-4">
+              More tools coming every week 🚀
             </h3>
-            <p className="text-slate-500 text-sm">
-              We&apos;re always adding new tools based on what users need most.
+            <p className="text-slate-400 max-w-lg mx-auto mb-8">
+              We&apos;re constantly expanding CosmoxHub based on your needs. Have a tool request? Drop us a message!
             </p>
+            <a href="mailto:contact@cosmoxhub.com" className="inline-block px-8 py-3 bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 rounded-xl font-medium transition-all hover:text-white">
+              Suggest a Tool
+            </a>
           </div>
         </div>
       </main>
