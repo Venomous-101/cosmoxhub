@@ -11,7 +11,8 @@ export default function PDFToImagePage() {
   const convert = async (f: File) => {
     setFile(f); setImages([]); setConverting(true);
     try {
-      const pdfjsLib = await import("pdfjs-dist");
+      // Use the legacy build to avoid private field issues
+      const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
       pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 
       const bytes = await f.arrayBuffer();
