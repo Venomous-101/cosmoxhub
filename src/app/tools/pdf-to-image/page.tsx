@@ -2,8 +2,6 @@
 import { useState } from "react";
 import { FileImage, Upload, Download } from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
-import { PDFDocument } from "pdf-lib";
-
 export default function PDFToImagePage() {
   const [file, setFile] = useState<File | null>(null);
   const [converting, setConverting] = useState(false);
@@ -13,29 +11,37 @@ export default function PDFToImagePage() {
   const convert = async (f: File) => {
     setFile(f); setImages([]); setConverting(true);
     try {
-      // We render each page using canvas via pdfjs-dist approach
-      // Using a simpler approach: convert via blob URL and canvas
+      const pdfjsLib = await import("pdfjs-dist");
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+
       const bytes = await f.arrayBuffer();
-      const doc = await PDFDocument.load(bytes);
-      const count = doc.getPageCount();
+      const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
+      const count = pdf.numPages;
       const results: string[] = [];
 
-      for (let i = 0; i < count; i++) {
-        const singlePdf = await PDFDocument.create();
-        const [page] = await singlePdf.copyPages(doc, [i]);
-        singlePdf.addPage(page);
-        const pdfBytes = await singlePdf.save();
-        const blob = new Blob([pdfBytes as unknown as BlobPart], { type: "application/pdf" });
-        const url = URL.createObjectURL(blob);
-        results.push(url);
+      for (let i = 1; i <= count; i++) {
+        const page = await pdf.getPage(i);
+        const viewport = page.getViewport({ scale: 2.0 }); // 2x scale for high resolution
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        
+        if (context) {
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+          await page.render({ canvasContext: context, viewport }).promise;
+          results.push(canvas.toDataURL("image/jpeg", 0.9));
+        }
       }
       setImages(results);
-    } catch { alert("Could not process this PDF. Please try another file."); }
+    } catch (e) {
+      console.error(e);
+      alert("Could not process this PDF. Please try another file."); 
+    }
     setConverting(false);
   };
 
   const downloadImage = (url: string, i: number) => {
-    const a = document.createElement("a"); a.href = url; a.download = `page-${i + 1}.pdf`; a.click();
+    const a = document.createElement("a"); a.href = url; a.download = `page-${i + 1}.jpg`; a.click();
   };
 
   return (
