@@ -28,7 +28,7 @@ export default function PDFToImagePage() {
         if (context) {
           canvas.height = viewport.height;
           canvas.width = viewport.width;
-          await page.render({ canvasContext: context, viewport }).promise;
+          await page.render({ canvasContext: context, viewport } as any).promise;
           results.push(canvas.toDataURL("image/jpeg", 0.9));
         }
       }

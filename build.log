@@ -1,0 +1,23 @@
+
+> cosmoxhub-app@0.1.0 build
+> next build
+
+▲ Next.js 16.2.1 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 23.8s
+  Running TypeScript ...
+Failed to type check.
+
+./src/app/tools/pdf-to-image/page.tsx:31:29
+Type error: Argument of type '{ canvasContext: CanvasRenderingContext2D; viewport: PageViewport; }' is not assignable to parameter of type 'RenderParameters'.
+  Property 'canvas' is missing in type '{ canvasContext: CanvasRenderingContext2D; viewport: PageViewport; }' but required in type 'RenderParameters'.
+
+  [90m29 |[0m           canvas.height = viewport.height;
+  [90m30 |[0m           canvas.width = viewport.width;
+[31m[1m>[0m [90m31 |[0m           [36mawait[0m page.render({ canvasContext: context, viewport }).promise;
+  [90m   |[0m                             [31m[1m^[0m
+  [90m32 |[0m           results.push(canvas.toDataURL([32m"image/jpeg"[0m, [35m0.9[0m));
+  [90m33 |[0m         }
+  [90m34 |[0m       }
+Next.js build worker exited with code: 1 and signal: null
