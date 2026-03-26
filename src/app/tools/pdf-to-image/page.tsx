@@ -12,7 +12,7 @@ export default function PDFToImagePage() {
     setFile(f); setImages([]); setConverting(true);
     try {
       const pdfjsLib = await import("pdfjs-dist");
-      pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+      pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 
       const bytes = await f.arrayBuffer();
       const uint8 = new Uint8Array(bytes);
