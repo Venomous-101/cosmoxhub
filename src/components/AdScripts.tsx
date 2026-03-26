@@ -1,18 +1,13 @@
-"use client";
+import Script from "next/script";
 
 export default function AdScripts() {
   return (
     <>
-      {/* 
-        Adsterra / Monetag Placeholders 
-        User: Paste your script tags below here once you get them from the dashboards.
-      */}
-      
-      {/* Example Adsterra Script Placement */}
-      {/* <script type='text/javascript' src='//your-adsterra-script-url.js'></script> */}
-
-      {/* Example Monetag Tag */}
-      {/* <script src="https://alwingulla.com/88/p.js" async data-qwf="YOUR_ID"></script> */}
+      {/* Adsterra: Social Bar (Global) */}
+      <Script 
+        src="https://pl28987162.profitablecpmratenetwork.com/1a/29/bc/1a29bcd189ce74300c56e9ae7c4f6ec7.js" 
+        strategy="afterInteractive" 
+      />
     </>
   );
 }
