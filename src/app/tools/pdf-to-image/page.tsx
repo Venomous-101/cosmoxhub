@@ -12,10 +12,11 @@ export default function PDFToImagePage() {
     setFile(f); setImages([]); setConverting(true);
     try {
       const pdfjsLib = await import("pdfjs-dist");
-      pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
 
       const bytes = await f.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
+      const uint8 = new Uint8Array(bytes);
+      const pdf = await pdfjsLib.getDocument({ data: uint8 }).promise;
       const count = pdf.numPages;
       const results: string[] = [];
 
@@ -33,9 +34,9 @@ export default function PDFToImagePage() {
         }
       }
       setImages(results);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      alert("Could not process this PDF. Please try another file."); 
+      alert(`Could not process this PDF. Error: ${e?.message || "Unknown error"}`); 
     }
     setConverting(false);
   };

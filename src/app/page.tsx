@@ -70,27 +70,27 @@ export default function HomePage() {
       <Navbar />
       <main className="min-h-screen">
         {/* Sleek Premium Hero */}
-        <section className="pt-24 pb-20 md:pt-32 md:pb-28 text-center relative overflow-hidden">
+        <section className="pt-24 pb-20 md:pt-32 md:pb-28 text-center relative overflow-hidden flex flex-col items-center justify-center">
           {/* Subtle Glows */}
           <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[800px] h-[400px] pointer-events-none bg-[radial-gradient(ellipse,rgba(99,102,241,0.15)_0%,transparent_60%)]" />
           <div className="absolute top-[20%] right-[-10%] w-[500px] h-[500px] pointer-events-none bg-[radial-gradient(ellipse,rgba(239,68,68,0.05)_0%,transparent_60%)]" />
 
-          <div className="container mx-auto px-4 relative z-10 max-w-4xl">
+          <div className="container mx-auto px-4 relative z-10 flex flex-col items-center max-w-4xl">
             {/* Minimalist Badge */}
-            <div className="inline-flex items-center gap-2 mb-8 bg-[#050510] border border-indigo-500/20 text-indigo-400 px-5 py-2 rounded-full text-sm font-medium shadow-[0_0_15px_rgba(99,102,241,0.1)]">
+            <div className="inline-flex items-center justify-center gap-2 mb-8 bg-[#050510] border border-indigo-500/20 text-indigo-400 px-5 py-2 rounded-full text-sm font-medium shadow-[0_0_15px_rgba(99,102,241,0.1)]">
               <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
               100% Free Utilities • No Signup Required
             </div>
 
             {/* Typography focused Header */}
-            <h1 className="font-space font-bold text-5xl md:text-7xl text-slate-100 leading-[1.1] mb-6 tracking-tight">
+            <h1 className="font-space font-bold text-5xl md:text-7xl text-slate-100 text-center leading-[1.1] mb-6 tracking-tight">
               The ultimate toolkit, <br className="hidden md:block" />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400">
                 all in one place.
               </span>
             </h1>
 
-            <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
+            <p className="text-lg md:text-xl text-slate-400 text-center max-w-3xl mx-auto mb-10 leading-relaxed font-light">
               CosmoxHub provides 15+ powerful, completely free online tools for PDF manipulation, text formatting, image conversion, and productivity. Processed securely in your browser.
             </p>
 
@@ -108,7 +108,7 @@ export default function HomePage() {
 
         {/* Organized Tool Categories */}
         <div className="container mx-auto px-4 pb-24">
-          <div className="max-w-7xl mx-auto space-y-24">
+          <div className="max-w-7xl mx-auto flex flex-col gap-24">
             {categories.map((cat) => (
               <section key={cat.id} id={cat.id} className="scroll-mt-24">
                 {/* Clean Section Header */}
@@ -117,12 +117,12 @@ export default function HomePage() {
                     <h2 className="font-space text-3xl font-bold text-slate-100 flex items-center gap-3">
                       {cat.label}
                     </h2>
-                    <p className="text-slate-400 mt-2 font-light">{cat.description}</p>
+                    <p className="text-slate-400 text-left mt-2 font-light">{cat.description}</p>
                   </div>
                 </div>
 
                 {/* Grid with improved gap and sizing */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {cat.tools.map((tool) => (
                     <ToolCard key={tool.title} {...tool} />
                   ))}
@@ -132,11 +132,11 @@ export default function HomePage() {
           </div>
 
           {/* Bottom Clean CTA */}
-          <div className="mt-24 max-w-4xl mx-auto text-center p-12 bg-gradient-to-b from-white/[0.03] to-transparent border border-white/5 rounded-3xl">
+          <div className="mt-24 max-w-4xl mx-auto flex flex-col items-center text-center p-12 bg-gradient-to-b from-white/[0.03] to-transparent border border-white/5 rounded-3xl">
             <h3 className="font-space text-2xl md:text-3xl font-bold text-slate-100 mb-4">
               More tools coming every week 🚀
             </h3>
-            <p className="text-slate-400 max-w-lg mx-auto mb-8">
+            <p className="text-slate-400 text-center max-w-lg mx-auto mb-8">
               We&apos;re constantly expanding CosmoxHub based on your needs. Have a tool request? Drop us a message!
             </p>
             <a href="mailto:contact@cosmoxhub.com" className="inline-block px-8 py-3 bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 rounded-xl font-medium transition-all hover:text-white">
