@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
+import AdScripts from "@/components/AdScripts";
 
 export const metadata: Metadata = {
   title: {
@@ -67,7 +69,9 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ""} />
         {children}
+        <AdScripts />
       </body>
     </html>
   );
