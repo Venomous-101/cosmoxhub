@@ -6,12 +6,12 @@ import ToolLayout from "@/components/ToolLayout";
 export default function WordCounterPage() {
   const [text, setText] = useState("");
 
-  const words = text.trim() === "" ? 0 : text.trim().split(/\s+/).length;
+  const words = text.trim() === "" ? 0 : text.trim().split(/\s+/).filter(t => /[\p{L}\p{N}]/u.test(t)).length;
   const chars = text.length;
   const charsNoSpace = text.replace(/\s/g, "").length;
-  const sentences = text.trim() === "" ? 0 : text.split(/[.!?]+/).filter(Boolean).length;
-  const paragraphs = text.trim() === "" ? 0 : text.split(/\n\s*\n/).filter(Boolean).length;
-  const readTime = Math.max(1, Math.ceil(words / 200));
+  const sentences = text.trim() === "" ? 0 : text.split(/[.!?\n]+/).filter(s => s.trim().length > 0).length;
+  const paragraphs = text.trim() === "" ? 0 : text.split(/\n+/).filter(p => p.trim().length > 0).length;
+  const readTime = words === 0 ? 0 : Math.max(1, Math.ceil(words / 200));
 
   const stats = [
     { label: "Words", value: words },
