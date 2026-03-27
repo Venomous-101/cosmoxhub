@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://cosmoxhub.vercel.app';
+  const baseUrl = 'https://cosmoxhub.com';
 
   const routes = [
     '',
@@ -20,6 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/tools/qr-generator',
     '/tools/age-calculator',
     '/tools/password-generator',
+    '/tools/claude-skills-creator',
   ];
 
   return routes.map((route) => ({

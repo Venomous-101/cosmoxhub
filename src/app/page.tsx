@@ -3,7 +3,7 @@ import {
   FileStack, Scissors, ImagePlus, FileImage,
   Type, CaseSensitive, RemoveFormatting, AlignLeft,
   Image, FileDown, Maximize2,
-  MessageSquare, QrCode, CalendarDays, KeyRound,
+  MessageSquare, QrCode, CalendarDays, KeyRound, Brain,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -61,6 +61,7 @@ const categories = [
       { title: "QR Code Generator", description: "Generate a QR code for any URL, text, WiFi or contact.", href: "/tools/qr-generator", icon: QrCode, badge: "Popular" },
       { title: "Age Calculator", description: "Calculate exact age in years, months, days and hours.", href: "/tools/age-calculator", icon: CalendarDays },
       { title: "Password Generator", description: "Generate strong, secure, random passwords instantly.", href: "/tools/password-generator", icon: KeyRound },
+      { title: "AI Agent Skills Creator", description: "Generate a professional skills.md file for AI agents.", href: "/tools/claude-skills-creator", icon: Brain, badge: "New" },
     ],
   },
 ];

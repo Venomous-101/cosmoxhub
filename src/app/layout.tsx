@@ -22,10 +22,12 @@ export const metadata: Metadata = {
     "password generator",
     "case converter",
     "whatsapp link generator",
+    "ai agent skills creator",
+    "claude skills.md generator",
   ],
   authors: [{ name: "CosmoxHub" }],
   creator: "CosmoxHub",
-  metadataBase: new URL("https://cosmoxhub.vercel.app"),
+  metadataBase: new URL("https://cosmoxhub.com"),
   openGraph: {
     type: "website",
     locale: "en_US",
