@@ -21,9 +21,9 @@ export default function JsonFormatterPage() {
       const parsed = JSON.parse(val);
       setFormatted(JSON.stringify(parsed, null, 2));
       setError("");
-    } catch (e: any) {
+    } catch (e: unknown) {
       setFormatted("");
-      setError(e.message);
+      setError(e instanceof Error ? e.message : "Invalid JSON format");
     }
   };
 

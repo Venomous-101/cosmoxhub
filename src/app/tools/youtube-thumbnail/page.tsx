@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Youtube, Download, Link as LinkIcon, AlertCircle, Image as ImageIcon } from "lucide-react";
+import { Video, Download, Link as LinkIcon, AlertCircle, Image as ImageIcon } from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
 
 export default function YouTubeThumbnailPage() {
@@ -60,7 +60,7 @@ export default function YouTubeThumbnailPage() {
     <ToolLayout 
       title="YouTube Thumbnail Downloader" 
       description="Download high-resolution thumbnails for any YouTube video instantly. Just paste the video link and choose your quality." 
-      icon={Youtube} 
+      icon={Video} 
       color="#ff0000"
     >
       <div className="max-w-5xl mx-auto w-full space-y-8">

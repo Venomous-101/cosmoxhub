@@ -8,7 +8,7 @@ import {
   KeyRound,
   Brain,
   FileText,
-  Youtube,
+  Video,
   Code
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -65,7 +65,7 @@ const categories = [
     tools: [
       { title: "WhatsApp Link Generator", description: "Create a WhatsApp chat link without saving the number.", href: "/tools/whatsapp-link", icon: MessageSquare, badge: "Useful" },
       { title: "QR Code Generator", description: "Generate a QR code for any URL, text, WiFi or contact.", href: "/tools/qr-generator", icon: QrCode, badge: "Popular" },
-      { title: "YouTube Thumbnail Downloader", description: "Download HD thumbnails from any YouTube video.", href: "/tools/youtube-thumbnail", icon: Youtube, badge: "New" },
+      { title: "YouTube Thumbnail Downloader", description: "Download HD thumbnails from any YouTube video.", href: "/tools/youtube-thumbnail", icon: Video, badge: "New" },
       { title: "Age Calculator", description: "Calculate exact age in years, months, days and hours.", href: "/tools/age-calculator", icon: CalendarDays },
       { title: "Password Generator", description: "Generate strong, secure, random passwords instantly.", href: "/tools/password-generator", icon: KeyRound },
       { title: "AI Agent Skills Creator", description: "Generate a professional skills.md file for AI agents.", href: "/tools/claude-skills-creator", icon: Brain, badge: "New" },
