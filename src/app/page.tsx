@@ -3,7 +3,13 @@ import {
   FileStack, Scissors, ImagePlus, FileImage,
   Type, CaseSensitive, RemoveFormatting, AlignLeft,
   Image, FileDown, Maximize2,
-  MessageSquare, QrCode, CalendarDays, KeyRound, Brain, FileText
+  MessageSquare,  QrCode,
+  CalendarDays,
+  KeyRound,
+  Brain,
+  FileText,
+  Youtube,
+  Code
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -59,9 +65,11 @@ const categories = [
     tools: [
       { title: "WhatsApp Link Generator", description: "Create a WhatsApp chat link without saving the number.", href: "/tools/whatsapp-link", icon: MessageSquare, badge: "Useful" },
       { title: "QR Code Generator", description: "Generate a QR code for any URL, text, WiFi or contact.", href: "/tools/qr-generator", icon: QrCode, badge: "Popular" },
+      { title: "YouTube Thumbnail Downloader", description: "Download HD thumbnails from any YouTube video.", href: "/tools/youtube-thumbnail", icon: Youtube, badge: "New" },
       { title: "Age Calculator", description: "Calculate exact age in years, months, days and hours.", href: "/tools/age-calculator", icon: CalendarDays },
       { title: "Password Generator", description: "Generate strong, secure, random passwords instantly.", href: "/tools/password-generator", icon: KeyRound },
       { title: "AI Agent Skills Creator", description: "Generate a professional skills.md file for AI agents.", href: "/tools/claude-skills-creator", icon: Brain, badge: "New" },
+      { title: "JSON Formatter", description: "Clean, prettify and validate JSON data instantly.", href: "/tools/json-formatter", icon: Code, badge: "New" },
       { title: "Text to PDF", description: "Convert plain text into a professional PDF document.", href: "/tools/text-to-pdf", icon: FileText, badge: "New" },
     ],
   },
@@ -107,7 +115,7 @@ export default function HomePage() {
             {/* Glassmorphic Stats Bar */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl bg-[#0a0a1f]/80 backdrop-blur-xl border border-indigo-500/20 rounded-[2rem] p-8 shadow-2xl relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/5 to-purple-500/5 pointer-events-none" />
-              
+
               <div className="flex flex-col items-center justify-center relative z-10">
                 <span className="text-4xl md:text-5xl font-space font-black text-white mb-2">15+</span>
                 <span className="text-indigo-300/80 text-xs md:text-sm font-bold uppercase tracking-[0.2em]">Free Utilities</span>
@@ -140,7 +148,7 @@ export default function HomePage() {
                     <h2 className="font-space text-3xl font-bold text-slate-100 flex items-center gap-3">
                       {cat.label}
                     </h2>
-                    <p className="text-slate-400 text-left mt-2 font-light">{cat.description}</p>
+                    <p className="text-slate-500 text-sm">&copy; {new Date().getFullYear()} CosmoxHub. Built for speed, privacy, and productivity.</p>
                   </div>
                 </div>
 

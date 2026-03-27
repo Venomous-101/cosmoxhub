@@ -22,6 +22,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/tools/password-generator',
     '/tools/claude-skills-creator',
     '/tools/text-to-pdf',
+    '/tools/youtube-thumbnail',
+    '/tools/json-formatter',
   ];
 
   return routes.map((route) => ({
