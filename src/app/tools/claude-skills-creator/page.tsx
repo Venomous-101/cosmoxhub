@@ -71,10 +71,11 @@ ${instructions ? instructions.split("\n").map(i => `- ${i}`).join("\n") : "- Lis
         <div className="card p-6 flex-1 h-fit">
           <div className="space-y-6">
             <div>
-              <label className="label-text flex items-center gap-2">
+              <label htmlFor="agent-name" className="label-text flex items-center gap-2">
                 Agent Name <span className="text-indigo-400/50 text-xs font-normal">(e.g. CodeArchitect)</span>
               </label>
               <input 
+                id="agent-name"
                 type="text" 
                 placeholder="e.g. ResearchMaster"
                 className="input-field"
@@ -84,8 +85,9 @@ ${instructions ? instructions.split("\n").map(i => `- ${i}`).join("\n") : "- Lis
             </div>
 
             <div>
-              <label className="label-text">Primary Role & Purpose</label>
+              <label htmlFor="agent-role" className="label-text">Primary Role & Purpose</label>
               <textarea 
+                id="agent-role"
                 placeholder="What is this agent's main job?"
                 className="input-field min-h-[100px] py-3"
                 value={formData.role}
@@ -94,8 +96,9 @@ ${instructions ? instructions.split("\n").map(i => `- ${i}`).join("\n") : "- Lis
             </div>
 
             <div>
-              <label className="label-text">Skills (One per line)</label>
+              <label htmlFor="agent-skills" className="label-text">Skills (One per line)</label>
               <textarea 
+                id="agent-skills"
                 placeholder="e.g. Data Analysis&#10;Python Coding&#10;SEO Strategy"
                 className="input-field min-h-[120px] py-3"
                 value={formData.skills}
@@ -104,8 +107,9 @@ ${instructions ? instructions.split("\n").map(i => `- ${i}`).join("\n") : "- Lis
             </div>
 
             <div>
-              <label className="label-text">Communication Style</label>
+              <label htmlFor="agent-style" className="label-text">Communication Style</label>
               <input 
+                id="agent-style"
                 type="text" 
                 placeholder="e.g. Professional yet friendly, Concise, Scientific"
                 className="input-field"
@@ -115,8 +119,9 @@ ${instructions ? instructions.split("\n").map(i => `- ${i}`).join("\n") : "- Lis
             </div>
 
             <div>
-              <label className="label-text">Instructions & Guardrails</label>
+              <label htmlFor="agent-instructions" className="label-text">Instructions & Guardrails</label>
               <textarea 
+                id="agent-instructions"
                 placeholder="Important rules or constraints..."
                 className="input-field min-h-[100px] py-3"
                 value={formData.instructions}
