@@ -24,6 +24,8 @@ export const metadata: Metadata = {
     "whatsapp link generator",
     "ai agent skills creator",
     "claude skills.md generator",
+    "text to pdf converter",
+    "online document creator",
   ],
   authors: [{ name: "CosmoxHub" }],
   creator: "CosmoxHub",

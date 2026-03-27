@@ -3,7 +3,7 @@ import {
   FileStack, Scissors, ImagePlus, FileImage,
   Type, CaseSensitive, RemoveFormatting, AlignLeft,
   Image, FileDown, Maximize2,
-  MessageSquare, QrCode, CalendarDays, KeyRound, Brain,
+  MessageSquare, QrCode, CalendarDays, KeyRound, Brain, FileText
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -62,6 +62,7 @@ const categories = [
       { title: "Age Calculator", description: "Calculate exact age in years, months, days and hours.", href: "/tools/age-calculator", icon: CalendarDays },
       { title: "Password Generator", description: "Generate strong, secure, random passwords instantly.", href: "/tools/password-generator", icon: KeyRound },
       { title: "AI Agent Skills Creator", description: "Generate a professional skills.md file for AI agents.", href: "/tools/claude-skills-creator", icon: Brain, badge: "New" },
+      { title: "Text to PDF", description: "Convert plain text into a professional PDF document.", href: "/tools/text-to-pdf", icon: FileText, badge: "New" },
     ],
   },
 ];
@@ -170,7 +171,8 @@ export default function HomePage() {
                 More tools coming <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-yellow-400">every week.</span>
               </h3>
               <p className="text-lg md:text-xl text-indigo-200/80 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
-                We're constantly expanding CosmoxHub based on your real-world needs. Can't find the tool you are looking for?
+                Everything you need to grow your productivity. High-performance tools that don&apos;t compromise on privacy or speed.
+s. Can't find the tool you are looking for?
               </p>
               <a href="mailto:contact@cosmoxhub.com" className="group relative inline-flex items-center justify-center px-10 py-4 font-bold text-white bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl hover:bg-white/20 transition-all duration-300 overflow-hidden shadow-xl hover:shadow-2xl hover:-translate-y-1">
                 <span className="relative z-10">Suggest a Tool Feature</span>

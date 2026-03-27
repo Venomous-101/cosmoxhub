@@ -21,6 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/tools/age-calculator',
     '/tools/password-generator',
     '/tools/claude-skills-creator',
+    '/tools/text-to-pdf',
   ];
 
   return routes.map((route) => ({
