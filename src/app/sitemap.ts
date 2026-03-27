@@ -24,6 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/tools/text-to-pdf',
     '/tools/youtube-thumbnail',
     '/tools/json-formatter',
+    '/tools/image-upscaler',
   ];
 
   return routes.map((route) => ({

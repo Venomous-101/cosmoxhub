@@ -9,7 +9,8 @@ import {
   Brain,
   FileText,
   Video,
-  Code
+  Code,
+  Maximize
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -70,6 +71,7 @@ const categories = [
       { title: "Password Generator", description: "Generate strong, secure, random passwords instantly.", href: "/tools/password-generator", icon: KeyRound },
       { title: "AI Agent Skills Creator", description: "Generate a professional skills.md file for AI agents.", href: "/tools/claude-skills-creator", icon: Brain, badge: "New" },
       { title: "JSON Formatter", description: "Clean, prettify and validate JSON data instantly.", href: "/tools/json-formatter", icon: Code, badge: "New" },
+      { title: "Image Upscaler", description: "Enhance image resolution (2x, 4x) in the browser.", href: "/tools/image-upscaler", icon: Maximize, badge: "New" },
       { title: "Text to PDF", description: "Convert plain text into a professional PDF document.", href: "/tools/text-to-pdf", icon: FileText, badge: "New" },
     ],
   },

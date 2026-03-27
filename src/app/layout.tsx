@@ -4,7 +4,12 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 import AdScripts from "@/components/AdScripts";
 import AdBanner from "@/components/AdBanner";
 
-export const metadata: Metadata = {
+import React from "react";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space" });
+
+export const metadata = {
   title: {
     default: "CosmoxHub — Free Online Tools for Everyone",
     template: "%s | CosmoxHub",
@@ -30,6 +35,8 @@ export const metadata: Metadata = {
     "download youtube thumbnails hd",
     "json formatter online",
     "validate json online",
+    "image upscaler online",
+    "increase image resolution",
   ],
   authors: [{ name: "CosmoxHub" }],
   creator: "CosmoxHub",
