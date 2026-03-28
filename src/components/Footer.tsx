@@ -41,13 +41,17 @@ export default function Footer() {
             ))}
           </div>
 
-          {/* Utilities */}
+          {/* Company */}
           <div>
-            <h4 className="text-slate-400 text-xs font-semibold tracking-wider uppercase mb-4">Utilities</h4>
-            {["QR Generator", "Age Calculator", "Password Generator", "WhatsApp Link"].map((t) => (
-              <Link key={t} href={`/tools/${t.toLowerCase().replace(/ /g, "-")}`}
+            <h4 className="text-slate-400 text-xs font-semibold tracking-wider uppercase mb-4">Company</h4>
+            {[
+              { name: "About Us", href: "/about" },
+              { name: "Privacy Policy", href: "/privacy" },
+              { name: "Terms of Service", href: "/terms" },
+            ].map((link) => (
+              <Link key={link.name} href={link.href}
                 className="block text-slate-400 text-sm mb-2 transition-colors duration-200 hover:text-slate-300"
-              >{t}</Link>
+              >{link.name}</Link>
             ))}
           </div>
         </div>

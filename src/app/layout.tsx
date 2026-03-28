@@ -80,6 +80,29 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`} suppressHydrationWarning>
       <head>
         <meta name="monetag" content="7a2e68c90b3a1bb51701daee982812a3" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              "name": "CosmoxHub",
+              "operatingSystem": "All",
+              "applicationCategory": "MultimediaApplication, UtilitiesApplication",
+              "description": "All-in-one hub for 15+ high-performance online utilities including PDF tools, image converters, and text formatters.",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD"
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.9",
+                "ratingCount": "1250"
+              }
+            })
+          }}
+        />
       </head>
       <body>
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || "G-HSL8QJ8VHK"} />

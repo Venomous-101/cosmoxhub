@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 export default function AdScripts() {
   const [clickCount, setClickCount] = useState(0);
   const [isActivated, setIsActivated] = useState(false);
-  const THRESHOLD = 9; // Number of clicks before ads activate
+  const THRESHOLD = 20; // Number of clicks before ads activate (Increased to 20 for elite experience)
 
   useEffect(() => {
     // Initialize from sessionStorage to maintain state across pages in the same tab

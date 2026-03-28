@@ -25,6 +25,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/tools/youtube-thumbnail',
     '/tools/json-formatter',
     '/tools/image-upscaler',
+    '/about',
+    '/privacy',
+    '/terms',
   ];
 
   return routes.map((route) => ({
