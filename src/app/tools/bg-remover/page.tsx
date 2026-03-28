@@ -17,7 +17,8 @@ import {
   ShieldCheck,
   CheckCircle2,
   X,
-  Cpu
+  Cpu,
+  Settings
 } from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
 import { motion, AnimatePresence } from "framer-motion";
