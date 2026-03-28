@@ -56,6 +56,8 @@ export default function AIPromptOptimizerPage() {
                     </span>
                     <button 
                         onClick={() => setInput("")}
+                        title="Clear original idea"
+                        aria-label="Clear original idea"
                         className="p-2 text-slate-500 hover:text-red-400 transition-colors"
                     >
                         <Trash2 size={16} />

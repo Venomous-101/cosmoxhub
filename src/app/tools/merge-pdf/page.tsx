@@ -128,9 +128,9 @@ export default function MergePDFPage() {
                   <div className="text-[10px] text-slate-500 uppercase tracking-widest mt-0.5">{(file.size / 1024).toFixed(0)} KB</div>
                 </div>
                 <div className="flex items-center gap-1">
-                  <button onClick={() => moveUp(i)} className="p-2 text-slate-500 hover:text-white transition-colors"><ArrowUp size={16} /></button>
-                  <button onClick={() => moveDown(i)} className="p-2 text-slate-500 hover:text-white transition-colors"><ArrowDown size={16} /></button>
-                  <button onClick={() => removeFile(i)} className="p-2 text-slate-500 hover:text-red-400 transition-colors"><Trash2 size={16} /></button>
+                  <button onClick={() => moveUp(i)} title="Move file up" aria-label="Move file up" className="p-2 text-slate-500 hover:text-white transition-colors"><ArrowUp size={16} /></button>
+                  <button onClick={() => moveDown(i)} title="Move file down" aria-label="Move file down" className="p-2 text-slate-500 hover:text-white transition-colors"><ArrowDown size={16} /></button>
+                  <button onClick={() => removeFile(i)} title="Remove file" aria-label="Remove file" className="p-2 text-slate-500 hover:text-red-400 transition-colors"><Trash2 size={16} /></button>
                 </div>
               </div>
             ))}
