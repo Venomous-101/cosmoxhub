@@ -82,7 +82,7 @@ export default function RootLayout({
         <meta name="monetag" content="7a2e68c90b3a1bb51701daee982812a3" />
       </head>
       <body>
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ""} />
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || "G-HSL8QJ8VHK"} />
         {children}
         <AdScripts />
         <AdBanner type="social-bar" />
