@@ -66,7 +66,7 @@ export const metadata = {
   verification: {
     google: "vJAvqwICv8kMeZ7CaG4I0lhehtNQrbHPprc0HjxRM0E",
     other: {
-      monetag: ["bec947b201f5e3c59c393dc3844b496f"],
+      monetag: ["7a2e68c90b3a1bb51701daee982812a3"],
     },
   },
 };
@@ -79,7 +79,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`} suppressHydrationWarning>
       <head>
-        <meta name="monetag" content="41be868d494955b9e8eb3be434a97efb" />
+        <meta name="monetag" content="7a2e68c90b3a1bb51701daee982812a3" />
       </head>
       <body>
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ""} />
