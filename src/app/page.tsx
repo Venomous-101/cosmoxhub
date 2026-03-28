@@ -184,7 +184,7 @@ export default function HomePage() {
                 Everything you need to grow your productivity. High-performance tools that don&apos;t compromise on privacy or speed.
 s. Can't find the tool you are looking for?
               </p>
-              <a href="mailto:contact@cosmoxhub.com" className="group relative inline-flex items-center justify-center px-10 py-4 font-bold text-white bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl hover:bg-white/20 transition-all duration-300 overflow-hidden shadow-xl hover:shadow-2xl hover:-translate-y-1">
+              <a href="mailto:eclipsonai@gmail.com" className="group relative inline-flex items-center justify-center px-10 py-4 font-bold text-white bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl hover:bg-white/20 transition-all duration-300 overflow-hidden shadow-xl hover:shadow-2xl hover:-translate-y-1">
                 <span className="relative z-10">Suggest a Tool Feature</span>
               </a>
             </div>
