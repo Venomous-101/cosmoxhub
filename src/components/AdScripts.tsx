@@ -58,7 +58,7 @@ export default function AdScripts() {
       <Script 
         id="monetag-multitag"
         src="https://quge5.com/88/tag.min.js" 
-        data-zone="223717" 
+        data-zone="224063" 
         strategy="afterInteractive" 
         data-cfasync="false"
       />
