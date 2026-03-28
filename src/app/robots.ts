@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/api/', '/private/'],
     },
-    sitemap: 'https://cosmoxhub.vercel.app/sitemap.xml',
+    sitemap: 'https://cosmoxhub.com/sitemap.xml',
   };
 }

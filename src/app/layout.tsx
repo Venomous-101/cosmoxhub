@@ -64,7 +64,7 @@ export const metadata = {
     },
   },
   verification: {
-    google: "PoHYF0-TjyxN82OKUTqt20r7RSjcZaqN2RC_lS5vKwI",
+    google: "vJAvqwICv8kMeZ7CaG4I0lhehtNQrbHPprc0HjxRM0E",
     other: {
       monetag: ["bec947b201f5e3c59c393dc3844b496f"],
     },
