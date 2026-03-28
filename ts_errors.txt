@@ -1,0 +1,37 @@
+﻿src/app/tools/bg-remover/page.tsx(54,9): error TS2322: Type 'typeof import("E:/Cosmoxhub/cosmoxhub-app/node_modules/@imgly/background-removal/dist/src/index")' is not assignable to type '(source: string | File | Blob, options?: any) => Promise<Blob>'.
+  Type 'typeof import("E:/Cosmoxhub/cosmoxhub-app/node_modules/@imgly/background-removal/dist/src/index")' provides no match for the signature '(source: string | File | Blob, options?: any): Promise<Blob>'.
+src/app/tools/code-beautifier/page.tsx(55,36): error TS2345: Argument of type '{ indent_size: number; indent_char: string; max_preserve_newlines: number; preserve_newlines: boolean; keep_array_indentation: boolean; break_chained_methods: boolean; indent_scripts: string; ... 9 more ...; indent_empty_lines: boolean; }' is not assignable to parameter of type 'HTMLBeautifyOptions'.
+  Types of property 'indent_scripts' are incompatible.
+    Type 'string' is not assignable to type '"normal" | "keep" | "separate" | undefined'.
+src/app/tools/code-beautifier/page.tsx(59,34): error TS2345: Argument of type '{ indent_size: number; indent_char: string; max_preserve_newlines: number; preserve_newlines: boolean; keep_array_indentation: boolean; break_chained_methods: boolean; indent_scripts: string; ... 9 more ...; indent_empty_lines: boolean; }' is not assignable to parameter of type 'JSBeautifyOptions'.
+  Types of property 'brace_style' are incompatible.
+    Type 'string' is not assignable to type '"none" | "collapse" | "expand" | "end-expand" | "preserve-inline" | undefined'.
+src/app/tools/image-to-pdf/page.tsx(123,30): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/app/tools/merge-pdf/page.tsx(81,30): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/app/tools/merge-pdf/page.tsx(252,34): error TS2304: Cannot find name 'RefreshCcw'.
+src/app/tools/pdf-unlocker/page.tsx(46,30): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/app/tools/qr-generator/page.tsx(115,29): error TS2322: Type '{ id: string; value: string; size: number; fgColor: string; bgColor: string; qrStyle: "squares" | "dots"; eyeRadius: number; logoImage: string | undefined; logoWidth: number; logoHeight: number; logoOpacity: number; enableCORS: true; qrRef: RefObject<...>; ecLevel: "H"; }' is not assignable to type 'IntrinsicAttributes & IntrinsicClassAttributes<QRCode> & Pick<Readonly<IProps>, never> & InexactPartial<...> & InexactPartial<...>'.
+  Property 'qrRef' does not exist on type 'IntrinsicAttributes & IntrinsicClassAttributes<QRCode> & Pick<Readonly<IProps>, never> & InexactPartial<...> & InexactPartial<...>'. Did you mean 'ref'?
+src/app/tools/split-pdf/page.tsx(89,30): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/app/tools/text-to-pdf/page.tsx(162,30): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/app/tools/word-counter/page.tsx(147,36): error TS2304: Cannot find name 'CheckCircle2'.

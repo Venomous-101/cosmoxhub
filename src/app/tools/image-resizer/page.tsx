@@ -1,196 +1,402 @@
 "use client";
-import { useState } from "react";
-import { Maximize2, Upload, Download } from "lucide-react";
+
+import { useState, useRef, useEffect, useCallback } from "react";
+import {
+  Maximize2, Upload, Download, X, Settings, LayoutGrid,
+  CheckCircle2, Lock, Unlock, ArrowRightLeft, Crop,
+  ScissorsSquare, SlidersHorizontal, RefreshCw
+} from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
+import { motion, AnimatePresence } from "framer-motion";
+
+interface ImageFile {
+  id: string;
+  file: File;
+  preview: string;
+  name: string;
+  size: number;
+  originalWidth: number;
+  originalHeight: number;
+  status: "idle" | "processing" | "completed" | "error";
+  resultUrl?: string;
+  resultW?: number;
+  resultH?: number;
+}
+
+type FitMode = "contain" | "stretch";
+type ActiveMode = "resize" | "crop";
+
+const SOCIAL_PRESETS = [
+  { label: "Instagram Post", w: 1080, h: 1080 },
+  { label: "Twitter Card", w: 1200, h: 628 },
+  { label: "YouTube Thumb", w: 1280, h: 720 },
+  { label: "Facebook Cover", w: 820, h: 312 },
+  { label: "LinkedIn Banner", w: 1584, h: 396 },
+];
 
 export default function ImageResizerPage() {
-  const [file, setFile] = useState<File | null>(null);
-  const [imgUrl, setImgUrl] = useState<string>("");
-  const [originalWidth, setOriginalWidth] = useState(0);
-  const [originalHeight, setOriginalHeight] = useState(0);
-  
-  const [width, setWidth] = useState(0);
-  const [height, setHeight] = useState(0);
-  const [maintainRatio, setMaintainRatio] = useState(true);
+  const [images, setImages] = useState<ImageFile[]>([]);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [targetWidth, setTargetWidth] = useState<number>(0);
+  const [targetHeight, setTargetHeight] = useState<number>(0);
+  const [lockAspect, setLockAspect] = useState(true);
+  const [fitMode, setFitMode] = useState<FitMode>("contain");
+  const [activeMode, setActiveMode] = useState<ActiveMode>("resize");
 
-  const [resizing, setResizing] = useState(false);
-  const [resizedUrl, setResizedUrl] = useState("");
+  // Crop state
+  const [cropX, setCropX] = useState(0);
+  const [cropY, setCropY] = useState(0);
+  const [cropW, setCropW] = useState(0);
+  const [cropH, setCropH] = useState(0);
 
-  const handleUpload = (f: File) => {
-    setFile(f);
-    setResizedUrl("");
-    const url = URL.createObjectURL(f);
-    setImgUrl(url);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const img = new Image();
-    img.onload = () => {
-        setOriginalWidth(img.width);
-        setOriginalHeight(img.height);
-        setWidth(img.width);
-        setHeight(img.height);
-    };
-    img.src = url;
-  };
+  useEffect(() => {
+    if (lockAspect && targetWidth > 0 && images.length > 0) {
+      const first = images[0];
+      const ratio = first.originalHeight / first.originalWidth;
+      setTargetHeight(Math.round(targetWidth * ratio));
+    }
+  }, [targetWidth, lockAspect, images]);
 
-  const handleWidthChange = (val: number) => {
-      setWidth(val);
-      if (maintainRatio && originalWidth > 0) {
-          setHeight(Math.round(val * (originalHeight / originalWidth)));
-      }
-  };
-
-  const handleHeightChange = (val: number) => {
-      setHeight(val);
-      if (maintainRatio && originalHeight > 0) {
-          setWidth(Math.round(val * (originalWidth / originalHeight)));
-      }
-  };
-
-  const resize = () => {
-    if (!file || !imgUrl) return;
-    setResizing(true);
-    
-    const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-    const ctx = canvas.getContext("2d");
-
-    const img = new Image();
-    img.onload = () => {
-        if (ctx) {
-            ctx.drawImage(img, 0, 0, width, height);
-            setResizedUrl(canvas.toDataURL(file.type));
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    Array.from(files).forEach((file) => {
+      const img = new Image();
+      img.onload = () => {
+        const newImg: ImageFile = {
+          id: Math.random().toString(36).substring(7),
+          file, preview: URL.createObjectURL(file),
+          name: file.name.replace(/\.[^/.]+$/, ""),
+          size: file.size,
+          originalWidth: img.width, originalHeight: img.height,
+          status: "idle",
+        };
+        if (images.length === 0 && targetWidth === 0) {
+          setTargetWidth(img.width);
+          setTargetHeight(img.height);
+          setCropW(img.width);
+          setCropH(img.height);
         }
-        setResizing(false);
-    };
-    img.src = imgUrl;
+        setImages((prev) => [...prev, newImg]);
+      };
+      img.src = URL.createObjectURL(file);
+    });
   };
 
-  const download = () => {
-    if (!resizedUrl || !file) return;
-    const a = document.createElement("a");
-    a.href = resizedUrl;
-    a.download = `resized-${file.name}`;
-    a.click();
+  const removeImage = (id: string) => {
+    setImages((prev) => {
+      const filtered = prev.filter((img) => img.id !== id);
+      const removed = prev.find((img) => img.id === id);
+      if (removed?.preview) URL.revokeObjectURL(removed.preview);
+      if (removed?.resultUrl) URL.revokeObjectURL(removed.resultUrl);
+      return filtered;
+    });
+  };
+
+  const processOne = async (img: ImageFile) => {
+    if (img.status === "completed") return;
+    setImages(prev => prev.map(i => i.id === img.id ? { ...i, status: "processing" } : i));
+    try {
+      const result = await new Promise<{ url: string; w: number; h: number }>((resolve) => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        const imageObj = new Image();
+        imageObj.onload = () => {
+          if (activeMode === "resize") {
+            canvas.width = targetWidth;
+            canvas.height = targetHeight;
+            if (ctx) {
+              ctx.imageSmoothingEnabled = true;
+              ctx.imageSmoothingQuality = "high";
+              if (fitMode === "stretch") {
+                ctx.drawImage(imageObj, 0, 0, targetWidth, targetHeight);
+              } else {
+                const ratio = Math.min(targetWidth / imageObj.width, targetHeight / imageObj.height);
+                const x = (targetWidth - imageObj.width * ratio) / 2;
+                const y = (targetHeight - imageObj.height * ratio) / 2;
+                ctx.fillStyle = "#000000";
+                ctx.fillRect(0, 0, targetWidth, targetHeight);
+                ctx.drawImage(imageObj, x, y, imageObj.width * ratio, imageObj.height * ratio);
+              }
+              resolve({ url: canvas.toDataURL("image/png", 1.0), w: targetWidth, h: targetHeight });
+            }
+          } else {
+            // Crop mode
+            const sx = Math.max(0, cropX), sy = Math.max(0, cropY);
+            const sw = Math.min(cropW, imageObj.width - sx);
+            const sh = Math.min(cropH, imageObj.height - sy);
+            canvas.width = sw; canvas.height = sh;
+            if (ctx) {
+              ctx.imageSmoothingEnabled = true;
+              ctx.imageSmoothingQuality = "high";
+              ctx.drawImage(imageObj, sx, sy, sw, sh, 0, 0, sw, sh);
+              resolve({ url: canvas.toDataURL("image/png", 1.0), w: sw, h: sh });
+            }
+          }
+        };
+        imageObj.src = img.preview;
+      });
+      setImages(prev => prev.map(i => i.id === img.id ? {
+        ...i, status: "completed", resultUrl: result.url, resultW: result.w, resultH: result.h
+      } : i));
+    } catch {
+      setImages(prev => prev.map(i => i.id === img.id ? { ...i, status: "error" } : i));
+    }
+  };
+
+  const processAll = async () => {
+    if (activeMode === "resize" && (targetWidth <= 0 || targetHeight <= 0)) return;
+    if (activeMode === "crop" && (cropW <= 0 || cropH <= 0)) return;
+    setIsProcessing(true);
+    for (const img of images) {
+      if (img.status !== "completed") await processOne(img);
+    }
+    setIsProcessing(false);
+  };
+
+  const downloadAll = () => {
+    images.forEach((img) => {
+      if (img.resultUrl) {
+        const link = document.createElement("a");
+        link.href = img.resultUrl;
+        link.download = `${img.name}-${activeMode}d.png`;
+        link.click();
+      }
+    });
+  };
+
+  const applyPreset = (w: number, h: number) => {
+    setTargetWidth(w);
+    setTargetHeight(h);
+    setLockAspect(false);
+    setActiveMode("resize");
+    setImages(prev => prev.map(i => ({ ...i, status: "idle", resultUrl: undefined })));
+  };
+
+  const jsonLd = {
+    "@context": "https://schema.org", "@type": "SoftwareApplication",
+    "name": "CosmoxHub Elite Image Resizer & Crop Tool",
+    "operatingSystem": "Any", "applicationCategory": "MultimediaApplication",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": ["Precision crop tool", "Bulk resizing", "Aspect ratio locking", "Social media presets", "100% Client-Side Privacy"]
   };
 
   return (
-    <ToolLayout title="Image Resizer" description="Resize images to any dimension securely in your browser. Original quality is preserved." icon={Maximize2} color="#10b981">
-      {!file ? (
-        <div 
-          className="upload-zone flex flex-col items-center justify-center p-12 border-2 border-dashed border-emerald-500/30 rounded-2xl bg-emerald-500/5 hover:bg-emerald-500/10 cursor-pointer transition-colors" 
-          onClick={() => document.getElementById("resize-input")?.click()}
-          title="Click to upload an image"
-        >
-            <Upload className="mb-4 text-emerald-500 w-10 h-10" />
-            <p className="text-slate-400 text-sm">Drop an image here or <span className="text-emerald-500 font-medium">click to browse</span></p>
-            <input 
-              id="resize-input" 
-              type="file" 
-              accept="image/*" 
-              className="hidden"
-              title="File input for image to resize"
-              onChange={(e) => e.target.files?.[0] && handleUpload(e.target.files[0])} 
-            />
+    <ToolLayout
+      title="Elite Image Resizer & Crop"
+      description="Resize and crop images to pixel-perfect dimensions. Social media presets, aspect ratio lock, and 100% private client-side processing."
+      icon={Maximize2} color="#10b981"
+    >
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
+      <div className="grid lg:grid-cols-[1fr_340px] gap-8 items-start">
+        {/* Main Workspace */}
+        <div className="space-y-6">
+          <AnimatePresence mode="wait">
+            {images.length === 0 ? (
+              <motion.div key="empty" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className="relative group h-[420px]">
+                <div onClick={() => fileInputRef.current?.click()} className="h-full flex flex-col items-center justify-center border-2 border-dashed border-emerald-500/20 rounded-[3rem] bg-emerald-500/5 transition-all group-hover:bg-emerald-500/10 group-hover:border-emerald-500/40 cursor-pointer overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="relative transform group-hover:-translate-y-2 transition-transform duration-300">
+                    <div className="w-20 h-20 bg-emerald-500/10 rounded-[2rem] flex items-center justify-center mb-4 ring-1 ring-emerald-500/20 group-hover:ring-emerald-500/50 group-hover:bg-emerald-500/20 transition-all">
+                      <ScissorsSquare className="w-10 h-10 text-emerald-500" />
+                    </div>
+                  </div>
+                  <h3 className="text-2xl font-black text-white mb-2 tracking-tight">Upload Images</h3>
+                  <p className="text-slate-400 text-center max-w-xs px-4 text-sm">Resize to exact dimensions or crop precisely. Bulk supported, zero cloud uploads.</p>
+                  <span className="mt-6 px-5 py-2 bg-white/5 text-slate-300 text-[10px] font-black uppercase tracking-widest rounded-full border border-white/5 hover:bg-emerald-500 hover:text-white transition-all">Start Elite Session</span>
+                </div>
+                <input ref={fileInputRef} type="file" multiple accept="image/*" className="hidden" aria-label="Upload images to resize" onChange={handleUpload} />
+              </motion.div>
+            ) : (
+              <motion.div key="grid" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <AnimatePresence>
+                    {images.map((img) => (
+                      <motion.div key={img.id} layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+                        className="group relative bg-[#0a0a1a]/80 backdrop-blur-xl border border-white/5 rounded-3xl p-4 flex gap-4 items-center hover:border-emerald-500/30 transition-all shadow-xl">
+                        <div className="relative w-24 h-24 rounded-2xl overflow-hidden bg-slate-900 ring-1 ring-white/10 group-hover:ring-emerald-500/30 transition-all shrink-0">
+                          <img src={img.resultUrl || img.preview} alt={img.name} className="w-full h-full object-cover" />
+                          {img.status === "completed" && (
+                            <div className="absolute inset-0 bg-emerald-500/20 flex items-center justify-center backdrop-blur-[2px]">
+                              <CheckCircle2 className="w-8 h-8 text-emerald-400" />
+                            </div>
+                          )}
+                          {img.status === "processing" && (
+                            <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                              <RefreshCw className="w-6 h-6 text-emerald-400 animate-spin" />
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0 pr-8">
+                          <h4 className="text-slate-200 text-sm font-bold truncate mb-1">{img.name}</h4>
+                          <div className="flex flex-wrap gap-2 text-[10px] uppercase tracking-widest font-black text-slate-500 mb-3">
+                            <span className="bg-white/5 px-2 py-0.5 rounded-sm">{img.originalWidth}×{img.originalHeight}</span>
+                            {img.resultW && <span className="text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-sm">→ {img.resultW}×{img.resultH}</span>}
+                          </div>
+                          {img.status === "completed" ? (
+                            <button onClick={() => { const l = document.createElement("a"); l.href = img.resultUrl!; l.download = `${img.name}-${activeMode}d.png`; l.click(); }}
+                              className="text-[10px] font-black flex items-center gap-2 text-emerald-400 hover:text-emerald-300 uppercase tracking-widest bg-emerald-400/5 px-4 py-2 rounded-xl border border-emerald-400/20 transition-all">
+                              <Download className="w-3 h-3" /> Download
+                            </button>
+                          ) : (
+                            <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                              <motion.div className={`h-full ${img.status === "error" ? "bg-rose-500" : "bg-emerald-500"}`}
+                                initial={{ width: "0%" }} animate={{ width: img.status === "processing" ? "70%" : "0%" }} transition={{ duration: 0.5 }} />
+                            </div>
+                          )}
+                        </div>
+                        <button onClick={() => removeImage(img.id)} aria-label="Remove image" title="Remove image" className="absolute top-4 right-4 p-1.5 bg-rose-500/10 text-rose-500 rounded-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-rose-500 hover:text-white">
+                          <X className="w-4 h-4" />
+                        </button>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                  <motion.button layout onClick={() => fileInputRef.current?.click()}
+                    className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-emerald-500/10 rounded-3xl bg-emerald-500/5 hover:border-emerald-500/30 transition-all group min-h-[128px]">
+                    <Upload className="w-6 h-6 text-emerald-500/40 group-hover:text-emerald-500 mb-2" />
+                    <span className="text-[10px] font-black text-emerald-500/60 uppercase tracking-widest">Add More</span>
+                  </motion.button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <input ref={fileInputRef} type="file" multiple accept="image/*" className="hidden" aria-label="Upload images to resize" onChange={handleUpload} />
         </div>
-      ) : (
-        <div className="flex flex-col gap-8">
-            <div className="card p-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-start bg-[#050510] border border-emerald-500/10 rounded-xl relative">
-                {/* Preview */}
-                <div className="text-center bg-slate-900/50 p-4 rounded-xl border border-slate-800/50">
-                    <p className="text-slate-400 text-xs font-medium uppercase tracking-wider mb-4">Original Image ({originalWidth}x{originalHeight})</p>
-                    <img 
-                      src={imgUrl} 
-                      alt="Original" 
-                      className="max-w-full max-h-[300px] rounded-lg object-contain bg-slate-950/50 mx-auto border border-slate-800" 
-                    />
-                </div>
 
-                {/* Controls */}
-                <div className="flex flex-col h-full justify-center">
-                    <h3 className="text-slate-100 text-lg font-semibold mb-6 flex items-center gap-2">
-                      <Maximize2 size={18} className="text-emerald-500" /> Resize Settings
-                    </h3>
-                    
-                    <div className="flex flex-col gap-5 mb-6">
-                        <div>
-                            <label htmlFor="width-input" className="block text-slate-400 text-xs font-medium uppercase tracking-wider mb-2">Width (px)</label>
-                            <input 
-                              id="width-input"
-                              type="number" 
-                              title="New image width in pixels"
-                              value={width || ""} 
-                              onChange={(e) => handleWidthChange(Number(e.target.value))} 
-                              className="input-field w-full p-3 bg-[#050510] border border-emerald-500/20 rounded-lg text-slate-200 focus:border-emerald-500/50 outline-none transition-colors" 
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="height-input" className="block text-slate-400 text-xs font-medium uppercase tracking-wider mb-2">Height (px)</label>
-                            <input 
-                              id="height-input"
-                              type="number" 
-                              title="New image height in pixels"
-                              value={height || ""} 
-                              onChange={(e) => handleHeightChange(Number(e.target.value))} 
-                              className="input-field w-full p-3 bg-[#050510] border border-emerald-500/20 rounded-lg text-slate-200 focus:border-emerald-500/50 outline-none transition-colors" 
-                            />
-                        </div>
-                    </div>
-
-                    <label className="flex items-center gap-3 text-slate-300 text-sm font-medium cursor-pointer mb-8 group hover:text-emerald-400 transition-colors w-fit p-2 rounded-lg hover:bg-emerald-500/5 -ml-2">
-                        <input 
-                          type="checkbox" 
-                          title="Maintain aspect ratio"
-                          checked={maintainRatio} 
-                          onChange={(e) => setMaintainRatio(e.target.checked)} 
-                          className="w-4 h-4 rounded accent-emerald-500 cursor-pointer" 
-                        />
-                        Maintain aspect ratio
-                    </label>
-
-                    <div className="flex gap-4 mt-auto border-t border-slate-800/50 pt-6">
-                        <button 
-                          className="btn-primary flex-1 py-2.5 bg-gradient-to-br from-emerald-500 to-emerald-400 shadow-[0_4px_20px_rgba(16,185,129,0.3)] disabled:opacity-50 disabled:cursor-not-allowed font-medium text-white rounded-lg transition-all" 
-                          onClick={resize} 
-                          disabled={resizing || width <= 0 || height <= 0}
-                          title="Resize the image"
-                        >
-                            {resizing ? "Resizing..." : "Resize Image"}
-                        </button>
-                        <button 
-                          className="btn-secondary flex-1 py-2.5 font-medium text-slate-300 bg-slate-800/50 border border-slate-700 hover:bg-slate-800 transition-all rounded-lg" 
-                          onClick={() => { setFile(null); setResizedUrl(""); }}
-                          title="Upload a different image"
-                        >
-                          Replace Image
-                        </button>
-                    </div>
-                </div>
+        {/* Sidebar */}
+        <aside className="space-y-5 sticky top-8">
+          <div className="bg-[#0a0a1a]/90 backdrop-blur-2xl border border-white/5 rounded-[2.5rem] p-8 relative overflow-hidden shadow-2xl">
+            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-emerald-600 to-emerald-400 shadow-[0_2px_15px_rgba(16,185,129,0.4)]" />
+            <div className="flex items-center gap-3 mb-8">
+              <div className="p-2.5 bg-emerald-500/10 rounded-2xl"><Settings className="w-5 h-5 text-emerald-500" /></div>
+              <h3 className="text-xl font-black text-white tracking-tight">Processing Engine</h3>
             </div>
 
-            {resizedUrl && (
-                <div className="card p-8 text-center bg-[#050510] border border-emerald-500/20 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.1)]">
-                    <div className="inline-flex items-center justify-center bg-emerald-500/10 text-emerald-500 px-4 py-2 rounded-full font-medium text-sm mb-6 border border-emerald-500/20">
-                      ✅ Resized Successfully ({width}x{height})
-                    </div>
-                    <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800/50 inline-block mb-8 max-w-full">
-                      <img 
-                        src={resizedUrl} 
-                        alt="Resized Result" 
-                        className="max-w-full max-h-[400px] rounded-lg object-contain mx-auto shadow-lg" 
-                      />
-                    </div>
-                    <button 
-                      className="btn-primary flex items-center justify-center gap-2 mx-auto px-6 py-3 bg-gradient-to-br from-emerald-500 to-emerald-400 shadow-[0_4px_20px_rgba(16,185,129,0.3)] font-medium text-white rounded-lg transition-all hover:-translate-y-0.5" 
-                      onClick={download}
-                      title="Download the resized image"
-                    >
-                        <Download size={18} /> Download Resized Image
+            <div className="space-y-7">
+              {/* Mode Toggle */}
+              <div className="space-y-3">
+                <label className="text-slate-500 text-[10px] font-black uppercase tracking-widest block">Operation Mode</label>
+                <div className="grid grid-cols-2 gap-2 bg-white/5 p-1 rounded-2xl border border-white/5">
+                  {[{ id: "resize", label: "Resize", icon: Maximize2 }, { id: "crop", label: "Crop", icon: Crop }].map(m => (
+                    <button key={m.id} onClick={() => { setActiveMode(m.id as ActiveMode); setImages(prev => prev.map(i => ({ ...i, status: "idle", resultUrl: undefined }))); }}
+                      className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeMode === m.id ? "bg-emerald-500 text-white shadow-lg" : "text-slate-500 hover:text-slate-300"}`}>
+                      <m.icon size={13} /> {m.label}
                     </button>
+                  ))}
                 </div>
-            )}
-        </div>
-      )}
+              </div>
+
+              {/* Resize Controls */}
+              {activeMode === "resize" && (
+                <div className="space-y-5">
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <label className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Target Dimensions</label>
+                      <button onClick={() => setLockAspect(!lockAspect)}
+                        className={`flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest transition-colors ${lockAspect ? "text-emerald-500" : "text-slate-500"}`}>
+                        {lockAspect ? <Lock size={11} /> : <Unlock size={11} />}
+                        {lockAspect ? "Locked" : "Free"}
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-1.5">
+                        <span className="text-slate-600 text-[9px] font-bold uppercase ml-1">Width px</span>
+                        <input type="number" value={targetWidth || ""} onChange={(e) => setTargetWidth(parseInt(e.target.value) || 0)} placeholder="W"
+                          className="w-full bg-white/5 border border-white/5 rounded-2xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none transition-all font-bold" />
+                      </div>
+                      <div className="space-y-1.5">
+                        <span className="text-slate-600 text-[9px] font-bold uppercase ml-1">Height px</span>
+                        <input type="number" value={targetHeight || ""} onChange={(e) => setTargetHeight(parseInt(e.target.value) || 0)} placeholder="H" disabled={lockAspect}
+                          className="w-full bg-white/5 border border-white/5 rounded-2xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none transition-all font-bold disabled:opacity-40" />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <label className="text-slate-500 text-[10px] font-black uppercase tracking-widest block flex items-center gap-2"><ArrowRightLeft size={11} className="text-emerald-500" /> Fit Strategy</label>
+                    <div className="grid grid-cols-2 gap-2 bg-white/5 p-1 rounded-2xl border border-white/5">
+                      {[{ id: "contain", l: "Contain" }, { id: "stretch", l: "Stretch" }].map(f => (
+                        <button key={f.id} onClick={() => setFitMode(f.id as FitMode)}
+                          className={`py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${fitMode === f.id ? "bg-emerald-500 text-white shadow-lg" : "text-slate-500 hover:text-slate-300"}`}>
+                          {f.l}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Social Presets */}
+                  <div className="space-y-3">
+                    <label className="text-slate-500 text-[10px] font-black uppercase tracking-widest block flex items-center gap-2"><SlidersHorizontal size={11} className="text-emerald-500" /> Social Presets</label>
+                    <div className="space-y-2">
+                      {SOCIAL_PRESETS.map(p => (
+                        <button key={p.label} onClick={() => applyPreset(p.w, p.h)}
+                          className="w-full flex items-center justify-between px-4 py-2.5 bg-white/5 hover:bg-emerald-500/10 border border-white/5 hover:border-emerald-500/30 rounded-xl transition-all group">
+                          <span className="text-[10px] font-black text-slate-400 group-hover:text-white uppercase tracking-wider">{p.label}</span>
+                          <span className="text-[9px] font-bold text-slate-600 group-hover:text-emerald-500 font-mono">{p.w}×{p.h}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Crop Controls */}
+              {activeMode === "crop" && (
+                <div className="space-y-4">
+                  <div className="p-4 bg-amber-500/5 border border-amber-500/10 rounded-2xl">
+                    <p className="text-[10px] font-bold text-amber-500/70 uppercase tracking-wider">Set crop origin (X,Y) and dimensions (W,H) in pixels.</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {[{ label: "X Origin", val: cropX, set: setCropX }, { label: "Y Origin", val: cropY, set: setCropY },
+                      { label: "Width px", val: cropW, set: setCropW }, { label: "Height px", val: cropH, set: setCropH }].map(c => (
+                      <div key={c.label} className="space-y-1.5">
+                        <span className="text-slate-600 text-[9px] font-bold uppercase ml-1">{c.label}</span>
+                        <input type="number" value={c.val || ""} onChange={(e) => c.set(parseInt(e.target.value) || 0)} placeholder="0"
+                          className="w-full bg-white/5 border border-white/5 rounded-2xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none transition-all font-bold" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="pt-2 space-y-3">
+                <button disabled={images.length === 0 || isProcessing} onClick={processAll}
+                  className="w-full h-14 flex items-center justify-center gap-3 bg-gradient-to-r from-emerald-600 to-emerald-400 shadow-[0_4px_30px_rgba(16,185,129,0.35)] hover:shadow-[0_4px_40px_rgba(16,185,129,0.55)] disabled:opacity-50 text-white text-[11px] font-black uppercase tracking-[0.15em] rounded-2xl transition-all hover:-translate-y-1 disabled:translate-y-0">
+                  {isProcessing ? <><RefreshCw className="animate-spin" size={16} /> Processing...</> : <><ScissorsSquare size={16} /> Execute {activeMode === "crop" ? "Crop" : "Resize"}</>}
+                </button>
+                {images.some(i => i.status === "completed") && (
+                  <button onClick={downloadAll} className="w-full h-12 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-slate-300 text-[10px] font-black uppercase tracking-widest rounded-2xl border border-white/5 transition-all">
+                    <Download size={15} /> Download All ({images.filter(i => i.status === "completed").length})
+                  </button>
+                )}
+                <button disabled={images.length === 0} onClick={() => { setImages([]); setTargetWidth(0); setTargetHeight(0); }}
+                  className="w-full py-2 text-rose-500/60 text-[9px] font-black uppercase tracking-[0.2em] hover:text-rose-400 disabled:opacity-0 transition-all">
+                  Clear Workspace
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-[#0a0a1a]/40 border border-white/5 rounded-3xl p-6">
+            <h4 className="text-white font-bold text-sm mb-4 flex items-center gap-2"><LayoutGrid size={15} className="text-emerald-500" /> Pro Tips</h4>
+            <ul className="space-y-3">
+              {[
+                { t: "Crop Mode", d: "Set X,Y as top-left origin, then W,H for the area to keep." },
+                { t: "Contain Mode", d: "Fits image inside target dimensions, preserving aspect ratio." },
+                { t: "Batch Export", d: "All processed images can be downloaded at once." }
+              ].map((tip, i) => (
+                <li key={i} className="space-y-0.5">
+                  <div className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">{tip.t}</div>
+                  <div className="text-xs text-slate-500 leading-relaxed font-medium">{tip.d}</div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </aside>
+      </div>
     </ToolLayout>
   );
 }

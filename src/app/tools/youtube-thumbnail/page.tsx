@@ -1,134 +1,229 @@
 "use client";
-import { useState } from "react";
-import { Video, Download, Link as LinkIcon, AlertCircle, Image as ImageIcon } from "lucide-react";
+
+import { useState, useCallback } from "react";
+import { 
+  PlaySquare,
+  Download, 
+  Trash2, 
+  Link as LinkIcon, 
+  Settings, 
+  Zap, 
+  Sparkles, 
+  Image as ImageIcon,
+  Maximize,
+  Monitor,
+  Smartphone,
+  Eye,
+  RefreshCcw
+} from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function YouTubeThumbnailPage() {
   const [url, setUrl] = useState("");
   const [videoId, setVideoId] = useState<string | null>(null);
-  const [error, setError] = useState("");
 
-  const extractVideoId = (input: string) => {
-    const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
-    const match = input.match(regex);
-    if (match && match[1]) {
-      setVideoId(match[1]);
-      setError("");
-    } else {
-      setVideoId(null);
-      setError("Please enter a valid YouTube URL");
-    }
-  };
+  const extractId = useCallback((input: string) => {
+    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+    const match = input.match(regExp);
+    const id = (match && match[7].length === 11) ? match[7] : null;
+    setVideoId(id);
+    return id;
+  }, []);
 
   const handleUrlChange = (val: string) => {
     setUrl(val);
-    if (val.trim()) {
-      extractVideoId(val);
-    } else {
-      setVideoId(null);
-      setError("");
+    extractId(val);
+  };
+
+  const resolutions = [
+    { id: "maxresdefault", label: "Ultra High Definition", quality: "4K/HD", icon: Maximize },
+    { id: "sddefault", label: "Standard Definition", quality: "SD", icon: Monitor },
+    { id: "hqdefault", label: "High Quality", quality: "HQ", icon: Eye },
+    { id: "mqdefault", label: "Medium Quality", quality: "LQ", icon: Smartphone },
+  ];
+
+  const downloadImage = async (id: string, resolution: string) => {
+    const imageUrl = `https://img.youtube.com/vi/${id}/${resolution}.jpg`;
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `cosmoxhub-yt-thumb-${id}-${resolution}.jpg`;
+      link.click();
+    } catch {
+      // Direct open if fetch fails due to CORS
+      window.open(imageUrl, '_blank');
     }
   };
 
-  const thumbnailStyles = [
-    { label: "Maximum Quality (HD)", suffix: "maxresdefault.jpg", size: "1280x720" },
-    { label: "High Quality", suffix: "hqdefault.jpg", size: "480x360" },
-    { label: "Standard Quality", suffix: "sddefault.jpg", size: "640x480" },
-    { label: "Medium Quality", suffix: "mqdefault.jpg", size: "320x180" },
-  ];
-
-  const downloadThumbnail = async (id: string, suffix: string, label: string) => {
-    const imageUrl = `https://img.youtube.com/vi/${id}/${suffix}`;
-    try {
-      const resp = await fetch(imageUrl);
-      const blob = await resp.blob();
-      const blobUrl = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = blobUrl;
-      a.download = `youtube_thumbnail_${label.toLowerCase().replace(/\s+/g, "_")}.jpg`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(blobUrl);
-    } catch {
-      // Fallback: Open in new tab if fetch fails (CORS)
-      window.open(imageUrl, "_blank");
-    }
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "CosmoxHub Elite YouTube Thumbnail Downloader",
+    "operatingSystem": "Any",
+    "applicationCategory": "MultimediaApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+       "Real-time YouTube URL ID extraction",
+       "High-res maxresdefault fetch engine",
+       "Multi-resolution visual asset gallery",
+       "Elite one-tap discovery/download protocol",
+       "Zero-latency client-side parsing"
+    ]
   };
 
   return (
-    <ToolLayout 
-      title="YouTube Thumbnail Downloader" 
-      description="Download high-resolution thumbnails for any YouTube video instantly. Just paste the video link and choose your quality." 
-      icon={Video} 
+    <ToolLayout
+      title="Elite Thumbnail Lab"
+      description="Extract high-resolution YouTube thumbnails instantly. The ultimate visual asset downloader for elite content creators."
+      icon={PlaySquare}
       color="#ff0000"
     >
-      <div className="max-w-5xl mx-auto w-full space-y-8">
-        {/* Input Section */}
-        <div className="card p-8">
-          <label htmlFor="yt-url" className="label-text mb-4">Paste YouTube Video URL</label>
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="relative flex-1">
-              <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
-              <input 
-                id="yt-url"
-                type="text" 
-                placeholder="https://www.youtube.com/watch?v=..."
-                className="input-field pl-12"
-                value={url}
-                onChange={(e) => handleUrlChange(e.target.value)}
-              />
-            </div>
-          </div>
-          {error && (
-            <div className="mt-4 flex items-center gap-2 text-rose-400 text-sm bg-rose-400/10 p-3 rounded-xl border border-rose-400/20">
-              <AlertCircle size={16} /> {error}
-            </div>
-          )}
-        </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
-        {/* Results Section */}
-        {videoId ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            {thumbnailStyles.map((style) => (
-              <div key={style.suffix} className="card p-4 group overflow-hidden border-white/5 hover:border-indigo-500/30 transition-all">
-                <div className="relative aspect-video rounded-xl overflow-hidden mb-4 bg-slate-900 flex items-center justify-center">
-                  <img 
-                    src={`https://img.youtube.com/vi/${videoId}/${style.suffix}`}
-                    alt={style.label}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&q=80";
-                    }}
-                  />
-                  <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-md text-[10px] text-white px-2 py-1 rounded-md font-mono border border-white/10">
-                    {style.size}
-                  </div>
+      <div className="space-y-12">
+        {/* Top Intelligence Bar */}
+        <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="group relative max-w-4xl mx-auto"
+        >
+            <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 via-rose-500/5 to-transparent rounded-[2.5rem] -z-10" />
+            
+            <div className="bg-[#0a0a1a]/80 backdrop-blur-2xl border border-white/5 rounded-[2.5rem] p-8 shadow-2xl relative flex flex-col md:flex-row items-center gap-6">
+                <div className="p-4 bg-red-500/10 rounded-2xl border border-red-500/20 group-hover:scale-105 group-hover:bg-red-500/20 transition-all duration-500 shrink-0 shadow-lg shadow-red-500/5">
+                    <LinkIcon className="text-red-500" size={24} />
                 </div>
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <h4 className="text-slate-200 font-semibold text-sm">{style.label}</h4>
-                    <p className="text-slate-500 text-xs mt-1">Resolution: {style.size}</p>
-                  </div>
-                  <button 
-                    onClick={() => downloadThumbnail(videoId, style.suffix, style.label)}
-                    className="btn-primary py-2 px-4 text-xs h-fit flex items-center gap-2 rounded-xl"
-                  >
-                    <Download size={14} /> Download
-                  </button>
+                
+                <div className="flex-1 w-full space-y-2">
+                    <div className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 px-2">Asset Destination URL</div>
+                    <div className="relative">
+                        <input 
+                            type="text"
+                            value={url}
+                            onChange={(e) => handleUrlChange(e.target.value)}
+                            placeholder="Paste YouTube Video URL (e.g. https://youtu.be/...)"
+                            className="w-full bg-black/40 border border-white/5 text-white font-mono text-sm px-6 py-5 rounded-2xl outline-none focus:border-red-500/30 transition-all shadow-inner placeholder:text-slate-800"
+                        />
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                             <RefreshCcw size={16} className={`text-slate-700 ${url ? 'animate-spin' : ''}`} />
+                        </div>
+                    </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        ) : !url && (
-            <div className="card p-12 flex flex-col items-center justify-center text-center opacity-50 grayscale">
-              <div className="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center mb-6">
-                <ImageIcon size={40} className="text-slate-600" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-400">No URL Entered</h3>
-              <p className="text-slate-500 max-w-sm mt-2">Enter a YouTube video link above to see and download available thumbnails.</p>
+
+                <div className="shrink-0 flex gap-2">
+                    <button 
+                        onClick={() => { setUrl(""); setVideoId(null); }}
+                        className="p-5 bg-white/5 hover:bg-rose-500/10 rounded-2xl text-slate-600 hover:text-rose-500 border border-white/5 hover:border-rose-500/30 transition-all active:scale-95"
+                    >
+                        <Trash2 size={20} />
+                    </button>
+                </div>
             </div>
-        )}
+        </motion.div>
+
+        {/* Dynamic Asset Grid */}
+        <AnimatePresence mode="wait">
+            {!videoId ? (
+                <motion.div
+                    key="empty"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="h-[400px] flex flex-col items-center justify-center text-center space-y-6 border-2 border-dashed border-white/5 rounded-[4rem] bg-white/[0.01]"
+                >
+                    <div className="w-24 h-24 bg-red-500/5 rounded-full flex items-center justify-center border border-red-500/10 shadow-2xl animate-pulse">
+                        <ImageIcon size={40} className="text-red-500 opacity-20" />
+                    </div>
+                    <div>
+                        <h4 className="text-2xl font-black text-white/30 uppercase tracking-[0.15em] mb-2 leading-none">Awaiting Stream</h4>
+                        <p className="text-[10px] text-slate-700 font-black uppercase tracking-widest">Provide video coordinates for high-fidelity extraction.</p>
+                    </div>
+                </motion.div>
+            ) : (
+                <motion.div
+                    key="gallery"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="grid grid-cols-1 md:grid-cols-2 gap-8"
+                >
+                    {resolutions.map((res, idx) => (
+                        <motion.div
+                            key={res.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: idx * 0.1 }}
+                            className="bg-[#0a0a1a]/80 backdrop-blur-xl border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl group/card ring-1 ring-white/5"
+                        >
+                            {/* Visual Asset Container */}
+                            <div className="aspect-video relative overflow-hidden bg-black/40">
+                                <img 
+                                    src={`https://img.youtube.com/vi/${videoId}/${res.id}.jpg`}
+                                    alt={res.label}
+                                    className="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-700"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
+                                
+                                <div className="absolute top-6 left-6 px-4 py-1.5 bg-black/60 backdrop-blur-md rounded-full border border-white/10 flex items-center gap-2">
+                                    <res.icon size={12} className="text-red-500" />
+                                    <span className="text-[10px] font-black uppercase tracking-[0.15em] text-white/80">{res.quality}</span>
+                                </div>
+                            </div>
+
+                            {/* Info & Action Bar */}
+                            <div className="p-8 flex items-center justify-between gap-4">
+                                <div>
+                                    <div className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">{res.label}</div>
+                                    <div className="text-white text-xs font-black uppercase tracking-tighter">Asset Optimized for Distribution</div>
+                                </div>
+                                
+                                <button 
+                                    onClick={() => downloadImage(videoId, res.id)}
+                                    className="p-4 bg-red-500 hover:bg-red-600 rounded-2xl text-black shadow-lg shadow-red-500/20 active:scale-90 transition-all"
+                                >
+                                    <Download size={20} strokeWidth={3} />
+                                </button>
+                            </div>
+                        </motion.div>
+                    ))}
+                </motion.div>
+            )}
+        </AnimatePresence>
+
+        {/* Elite Footer Meta */}
+        <div className="max-w-4xl mx-auto flex flex-col md:flex-row gap-6 pt-12 border-t border-white/5">
+            <div className="flex-1 p-8 bg-[#0a0a1a]/40 border border-white/5 rounded-[2.5rem] flex items-start gap-4">
+                <Settings size={20} className="text-red-500 shrink-0 mt-1" />
+                <div>
+                   <h5 className="text-[11px] font-black uppercase tracking-widest text-white mb-2 italic flex items-center gap-2">
+                       Protocol 4.0 Discovery <Sparkles size={12} className="text-red-500" />
+                   </h5>
+                   <p className="text-[10px] text-slate-500 font-bold leading-relaxed tracking-wider uppercase opacity-80">
+                       Uses standard REST API handoffs to fetch high-resolution bitmaps directly from YouTube&apos;s static CDN servers.
+                   </p>
+                </div>
+            </div>
+            
+            <div className="flex-1 p-8 bg-[#0a0a1a]/40 border border-white/5 rounded-[2.5rem] flex items-start gap-4 ring-1 ring-red-500/5">
+                <Zap size={20} className="text-red-500 shrink-0 mt-1" />
+                <div>
+                   <h5 className="text-[11px] font-black uppercase tracking-widest text-white mb-2 italic">Creator Handoff</h5>
+                   <p className="text-[10px] text-slate-500 font-bold leading-relaxed tracking-wider uppercase opacity-80">
+                       Elite thumbnails are automatically parsed from standard URLs, Shorts, and legacy embed links in real-time.
+                   </p>
+                </div>
+            </div>
+        </div>
       </div>
     </ToolLayout>
   );

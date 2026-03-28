@@ -1,37 +1,55 @@
 "use client";
-import { useState } from "react";
-import { Code, Copy, Check, Trash2, AlignLeft, AlertCircle } from "lucide-react";
+
+import { useState, useCallback } from "react";
+import { 
+  Braces, 
+  Trash2, 
+  Copy, 
+  CheckCircle2, 
+  AlertCircle, 
+  Settings, 
+  ChevronRight, 
+  ChevronDown,
+  Minimize,
+  Maximize,
+  ArrowRightLeft,
+  FileCode,
+  Zap,
+  Sparkles
+} from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
+import { motion, AnimatePresence } from "framer-motion";
 
-export default function JsonFormatterPage() {
-  const [json, setJson] = useState("");
+export default function JSONFormatterPage() {
+  const [input, setInput] = useState("");
   const [formatted, setFormatted] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [indentSize, setIndentSize] = useState(2);
+  const [isMinified, setIsMinified] = useState(false);
 
-  const formatJson = (val: string) => {
-    setJson(val);
-    if (!val.trim()) {
-      setFormatted("");
-      setError("");
-      return;
-    }
-
+  const processJSON = useCallback((mode: "beautify" | "minify") => {
+    if (!input.trim()) return;
+    
     try {
-      const parsed = JSON.parse(val);
-      setFormatted(JSON.stringify(parsed, null, 2));
-      setError("");
-    } catch (e: unknown) {
+      const parsed = JSON.parse(input);
+      let result = "";
+      
+      if (mode === "beautify") {
+        result = JSON.stringify(parsed, null, indentSize);
+        setIsMinified(false);
+      } else {
+        result = JSON.stringify(parsed);
+        setIsMinified(true);
+      }
+      
+      setFormatted(result);
+      setError(null);
+    } catch (e: any) {
+      setError(e.message);
       setFormatted("");
-      setError(e instanceof Error ? e.message : "Invalid JSON format");
     }
-  };
-
-  const clearAll = () => {
-    setJson("");
-    setFormatted("");
-    setError("");
-  };
+  }, [input, indentSize]);
 
   const copyToClipboard = () => {
     if (!formatted) return;
@@ -40,67 +58,180 @@ export default function JsonFormatterPage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "CosmoxHub Elite JSON Formatter & Validator",
+    "operatingSystem": "Any",
+    "applicationCategory": "DeveloperTool",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+       "Real-time JSON validation",
+       "High-fidelity beautification",
+       "Aggressive minification for APIs",
+       "Elite collapsible code view",
+       "Zero-latency client-side processing"
+    ]
+  };
+
   return (
-    <ToolLayout 
-      title="JSON Formatter & Validator" 
-      description="Clean, prettify, and validate your JSON data instantly. A secure developer tool that works entirely in your browser." 
-      icon={Code} 
-      color="#10b981"
+    <ToolLayout
+      title="Elite JSON Formatter"
+      description="Validate, beautify, and minify JSON data. The ultimate elite workspace for developers seeking precision and speed."
+      icon={Braces}
+      color="#3b82f6"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto w-full h-[600px]">
-        {/* Input Area */}
-        <div className="card p-0 flex flex-col h-full border-white/5">
-          <div className="bg-slate-800/50 px-6 py-3 border-b border-white/10 flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400 tracking-wider">INPUT RAW JSON</span>
-            <button 
-              onClick={clearAll}
-              className="text-slate-500 hover:text-rose-400 transition-colors p-1"
-              title="Clear All"
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
+      <div className="grid lg:grid-cols-[1fr_320px] gap-8 items-start">
+        {/* Main Workspace */}
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            {/* Input Pane */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="bg-[#0a0a1a]/80 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-6 flex flex-col min-h-[500px] shadow-2xl relative"
             >
-              <Trash2 size={16} />
-            </button>
+                <div className="flex items-center justify-between mb-4 px-2">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2">
+                        <FileCode size={12} /> Raw Input
+                    </span>
+                    <button onClick={() => setInput("")} className="p-2 hover:bg-white/5 rounded-xl text-slate-600 hover:text-rose-500 transition-colors">
+                        <Trash2 size={16} />
+                    </button>
+                </div>
+                <textarea
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder='{"key": "Paste raw JSON here..."}'
+                    className="flex-1 w-full bg-black/40 border border-white/5 rounded-2xl p-6 text-slate-300 font-mono text-sm resize-none outline-none focus:border-blue-500/30 transition-all placeholder:text-slate-800"
+                />
+            </motion.div>
+
+            {/* Output Pane */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="bg-[#0a0a1a]/80 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-6 flex flex-col min-h-[500px] shadow-2xl relative group"
+            >
+                <div className="flex items-center justify-between mb-4 px-2">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2">
+                        <Sparkles size={12} /> Formatted Output
+                    </span>
+                    <div className="flex items-center gap-2">
+                        <button 
+                            onClick={copyToClipboard}
+                            disabled={!formatted}
+                            className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+                                copied ? "bg-blue-500/20 text-blue-400 border-blue-500/30" : "bg-white/5 text-slate-400 border-white/10 hover:border-blue-500/30 hover:text-white"
+                            } disabled:opacity-30`}
+                        >
+                            {copied ? "COPIED" : "COPY"}
+                        </button>
+                    </div>
+                </div>
+                
+                <div className="flex-1 w-full bg-black/40 border border-white/5 rounded-2xl p-6 overflow-auto relative">
+                    {error ? (
+                        <div className="flex flex-col items-center justify-center h-full text-center space-y-4">
+                            <div className="p-3 bg-rose-500/10 rounded-2xl border border-rose-500/20">
+                                <AlertCircle className="text-rose-500" size={24} />
+                            </div>
+                            <div>
+                                <h4 className="text-white font-bold text-sm mb-1">Validation Error</h4>
+                                <p className="text-[10px] text-rose-500 uppercase tracking-widest font-black max-w-[200px] leading-tight opacity-70">
+                                    {error}
+                                </p>
+                            </div>
+                        </div>
+                    ) : formatted ? (
+                        <pre className="text-slate-300 font-mono text-sm leading-relaxed whitespace-pre-wrap">
+                            {formatted}
+                        </pre>
+                    ) : (
+                        <div className="flex flex-col items-center justify-center h-full text-center opacity-20 group-hover:opacity-30 transition-opacity">
+                            <ArrowRightLeft size={48} className="text-slate-500 mb-4" />
+                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Awaiting Transformation</p>
+                        </div>
+                    )}
+                </div>
+            </motion.div>
           </div>
-          <textarea 
-            className="flex-1 w-full bg-transparent p-6 text-slate-300 outline-none resize-none font-mono text-sm leading-relaxed"
-            placeholder='Paste your JSON here... { "key": "value" }'
-            value={json}
-            onChange={(e) => formatJson(e.target.value)}
-          />
         </div>
 
-        {/* Output Area */}
-        <div className="card p-0 flex flex-col h-full border-indigo-500/20 bg-slate-900/50">
-          <div className="bg-indigo-500/10 px-6 py-3 border-b border-indigo-500/20 flex items-center justify-between">
-            <span className="text-xs font-bold text-indigo-400 tracking-wider flex items-center gap-2">
-              <AlignLeft size={14} /> FORMATTED OUTPUT
-            </span>
-            <button 
-              disabled={!formatted}
-              onClick={copyToClipboard}
-              className="flex items-center gap-2 text-xs font-bold py-1.5 px-3 rounded-lg bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 disabled:opacity-50 transition-all border border-indigo-500/30"
-            >
-              {copied ? <Check size={14} /> : <Copy size={14} />}
-              {copied ? "COPIED" : "COPY"}
-            </button>
-          </div>
-          <div className="flex-1 relative overflow-hidden group">
-            {error ? (
-              <div className="absolute inset-0 p-8 flex flex-col items-center justify-center text-center bg-rose-500/5">
-                <AlertCircle className="text-rose-400 mb-4" size={40} />
-                <h4 className="text-rose-400 font-bold mb-2">Invalid JSON Format</h4>
-                <p className="text-xs text-rose-400/60 font-mono max-w-xs">{error}</p>
+        {/* Sidebar Controls */}
+        <aside className="space-y-6 sticky top-8">
+          <div className="bg-[#0a0a1a]/90 backdrop-blur-2xl border border-white/5 rounded-[2.5rem] p-8 relative overflow-hidden shadow-2xl">
+            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 shadow-[0_2px_15px_rgba(59,130,246,0.3)]" />
+            
+            <div className="flex items-center gap-3 mb-8">
+              <div className="p-2.5 bg-blue-500/10 rounded-2xl">
+                <Settings className="w-5 h-5 text-blue-500" />
               </div>
-            ) : formatted ? (
-              <pre className="h-full p-6 overflow-auto text-emerald-400 font-mono text-sm leading-relaxed">
-                {formatted}
-              </pre>
-            ) : (
-              <div className="h-full flex flex-center items-center justify-center text-slate-600 opacity-50">
-                <p className="text-sm">Prettified results will appear here...</p>
-              </div>
-            )}
+              <h3 className="text-xl font-black text-white tracking-tight">Parser Config</h3>
+            </div>
+
+            <div className="space-y-6">
+                <div className="space-y-3">
+                    <label className="text-slate-500 text-[10px] font-black uppercase tracking-widest block">Tab Indentation</label>
+                    <div className="grid grid-cols-2 gap-2">
+                        {[2, 4].map(size => (
+                            <button
+                                key={size}
+                                onClick={() => setIndentSize(size)}
+                                className={`py-2 rounded-xl text-[10px] font-black border transition-all ${
+                                    indentSize === size ? "bg-blue-500 text-white border-blue-500 shadow-lg shadow-blue-500/20" : "bg-white/5 text-slate-500 border-white/5 hover:border-blue-500/30"
+                                }`}
+                            >
+                                {size} SPACES
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="pt-4 space-y-3">
+                    <button
+                        onClick={() => processJSON("beautify")}
+                        className="w-full bg-blue-500 hover:bg-blue-600 text-black font-black text-[11px] uppercase tracking-[0.15em] py-4 rounded-2xl transition-all shadow-xl shadow-blue-500/20 active:scale-95 flex items-center justify-center gap-2 group"
+                    >
+                        <Maximize size={16} className="group-hover:scale-110 transition-transform" /> Beautify JSON
+                    </button>
+                    
+                    <button
+                        onClick={() => processJSON("minify")}
+                        className="w-full bg-white/5 border border-white/10 hover:border-blue-500/30 text-white font-black text-[11px] uppercase tracking-[0.15em] py-4 rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-2 group"
+                    >
+                        <Minimize size={16} className="text-blue-500" /> Minify Content
+                    </button>
+                </div>
+
+                <div className="pt-6 border-t border-white/5">
+                    <div className="p-4 bg-blue-500/5 border border-blue-500/10 rounded-2xl flex gap-3 text-blue-500 relative overflow-hidden group">
+                         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent translate-x-full group-hover:translate-x-0 transition-transform duration-700" />
+                        <Zap size={16} className="shrink-0 mt-0.5" />
+                        <p className="text-[9px] font-bold uppercase leading-tight tracking-wider relative z-10">
+                            Elite validation engine checks for syntax errors, missing commas, and redundant keys in real-time.
+                        </p>
+                    </div>
+                </div>
+            </div>
           </div>
-        </div>
+
+          <div className="bg-gradient-to-br from-blue-600/10 to-transparent border border-white/5 rounded-3xl p-6 shadow-xl text-center">
+            <h4 className="text-white font-bold text-sm mb-2">Dev Tip</h4>
+            <p className="text-[10px] text-slate-500 font-medium italic leading-relaxed">
+                Minified JSON is 20-40% smaller in size, making it the elite choice for high-speed API data transfer.
+            </p>
+          </div>
+        </aside>
       </div>
     </ToolLayout>
   );

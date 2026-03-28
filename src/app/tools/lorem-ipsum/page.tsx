@@ -1,68 +1,279 @@
 "use client";
-import { useState, useEffect } from "react";
-import { AlignLeft, Copy, Check } from "lucide-react";
-import ToolLayout from "@/components/ToolLayout";
 
-const words = [
-  "lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing", "elit",
-  "sed", "do", "eiusmod", "tempor", "incididunt", "ut", "labore", "et", "dolore",
-  "magna", "aliqua", "enim", "ad", "minim", "veniam", "quis", "nostrud", "exercitation",
-  "ullamco", "laboris", "nisi", "ut", "aliquip", "ex", "ea", "commodo", "consequat"
+import { useState, useEffect } from "react";
+import { 
+  Type, 
+  Copy, 
+  Download, 
+  RefreshCcw, 
+  Code2, 
+  Settings, 
+  CheckCircle2, 
+  Sparkles,
+  Zap,
+  AlignLeft,
+  Quote
+} from "lucide-react";
+import ToolLayout from "@/components/ToolLayout";
+import { motion, AnimatePresence } from "framer-motion";
+
+const LOREM_WORDS = [
+  "lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing", "elit", "sed", "do", "eiusmod", "tempor", "incididunt", "ut", "labore", "et", "dolore", "magna", "aliqua", "enim", "ad", "minim", "veniam", "quis", "nostrud", "exercitation", "ullamco", "laboris", "nisi", "ut", "aliquip", "ex", "ea", "commodo", "consequat", "duis", "aute", "irure", "dolor", "in", "reprehenderit", "in", "voluptate", "velit", "esse", "cillum", "dolore", "eu", "fugiat", "nulla", "pariatur", "excepteur", "sint", "occaecat", "cupidatat", "non", "proident", "sunt", "in", "culpa", "qui", "officia", "deserunt", "mollit", "anim", "id", "est", "laborum"
 ];
 
-const generateParagraph = (isFirst: boolean) => {
-  let p = isFirst ? "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " : "";
-  const length = Math.floor(Math.random() * 20) + 30; // 30-50 words
-  for (let i = isFirst ? 8 : 0; i < length; i++) {
-      p += words[Math.floor(Math.random() * words.length)] + " ";
-  }
-  p = p.trim() + ".";
-  return p.charAt(0).toUpperCase() + p.slice(1);
-};
-
 export default function LoremIpsumPage() {
-  const [paragraphs, setParagraphs] = useState(3);
+  const [type, setType] = useState<"paragraphs" | "words" | "sentences">("paragraphs");
+  const [count, setCount] = useState(3);
+  const [startWithLorem, setStartWithLorem] = useState(true);
+  const [wrapWithHtml, setWrapWithHtml] = useState(false);
+  const [generatedText, setGeneratedText] = useState("");
   const [copied, setCopied] = useState(false);
-  const [text, setText] = useState("");
 
   useEffect(() => {
-    setText(Array.from({ length: paragraphs }, (_, i) => generateParagraph(i === 0)).join("\n\n"));
-  }, [paragraphs]);
+    generateText();
+  }, [type, count, startWithLorem, wrapWithHtml]);
 
-  const copy = () => {
-    navigator.clipboard.writeText(text);
-    setCopied(true); setTimeout(() => setCopied(false), 1500);
+  const generateText = () => {
+    let result = "";
+    
+    if (type === "paragraphs") {
+      const paras = [];
+      for (let i = 0; i < count; i++) {
+        let para = [];
+        const wordCount = 50 + Math.floor(Math.random() * 50);
+        for (let j = 0; j < wordCount; j++) {
+          para.push(LOREM_WORDS[Math.floor(Math.random() * LOREM_WORDS.length)]);
+        }
+        let pText = para.join(" ") + ".";
+        pText = pText.charAt(0).toUpperCase() + pText.slice(1);
+        
+        if (i === 0 && startWithLorem) {
+          pText = "Lorem ipsum dolor sit amet, " + pText.toLowerCase();
+        }
+        
+        paras.push(wrapWithHtml ? `<p>${pText}</p>` : pText);
+      }
+      result = paras.join("\n\n");
+    } else if (type === "words") {
+      let words = [];
+      for (let i = 0; i < count; i++) {
+        words.push(LOREM_WORDS[Math.floor(Math.random() * LOREM_WORDS.length)]);
+      }
+      if (startWithLorem && count >= 5) {
+        words.splice(0, 5, "lorem", "ipsum", "dolor", "sit", "amet");
+      }
+      result = words.join(" ");
+      if (wrapWithHtml) result = `<span>${result}</span>`;
+    } else {
+      let sentences = [];
+      for (let i = 0; i < count; i++) {
+          let s = [];
+          const words = 8 + Math.floor(Math.random() * 10);
+          for(let j=0; j<words; j++) s.push(LOREM_WORDS[Math.floor(Math.random() * LOREM_WORDS.length)]);
+          let stext = s.join(" ") + ".";
+          sentences.push(stext.charAt(0).toUpperCase() + stext.slice(1));
+      }
+      result = sentences.join(" ");
+      if (wrapWithHtml) result = `<p>${result}</p>`;
+    }
+    
+    setGeneratedText(result);
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(generatedText);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const downloadText = () => {
+    const element = document.createElement("a");
+    const file = new Blob([generatedText], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = "lorem-ipsum-cosmox.txt";
+    document.body.appendChild(element);
+    element.click();
+  };
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "CosmoxHub Elite Lorem Ipsum Generator",
+    "operatingSystem": "Any",
+    "applicationCategory": "DeveloperTool",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+      "Custom paragraphs/words/sentences",
+      "HTML tag wrapping support",
+      "Instant copy to clipboard",
+      "Download as TXT",
+      "Premium glassmorphic preview"
+    ]
   };
 
   return (
-    <ToolLayout title="Lorem Ipsum Generator" description="Generate dummy placeholder text for your mockups, designs, and prototypes instantly." icon={AlignLeft} color="#6366f1">
-      <div className="card p-6 mb-6 flex flex-wrap gap-4 items-center bg-[#050510] border border-indigo-500/10 rounded-xl">
-        <label htmlFor="paragraphs-count" className="text-slate-200 font-medium">Paragraphs:</label>
-        <input 
-          id="paragraphs-count"
-          type="number" 
-          min="1" 
-          max="50" 
-          title="Number of paragraphs to generate"
-          value={paragraphs} 
-          onChange={(e) => setParagraphs(Number(e.target.value) || 1)}
-          className="input-field w-24 bg-[#050510] border border-indigo-500/20 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500/50 transition-colors" 
-        />
-          
-        <button 
-          onClick={copy} 
-          className="btn-primary ml-auto flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-white transition-all w-fit bg-gradient-to-br from-indigo-500 to-violet-500 shadow-[0_4px_20px_rgba(99,102,241,0.25)]" 
-          title="Copy generated text"
-        >
-            {copied ? <><Check size={18} /> Copied!</> : <><Copy size={18} /> Copy Text</>}
-        </button>
-      </div>
+    <ToolLayout
+      title="Elite Lorem Ipsum"
+      description="Generate premium placeholder text for your designs. Fully customizable length, HTML formatting, and instant export."
+      icon={Quote}
+      color="#06b6d4"
+    >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
-      <div 
-        className="input-field w-full min-h-[300px] bg-[#050510]/50 border border-indigo-500/10 rounded-xl p-6 text-slate-300 outline-none whitespace-pre-wrap leading-relaxed overflow-y-auto"
-        title="Generated Lorem Ipsum text"
-      >
-        {text}
+      <div className="grid lg:grid-cols-[1fr_320px] gap-8 items-start">
+        {/* Main Workspace */}
+        <div className="space-y-6">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="group relative"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent rounded-[3rem] -z-10" />
+            
+            <div className="bg-[#0a0a1a]/80 backdrop-blur-xl border border-white/5 rounded-[3rem] p-4 shadow-2xl overflow-hidden min-h-[400px] flex flex-col">
+              {/* Toolbar */}
+              <div className="flex items-center justify-between px-6 py-4 border-b border-white/5">
+                <div className="flex gap-2">
+                    <div className="w-3 h-3 rounded-full bg-rose-500/20 ring-1 ring-rose-500/40" />
+                    <div className="w-3 h-3 rounded-full bg-amber-500/20 ring-1 ring-amber-500/40" />
+                    <div className="w-3 h-3 rounded-full bg-emerald-500/20 ring-1 ring-emerald-500/40" />
+                </div>
+                <div className="flex items-center gap-3">
+                    <button 
+                        onClick={generateText}
+                        className="p-2 hover:bg-white/5 rounded-xl text-slate-400 hover:text-cyan-400 transition-colors"
+                        title="Regenerate"
+                    >
+                        <RefreshCcw size={18} />
+                    </button>
+                    <button 
+                        onClick={copyToClipboard}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+                            copied ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" : "bg-cyan-500/10 text-cyan-400 border-cyan-500/20 hover:bg-cyan-500 hover:text-white"
+                        } border`}
+                    >
+                        {copied ? <CheckCircle2 size={14} /> : <Copy size={14} />}
+                        {copied ? "Secured" : "Scrape"}
+                    </button>
+                </div>
+              </div>
+
+              <textarea
+                readOnly
+                value={generatedText}
+                className="flex-1 w-full bg-transparent p-8 text-slate-300 font-medium leading-relaxed resize-none outline-none selection:bg-cyan-500/30 font-mono text-sm"
+              />
+
+              <div className="px-8 py-6 bg-white/5 border-t border-white/5 flex items-center justify-between">
+                <div className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em]">
+                    {generatedText.split(/\s+/).length} Words • {generatedText.length} Characters
+                </div>
+                <button
+                  onClick={downloadText}
+                  className="flex items-center gap-2 text-slate-400 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors"
+                >
+                  <Download size={14} /> Pull as Text
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Sidebar Controls */}
+        <aside className="space-y-6 sticky top-8">
+          <div className="bg-[#0a0a1a]/80 backdrop-blur-2xl border border-white/5 rounded-[2.5rem] p-8 relative overflow-hidden shadow-2xl">
+            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-cyan-600 to-cyan-400" />
+            
+            <div className="flex items-center gap-3 mb-8">
+              <div className="p-2.5 bg-cyan-500/10 rounded-2xl">
+                <Settings className="w-5 h-5 text-cyan-500" />
+              </div>
+              <h3 className="text-xl font-black text-white tracking-tight">Parameters</h3>
+            </div>
+
+            <div className="space-y-8">
+              {/* Mode Selection */}
+              <div className="space-y-4">
+                <label className="text-slate-400 text-[10px] font-black uppercase tracking-widest block">Output Unit</label>
+                <div className="grid grid-cols-3 gap-2">
+                    {(["paragraphs", "sentences", "words"] as const).map((m) => (
+                        <button
+                            key={m}
+                            onClick={() => setType(m)}
+                            className={`py-2 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all ${
+                                type === m ? "bg-cyan-500/20 border-cyan-500/40 text-cyan-400 shadow-lg" : "bg-white/5 border-white/5 text-slate-500 hover:border-white/20"
+                            }`}
+                        >
+                            {m.slice(0, -1)}
+                        </button>
+                    ))}
+                </div>
+              </div>
+
+              {/* Count Input */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                    <label className="text-slate-400 text-[10px] font-black uppercase tracking-widest block">Magnitude</label>
+                    <span className="text-cyan-400 font-black text-xs">{count}</span>
+                </div>
+                <input 
+                  type="range"
+                  min="1"
+                  max={type === 'words' ? 500 : 20}
+                  value={count}
+                  onChange={(e) => setCount(parseInt(e.target.value))}
+                  className="w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-cyan-500"
+                />
+              </div>
+
+              {/* Toggles */}
+              <div className="space-y-4 pt-4 border-t border-white/5">
+                <div className="flex items-center justify-between">
+                    <span className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Start with "Lorem"</span>
+                    <button 
+                        onClick={() => setStartWithLorem(!startWithLorem)}
+                        className={`w-10 h-5 rounded-full relative transition-colors ${startWithLorem ? "bg-cyan-500" : "bg-slate-700"}`}
+                    >
+                        <motion.div animate={{ x: startWithLorem ? 22 : 2 }} className="absolute top-1 w-3 h-3 bg-white rounded-full shadow-md" />
+                    </button>
+                </div>
+                <div className="flex items-center justify-between">
+                    <span className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Inject HTML Tags</span>
+                    <button 
+                        onClick={() => setWrapWithHtml(!wrapWithHtml)}
+                        className={`w-10 h-5 rounded-full relative transition-colors ${wrapWithHtml ? "bg-cyan-500" : "bg-slate-700"}`}
+                    >
+                        <motion.div animate={{ x: wrapWithHtml ? 22 : 2 }} className="absolute top-1 w-3 h-3 bg-white rounded-full shadow-md" />
+                    </button>
+                </div>
+              </div>
+
+              {/* Quick Info */}
+              <div className="p-4 bg-cyan-500/5 border border-cyan-500/10 rounded-2xl flex gap-3 items-start">
+                <Code2 className="w-4 h-4 text-cyan-500 shrink-0" />
+                <p className="text-[9px] text-cyan-500/80 font-bold leading-tight uppercase">
+                    Perfect for prototyping clean UI/UX mockups within Figma or directly in VS Code.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-[#0a0a1a]/40 border border-white/5 rounded-3xl p-6 shadow-xl leading-relaxed">
+            <h4 className="text-white font-bold text-sm mb-4 flex items-center gap-2">
+              <Sparkles size={16} className="text-cyan-500" /> AI Standard
+            </h4>
+            <div className="text-[10px] text-slate-500 font-medium italic">
+                Our algorithm uses weighted probability to ensure a natural flow of Latin-esque prose, avoiding repetitive word-loops found in basic generators.
+            </div>
+          </div>
+        </aside>
       </div>
     </ToolLayout>
   );

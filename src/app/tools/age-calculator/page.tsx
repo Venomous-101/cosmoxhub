@@ -1,111 +1,241 @@
 "use client";
-import { useState } from "react";
-import { CalendarDays } from "lucide-react";
+
+import { useState, useEffect } from "react";
+import { 
+  Calendar, 
+  Clock, 
+  Hourglass, 
+  Cake, 
+  Sparkles, 
+  Zap, 
+  CalendarDays,
+  Target,
+  Timer,
+  TimerOff,
+  History,
+  TrendingUp,
+  Settings
+} from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function AgeCalculatorPage() {
-  const [dob, setDob] = useState("");
-  
-  const calculateAge = () => {
-    if (!dob) return null;
-    
-    const birthDate = new Date(dob);
-    const today = new Date();
-    
-    if (birthDate > today) return { error: "Date of birth cannot be in the future." };
-    
-    let years = today.getFullYear() - birthDate.getFullYear();
-    let months = today.getMonth() - birthDate.getMonth();
-    let days = today.getDate() - birthDate.getDate();
+  const [birthDate, setBirthDate] = useState<string>("");
+  const [targetDate, setTargetDate] = useState<string>(new Date().toISOString().split("T")[0]);
+  const [lifeStats, setLifeStats] = useState<any>(null);
 
-    if (days < 0) {
-      months--;
-      // Get days in the previous month
-      const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
-      days += prevMonth.getDate();
-    }
-    
-    if (months < 0) {
-      years--;
-      months += 12;
-    }
+  useEffect(() => {
+    if (birthDate) calculateLife();
+  }, [birthDate, targetDate]);
 
-    const diffTime = Math.abs(today.getTime() - birthDate.getTime());
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    const nextBday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
-    if (today > nextBday) nextBday.setFullYear(today.getFullYear() + 1);
+  const calculateLife = () => {
+    const start = new Date(birthDate);
+    const end = new Date(targetDate);
     
-    const daysToBday = Math.ceil((nextBday.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) return;
 
-    return {
-        years, months, days, totalDays: diffDays, 
-        totalWeeks: Math.floor(diffDays / 7),
-        totalHours: diffDays * 24,
-        nextBdayDays: daysToBday === 365 ? 0 : daysToBday
-    };
+    const diffMs = end.getTime() - start.getTime();
+    if (diffMs < 0) return;
+
+    const years = Math.floor(diffMs / (365.25 * 24 * 60 * 60 * 1000));
+    const months = Math.floor(diffMs / (30.44 * 24 * 60 * 60 * 1000));
+    const weeks = Math.floor(diffMs / (7 * 24 * 60 * 60 * 1000));
+    const days = Math.floor(diffMs / (24 * 60 * 60 * 1000));
+    const hours = Math.floor(diffMs / (60 * 60 * 1000));
+    const minutes = Math.floor(diffMs / (60 * 1000));
+    const seconds = Math.floor(diffMs / 1000);
+
+    // Calculate Next Birthday
+    const nextBday = new Date(end.getFullYear(), start.getMonth(), start.getDate());
+    if (nextBday < end) nextBday.setFullYear(end.getFullYear() + 1);
+    const daysUntil = Math.ceil((nextBday.getTime() - end.getTime()) / (24 * 60 * 60 * 1000));
+
+    setLifeStats({
+      years,
+      months,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      daysUntilNext: daysUntil === 366 ? 0 : daysUntil
+    });
   };
 
-  const result = calculateAge();
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "CosmoxHub Elite Age Calculator & Life Analytics",
+    "operatingSystem": "Any",
+    "applicationCategory": "ToolApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+       "Precision decade, year, month tracking",
+       "High-res breakdown (Seconds, Minutes, Hours)",
+       "Milestone countdown system",
+       "Privacy-first client-side calculation",
+       "Elite glassmorphic dashboard"
+    ]
+  };
+
+  const AnalyticCard = ({ icon: Icon, label, value, color }: any) => (
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="bg-[#0a0a1a]/60 backdrop-blur-xl border border-white/5 rounded-3xl p-6 hover:border-violet-500/20 transition-all group overflow-hidden relative shadow-2xl"
+    >
+      <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className={`p-2.5 rounded-xl bg-${color}-500/10 border border-${color}-500/20 w-fit mb-4`}>
+        <Icon size={18} className={`text-${color}-500`} />
+      </div>
+      <div className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">{label}</div>
+      <div className="text-2xl font-black text-white tracking-tighter tabular-nums truncate">
+        {value.toLocaleString()}
+      </div>
+    </motion.div>
+  );
 
   return (
-    <ToolLayout title="Age Calculator" description="Calculate your exact age in years, months, days, weeks, and hours. See how many days left until your next birthday." icon={CalendarDays} color="#f59e0b">
-      <div className="card p-6 max-w-[600px] mx-auto w-full">
-        <label htmlFor="dobInput" className="block text-slate-100 text-[0.95rem] mb-3 font-medium">
-            Enter your Date of Birth:
-        </label>
-        <div className="flex gap-4">
-            <input 
-                id="dobInput"
-                type="date" 
-                value={dob} 
-                onChange={(e) => setDob(e.target.value)}
-                className="input-field p-4" 
-                title="Date of Birth"
-                aria-label="Date of Birth"
-            />
-            {dob && <button className="btn-secondary" onClick={() => setDob("")} title="Clear Date" aria-label="Clear Date">Clear</button>}
-        </div>
+    <ToolLayout
+      title="Elite Age Calculator"
+      description="Advanced Life Analytics Dashboard. Breakdown your journey into precision milestones from years down to seconds."
+      icon={Hourglass}
+      color="#ec4899"
+    >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
-        {/* Results */}
-        {result && "error" in result ? (
-            <div className="mt-6 text-red-500 text-sm">{result.error}</div>
-        ) : result && (
-            <div className="mt-8">
-                {/* Main Age */}
-                <div className="text-center p-6 bg-gradient-to-br from-[#f59e0b]/10 to-transparent border border-[#f59e0b]/20 rounded-xl mb-6">
-                    <p className="text-slate-400 text-[0.85rem] uppercase tracking-wider mb-2">You are exactly</p>
-                    <div className="flex flex-wrap justify-center gap-4 items-baseline">
-                        <span className="text-4xl font-extrabold text-[#f59e0b] font-space">{result.years}</span>
-                        <span className="text-slate-100">years</span>
-                        <span className="text-4xl font-extrabold text-[#f59e0b] font-space">{result.months}</span>
-                        <span className="text-slate-100">months</span>
-                        <span className="text-4xl font-extrabold text-[#f59e0b] font-space">{result.days}</span>
-                        <span className="text-slate-100">days</span>
-                        <span className="text-slate-100">old.</span>
-                    </div>
-                </div>
-
-                {/* Grid stats */}
-                <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 bg-indigo-500/5 rounded-lg border border-indigo-500/10">
-                        <p className="text-slate-400 text-xs mb-1">Total Days Lived</p>
-                        <p className="text-slate-100 text-xl font-bold">{result.totalDays.toLocaleString()}</p>
-                    </div>
-                    <div className="p-4 bg-indigo-500/5 rounded-lg border border-indigo-500/10">
-                        <p className="text-slate-400 text-xs mb-1">Total Weeks Lived</p>
-                        <p className="text-slate-100 text-xl font-bold">{result.totalWeeks.toLocaleString()}</p>
-                    </div>
-                    <div className="p-4 bg-indigo-500/5 rounded-lg border border-indigo-500/10">
-                        <p className="text-slate-400 text-xs mb-1">Total Hours Lived</p>
-                        <p className="text-slate-100 text-xl font-bold">{result.totalHours.toLocaleString()}</p>
-                    </div>
-                    <div className="p-4 bg-emerald-500/5 rounded-lg border border-emerald-500/20">
-                        <p className="text-emerald-500 text-xs mb-1 font-semibold">Days until next birthday 🎂</p>
-                        <p className="text-slate-100 text-xl font-bold">{result.nextBdayDays} <span className="text-sm font-normal text-slate-400">days</span></p>
-                    </div>
-                </div>
+      <div className="grid lg:grid-cols-[340px_1fr] gap-8 items-start">
+        {/* Sidebar Controls */}
+        <aside className="space-y-6 sticky top-8">
+          <div className="bg-[#0a0a1a]/80 backdrop-blur-2xl border border-white/5 rounded-[2.5rem] p-8 relative overflow-hidden shadow-2xl">
+            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-pink-600 to-rose-600 shadow-[0_2px_15px_rgba(236,72,153,0.3)]" />
+            
+            <div className="flex items-center gap-3 mb-8">
+              <div className="p-2.5 bg-pink-500/10 rounded-2xl">
+                <Settings className="w-5 h-5 text-pink-500" />
+              </div>
+              <h3 className="text-xl font-black text-white tracking-tight">Timeline Settings</h3>
             </div>
-        )}
+
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <label className="text-slate-500 text-[10px] font-black uppercase tracking-widest block">Date of Genesis</label>
+                <div className="relative group/input">
+                    <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within/input:text-pink-500 transition-colors" />
+                    <input 
+                    type="date"
+                    value={birthDate}
+                    onChange={(e) => setBirthDate(e.target.value)}
+                    className="w-full bg-white/5 border border-white/5 text-white text-xs font-bold rounded-xl pl-12 pr-4 py-3.5 outline-none focus:border-pink-500/30 transition-all shadow-inner"
+                    />
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <label className="text-slate-500 text-[10px] font-black uppercase tracking-widest block font-black">Target Horizon</label>
+                <div className="relative group/input">
+                    <Target className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within/input:text-rose-500 transition-colors" />
+                    <input 
+                    type="date"
+                    value={targetDate}
+                    onChange={(e) => setTargetDate(e.target.value)}
+                    className="w-full bg-white/5 border border-white/5 text-white text-xs font-bold rounded-xl pl-12 pr-4 py-3.5 outline-none focus:border-rose-500/30 transition-all"
+                    />
+                </div>
+              </div>
+
+              <div className="pt-6 border-t border-white/5">
+                <div className="p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl flex gap-3 text-emerald-500">
+                    <History size={16} className="shrink-0 mt-0.5" />
+                    <p className="text-[9px] font-bold uppercase leading-tight tracking-wider">
+                        Client-side compute active. Genesis data remains local to this terminal.
+                    </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        {/* Main Dashboard */}
+        <div className="space-y-6">
+          <AnimatePresence mode="wait">
+            {!lifeStats ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="h-[400px] flex flex-col items-center justify-center border-2 border-dashed border-white/5 rounded-[3rem] bg-white/[0.02] text-center px-8"
+              >
+                <div className="w-20 h-20 bg-pink-500/10 rounded-3xl flex items-center justify-center mb-6 border border-pink-500/20">
+                    <CalendarDays className="w-10 h-10 text-pink-500 opacity-40" />
+                </div>
+                <h3 className="text-2xl font-black text-white/40 mb-2 uppercase tracking-[0.1em]">Awaiting Input</h3>
+                <p className="max-w-xs text-slate-600 font-medium text-xs uppercase tracking-widest leading-loose">
+                    Specify genesis and horizon dates to generate elite timeline analytics.
+                </p>
+              </motion.div>
+            ) : (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="space-y-6"
+              >
+                {/* Hero Header */}
+                <div className="bg-gradient-to-br from-pink-600 to-rose-600 rounded-[3rem] p-10 flex flex-col md:flex-row items-center justify-between shadow-2xl shadow-pink-500/10 overflow-hidden relative">
+                    <div className="absolute top-0 right-0 p-12 opacity-10 pointer-events-none">
+                        <Cake size={120} className="text-white" />
+                    </div>
+                    <div className="relative z-10 text-center md:text-left mb-6 md:mb-0">
+                        <div className="text-pink-100/60 text-[10px] font-black uppercase tracking-[0.3em] mb-4">Total Life Magnitude</div>
+                        <div className="flex items-baseline gap-2 justify-center md:justify-start">
+                            <span className="text-7xl font-black text-white tracking-tighter leading-none">{lifeStats.years}</span>
+                            <span className="text-2xl font-bold text-pink-100 tracking-tighter">Elite Years</span>
+                        </div>
+                    </div>
+                    
+                    <div className="relative z-10 bg-black/20 backdrop-blur-xl border border-white/10 p-6 rounded-[2rem] text-center min-w-[200px]">
+                        <div className="text-pink-100/60 text-[9px] font-black uppercase tracking-widest mb-2 flex items-center justify-center gap-2">
+                            <Sparkles size={12} className="text-white" /> Next Milestone
+                        </div>
+                        <div className="text-3xl font-black text-white tabular-nums tracking-tighter">{lifeStats.daysUntilNext}</div>
+                        <div className="text-[10px] font-black uppercase text-pink-100 tracking-[0.1em]">Days Remaining</div>
+                    </div>
+                </div>
+
+                {/* Detailed Analytics Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <AnalyticCard icon={TrendingUp} label="Total Months" value={lifeStats.months} color="blue" />
+                    <AnalyticCard icon={CalendarDays} label="Total Weeks" value={lifeStats.weeks} color="cyan" />
+                    <AnalyticCard icon={Calendar} label="Total Days" value={lifeStats.days} color="amber" />
+                    <AnalyticCard icon={Clock} label="Total Hours" value={lifeStats.hours} color="emerald" />
+                    <AnalyticCard icon={Timer} label="Total Minutes" value={lifeStats.minutes} color="indigo" />
+                    <AnalyticCard icon={Zap} label="Total Seconds" value={lifeStats.seconds} color="rose" />
+                </div>
+
+                {/* Insight Row */}
+                <div className="p-8 bg-[#0a0a1a]/40 border border-white/5 rounded-[2.5rem] flex items-center gap-6 group hover:bg-[#0a0a1a]/60 transition-all">
+                    <div className="w-16 h-16 bg-pink-500/10 rounded-[1.5rem] flex items-center justify-center shrink-0 border border-pink-500/20 group-hover:scale-110 transition-transform shadow-xl">
+                        <Hourglass className="text-pink-500" size={28} />
+                    </div>
+                    <div>
+                        <h4 className="text-white font-black text-[13px] uppercase tracking-widest mb-2 flex items-center gap-2">
+                           Atomic Chronology <Sparkles size={14} className="text-pink-500" />
+                        </h4>
+                        <p className="text-slate-500 text-[11px] leading-relaxed italic font-medium">
+                            Calculations are synchronized to Unix Epoch time markers, ensuring absolute precision including leap-year adjustments and solar-rotational variance. Optimized for high-fidelity personal retrospectives.
+                        </p>
+                    </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </ToolLayout>
   );

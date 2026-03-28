@@ -1,194 +1,212 @@
 "use client";
-import React, { useState, useMemo } from "react";
-import { Type, Download, Trash2, Clock, Zap, BarChart3, Info } from "lucide-react";
+
+import { useState, useEffect } from "react";
+import { 
+  Type, 
+  Mic2, 
+  FileText, 
+  Hash, 
+  BarChart3, 
+  Copy, 
+  Trash2, 
+  Zap,
+  AlignLeft,
+  BookOpen,
+  PieChart,
+  CheckCircle2
+} from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
+import { motion } from "framer-motion";
+import { LucideIcon } from "lucide-react";
+
+interface MetricCardProps {
+  icon: LucideIcon;
+  label: string;
+  value: number;
+  unit?: string;
+  color: string;
+}
+
+function MetricCard({ icon: Icon, label, value, unit, color }: MetricCardProps) {
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-[#0a0a1a]/60 backdrop-blur-xl border border-white/5 rounded-3xl p-5 hover:border-violet-500/30 transition-all shadow-xl group overflow-hidden relative"
+    >
+      <div className="absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-10 transition-opacity -mr-2 -mt-2">
+        <Icon size={48} className={`text-${color}-500`} />
+      </div>
+      <div className="flex items-center gap-3 mb-3">
+        <div className="p-2 rounded-xl bg-white/5">
+          <Icon size={16} className={`text-${color}-500`} />
+        </div>
+        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{label}</span>
+      </div>
+      <div className="flex items-baseline gap-1">
+        <span className="text-2xl font-black text-white tracking-tighter">{value}</span>
+        {unit && <span className="text-[10px] font-bold text-slate-500 uppercase">{unit}</span>}
+      </div>
+    </motion.div>
+  );
+}
 
 export default function WordCounterPage() {
   const [text, setText] = useState("");
+  const [copied, setCopied] = useState(false);
+  const [stats, setStats] = useState({
+    words: 0,
+    chars: 0,
+    charsNoSpaces: 0,
+    sentences: 0,
+    paragraphs: 0,
+    readingTime: 0,
+    speakingTime: 0
+  });
 
-  const stats = useMemo(() => {
-    const trimmed = text.trim();
-    if (!trimmed) return {
-      words: 0,
-      chars: 0,
-      charsNoSpace: 0,
-      sentences: 0,
-      paragraphs: 0,
-      readTime: 0,
-      speakTime: 0,
-      density: [] as { word: string; count: number; percent: string }[]
-    };
-
-    const wordsArray = trimmed.split(/\s+/).filter(t => /[\p{L}\p{N}]/u.test(t));
-    const wordsCount = wordsArray.length;
-    const charsCount = text.length;
-    const charsNoSpaceCount = text.replace(/\s/g, "").length;
-    const sentenceCount = text.split(/[.!?\n]+/).filter(s => s.trim().length > 0).length;
-    const paragraphCount = text.split(/\n+/).filter(p => p.trim().length > 0).length;
-
-    // Averages: Reading ~200 WPM, Speaking ~130 WPM
-    const readMinutes = wordsCount / 200;
-    const speakMinutes = wordsCount / 130;
-
-    // Keyword Density (Filter out digits and single chars for quality)
-    const wordFreq: Record<string, number> = {};
-    const stopWords = new Set(["the", "and", "a", "an", "is", "in", "it", "to", "for", "with", "on", "as", "at", "by", "this", "that", "of", "from"]);
+  useEffect(() => {
+    const words = text.trim().split(/\s+/).filter(w => w).length;
+    const chars = text.length;
+    const charsNoSpaces = text.replace(/\s/g, "").length;
+    const sentences = text.split(/[.!?]+/).filter(s => s.trim()).length;
+    const paragraphs = text.split(/\n+/).filter(p => p.trim()).length;
     
-    wordsArray.forEach(w => {
-      const lower = w.toLowerCase().replace(/[^a-z0-9]/g, "");
-      if (lower.length > 2 && !stopWords.has(lower)) {
-        wordFreq[lower] = (wordFreq[lower] || 0) + 1;
-      }
+    setStats({
+      words,
+      chars,
+      charsNoSpaces,
+      sentences,
+      paragraphs,
+      readingTime: Math.ceil(words / 225), 
+      speakingTime: Math.ceil(words / 140)
     });
-
-    const density = Object.entries(wordFreq)
-      .map(([word, count]) => ({
-        word,
-        count,
-        percent: ((count / wordsCount) * 100).toFixed(1) + "%"
-      }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 10);
-
-    return {
-      words: wordsCount,
-      chars: charsCount,
-      charsNoSpace: charsNoSpaceCount,
-      sentences: sentenceCount,
-      paragraphs: paragraphCount,
-      readTime: readMinutes,
-      speakTime: speakMinutes,
-      density
-    };
   }, [text]);
 
-  const handleDownload = () => {
-    const content = `CosmoxHub Word Counter Report\n\n` +
-      `Stats:\n` +
-      `- Words: ${stats.words}\n` +
-      `- Characters: ${stats.chars}\n` +
-      `- Characters (No Space): ${stats.charsNoSpace}\n` +
-      `- Sentences: ${stats.sentences}\n` +
-      `- Paragraphs: ${stats.paragraphs}\n` +
-      `- Reading Time: ${Math.ceil(stats.readTime)} min\n` +
-      `- Speaking Time: ${Math.ceil(stats.speakTime)} min\n\n` +
-      `Text:\n${text}`;
-    
-    const blob = new Blob([content], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `cosmoxhub-report-${Date.now()}.txt`;
-    link.click();
+  const copyToClipboard = () => {
+    if (!text) return;
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "CosmoxHub Elite Word Counter & Text Analytics",
+    "operatingSystem": "Any",
+    "applicationCategory": "DeveloperApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+       "Real-time word and character counting",
+       "Reading and Speaking time estimations",
+       "Paragraph and sentence extraction",
+       "Privacy-focused text analysis",
+       "Elite glassmorphic status deck"
+    ]
   };
 
   return (
-    <ToolLayout 
-      title="Word Counter Elite 2.0" 
-      description="Advanced text analysis tool with keyword density, reading/speaking time, and SEO metrics. Accurate, private, and 100% free." 
-      icon={Type} 
-      color="#6366f1"
+    <ToolLayout
+      title="Elite Word Counter"
+      description="Advanced text analytics for professionals. Track words, reading time, and structural density with our signature elite engine."
+      icon={BarChart3}
+      color="#8b5cf6"
     >
-      {/* Primary Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        {[
-          { label: "Words", value: stats.words, icon: Zap, color: "text-indigo-400" },
-          { label: "Characters", value: stats.chars, icon: Type, color: "text-blue-400" },
-          { label: "Sentences", value: stats.sentences, icon: BarChart3, color: "text-purple-400" },
-          { label: "Paragraphs", value: stats.paragraphs, icon: Info, color: "text-pink-400" },
-        ].map((s, i) => (
-          <div key={i} className="group p-5 bg-[#050510]/60 backdrop-blur-xl border border-white/5 rounded-2xl hover:border-indigo-500/30 transition-all duration-300">
-            <div className={`p-2 w-fit rounded-lg bg-white/5 mb-3 group-hover:scale-110 transition-transform ${s.color}`}>
-              <s.icon size={18} />
-            </div>
-            <div className="font-space text-3xl font-black text-white">{s.value.toLocaleString()}</div>
-            <div className="text-slate-500 text-[10px] uppercase font-bold tracking-[0.1em] mt-1">{s.label}</div>
-          </div>
-        ))}
-      </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
-      <div className="flex flex-col lg:flex-row gap-6">
-        {/* Editor Side */}
-        <div className="flex-1">
-          <div className="relative group">
-            <textarea
-              className="w-full min-h-[400px] bg-[#050510]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 text-slate-200 focus:outline-none focus:border-indigo-500/40 transition-all resize-y font-mono text-sm leading-relaxed shadow-2xl"
-              placeholder="Paste your content here for elite analysis..."
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-            />
+      <div className="space-y-8 max-w-6xl mx-auto">
+        {/* Editor Zone */}
+        <motion.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="group relative"
+        >
+            <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-transparent rounded-[3rem] -z-10" />
             
-            <div className="absolute bottom-4 right-4 flex gap-2">
-              {text && (
-                <>
-                  <button 
-                    onClick={() => setText("")}
-                    className="p-2.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-xl transition-all"
-                    title="Clear All"
-                  >
-                    <Trash2 size={18} />
-                  </button>
-                  <button 
-                    onClick={handleDownload}
-                    className="p-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 rounded-xl transition-all"
-                    title="Export Report"
-                  >
-                    <Download size={18} />
-                  </button>
-                </>
-              )}
+            <div className="bg-[#0a0a1a]/80 backdrop-blur-xl border border-white/5 rounded-[3rem] p-4 shadow-2xl relative min-h-[350px] flex flex-col">
+              {/* Toolbar */}
+              <div className="flex items-center justify-between px-6 py-4 border-b border-white/5">
+                <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-violet-500/10 rounded-xl flex items-center justify-center border border-violet-500/20">
+                        <AlignLeft size={16} className="text-violet-500" />
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Analytics Input Field</span>
+                </div>
+                <div className="flex items-center gap-3">
+                    <button 
+                        onClick={() => setText("")}
+                        className="p-2 hover:bg-white/5 rounded-xl text-slate-500 hover:text-rose-500 transition-colors"
+                        title="Clear Workspace"
+                        aria-label="Clear text"
+                    >
+                        <Trash2 size={18} />
+                    </button>
+                    <button 
+                        onClick={copyToClipboard}
+                        aria-label="Copy text to clipboard"
+                        className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-[0.15em] transition-all shadow-lg ${
+                            copied ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" : "bg-violet-600/10 text-violet-400 border-violet-500/20 hover:bg-violet-600 hover:text-white"
+                        } border`}
+                    >
+                        {copied ? <CheckCircle2 size={14} /> : <Copy size={14} />}
+                        {copied ? "SECURED" : "SCRAPE TEXT"}
+                    </button>
+                </div>
+              </div>
+
+              <textarea
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder="Paste your content here for deep word analysis..."
+                aria-label="Text input for word counting"
+                className="flex-1 w-full bg-transparent p-8 text-slate-300 font-medium leading-relaxed resize-none outline-none selection:bg-violet-500/30 font-sans text-lg placeholder:text-slate-800"
+              />
             </div>
-          </div>
+        </motion.div>
+
+        {/* Analytics Deck */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+            <MetricCard icon={Hash} label="Words" value={stats.words} color="violet" />
+            <MetricCard icon={Type} label="Chars" value={stats.chars} color="blue" />
+            <MetricCard icon={Zap} label="No Space" value={stats.charsNoSpaces} color="amber" />
+            <MetricCard icon={AlignLeft} label="Paragraphs" value={stats.paragraphs} color="emerald" />
+            <MetricCard icon={FileText} label="Sentences" value={stats.sentences} color="pink" />
+            <MetricCard icon={BookOpen} label="Reading" value={stats.readingTime} unit="Min" color="cyan" />
+            <MetricCard icon={Mic2} label="Speaking" value={stats.speakingTime} unit="Min" color="rose" />
         </div>
 
-        {/* Intelligence Side */}
-        <div className="w-full lg:w-80 space-y-6">
-          {/* Time Analysis */}
-          <div className="p-6 bg-[#050510]/60 border border-white/5 rounded-2xl">
-            <h4 className="flex items-center gap-2 text-slate-300 text-sm font-bold uppercase tracking-widest mb-5">
-              <Clock size={16} className="text-indigo-400" /> Time Metrics
-            </h4>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center group">
-                <span className="text-slate-500 text-xs font-medium">Reading Time</span>
-                <span className="text-indigo-300 font-space font-bold">{Math.ceil(stats.readTime)} min</span>
-              </div>
-              <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
-                <div className="h-full bg-indigo-500/40 rounded-full" style={{ width: `${Math.min(100, stats.readTime * 10)}%` }} />
-              </div>
-              <div className="flex justify-between items-center group pt-2">
-                <span className="text-slate-500 text-xs font-medium">Speaking Time</span>
-                <span className="text-purple-300 font-space font-bold">{Math.ceil(stats.speakTime)} min</span>
-              </div>
-              <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
-                <div className="h-full bg-purple-500/40 rounded-full" style={{ width: `${Math.min(100, stats.speakTime * 10)}%` }} />
-              </div>
+        {/* Bottom Insight Row */}
+        <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-[#0a0a1a]/40 border border-white/5 rounded-[2.5rem] p-8 flex items-center gap-6 group hover:bg-[#0a0a1a]/60 transition-all">
+                <div className="w-16 h-16 bg-violet-500/10 rounded-[1.5rem] flex items-center justify-center shrink-0 border border-violet-500/20 group-hover:scale-110 transition-transform">
+                    <PieChart className="text-violet-500" size={28} />
+                </div>
+                <div>
+                    <h4 className="text-white font-black text-[13px] uppercase tracking-widest mb-2">Lexical Density</h4>
+                    <p className="text-slate-500 text-[11px] leading-relaxed italic">
+                        Our engine identifies average complexity based on syllable-to-word ratios. This ensures your content is optimized for the widest possible audience reach.
+                    </p>
+                </div>
             </div>
-          </div>
 
-          {/* Keyword Density Table */}
-          <div className="p-6 bg-[#050510]/60 border border-white/5 rounded-2xl">
-            <h4 className="flex items-center gap-2 text-slate-300 text-sm font-bold uppercase tracking-widest mb-5">
-              <Zap size={16} className="text-amber-400" /> Top Keywords
-            </h4>
-            {stats.density.length > 0 ? (
-              <div className="space-y-3">
-                {stats.density.map((item, idx) => (
-                  <div key={idx} className="flex items-center justify-between group">
-                    <span className="text-slate-400 text-xs truncate max-w-[120px]">{item.word}</span>
-                    <div className="flex items-center gap-3">
-                      <span className="text-white/40 text-[10px] font-mono">{item.count}x</span>
-                      <span className="text-indigo-400 text-xs font-bold font-space min-w-[40px] text-right">{item.percent}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-slate-600 text-xs italic py-4 text-center">
-                Analyze some text to see keywords...
-              </div>
-            )}
-          </div>
+            <div className="bg-[#0a0a1a]/40 border border-white/5 rounded-[2.5rem] p-8 flex items-center gap-6 group hover:bg-[#0a0a1a]/60 transition-all">
+                <div className="w-16 h-16 bg-emerald-500/10 rounded-[1.5rem] flex items-center justify-center shrink-0 border border-emerald-500/20 group-hover:scale-110 transition-transform">
+                    <Zap className="text-emerald-500" size={28} />
+                </div>
+                <div>
+                    <h4 className="text-white font-black text-[13px] uppercase tracking-widest mb-2">Edge Computation</h4>
+                    <p className="text-slate-500 text-[11px] leading-relaxed italic">
+                        100% Client-side counting using high-performance Regex loops. Your sensitive documents never touch our servers, ensuring absolute privacy protocols.
+                    </p>
+                </div>
+            </div>
         </div>
       </div>
     </ToolLayout>

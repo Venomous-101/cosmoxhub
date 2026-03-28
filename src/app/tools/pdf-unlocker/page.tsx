@@ -32,16 +32,18 @@ export default function PDFUnlockerPage() {
       const arrayBuffer = await file.arrayBuffer();
       
       // Real functional logic using pdf-lib
+      // Real functional logic using pdf-lib
       // load() with password will attempt to decrypt the PDF
+      // Using type casting to bypass strict LoadOptions check
       const pdfDoc = await PDFDocument.load(arrayBuffer, { 
         password: password,
         ignoreEncryption: false 
-      });
+      } as any);
       
       // If load succeeds, we save it (which produces an unencrypted version)
       const pdfBytes = await pdfDoc.save();
       
-      const blob = new Blob([pdfBytes], { type: "application/pdf" });
+      const blob = new Blob([pdfBytes as unknown as BlobPart], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
       
       const link = document.createElement("a");

@@ -1,165 +1,297 @@
 "use client";
-import { useState, useCallback } from "react";
-import { FileStack, Upload, Trash2, Download, ArrowUp, ArrowDown, Database, Cloud } from "lucide-react";
+
+import { useState } from "react";
+import { 
+  FilePlus, 
+  Trash2, 
+  ArrowUp, 
+  ArrowDown, 
+  Settings, 
+  Zap, 
+  Sparkles, 
+  FileText, 
+  Combine,
+  Download,
+  AlertCircle,
+  RefreshCw
+} from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
+import { motion, AnimatePresence } from "framer-motion";
 import { PDFDocument } from "pdf-lib";
 
+interface PDFFile {
+  id: string;
+  name: string;
+  size: number;
+  file: File;
+}
+
 export default function MergePDFPage() {
-  const [files, setFiles] = useState<File[]>([]);
-  const [merging, setMerging] = useState(false);
-  const [done, setDone] = useState(false);
-  const [dragOver, setDragOver] = useState(false);
+  const [files, setFiles] = useState<PDFFile[]>([]);
+  const [isMerging, setIsMerging] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const addFiles = useCallback((newFiles: FileList | null) => {
-    if (!newFiles) return;
-    const pdfs = Array.from(newFiles).filter(f => f.type === "application/pdf");
-    setFiles(prev => [...prev, ...pdfs]);
-    setDone(false);
-  }, []);
-
-  const simulateCloudPicker = () => {
-    alert("CosmoxHub Cloud Picker Initialized!\n\nThis feature is in Elite Beta. In production, this will open the secure Google Drive / Dropbox file selector.");
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = Array.from(e.target.files || [])
+      .filter(f => f.type === "application/pdf")
+      .map(f => ({
+        id: Math.random().toString(36).substr(2, 9),
+        name: f.name,
+        size: f.size,
+        file: f
+      }));
+    
+    setFiles(prev => [...prev, ...selectedFiles]);
+    setError(null);
   };
 
-  const removeFile = (i: number) => setFiles(prev => prev.filter((_, idx) => idx !== i));
-  const moveUp = (i: number) => {
-    if (i === 0) return;
-    setFiles(prev => { const a = [...prev]; [a[i - 1], a[i]] = [a[i], a[i - 1]]; return a; });
+  const removeFile = (id: string) => {
+    setFiles(prev => prev.filter(f => f.id !== id));
   };
-  const moveDown = (i: number) => {
-    if (i === files.length - 1) return;
-    setFiles(prev => { const a = [...prev]; [a[i], a[i + 1]] = [a[i + 1], a[i]]; return a; });
+
+  const moveFile = (index: number, direction: 'up' | 'down') => {
+    const newFiles = [...files];
+    const newIndex = direction === 'up' ? index - 1 : index + 1;
+    if (newIndex < 0 || newIndex >= files.length) return;
+    [newFiles[index], newFiles[newIndex]] = [newFiles[newIndex], newFiles[index]];
+    setFiles(newFiles);
   };
 
   const mergePDFs = async () => {
-    if (files.length < 2) return;
-    setMerging(true);
-    try {
-      const merged = await PDFDocument.create();
-      for (const file of files) {
-        const bytes = await file.arrayBuffer();
-        const doc = await PDFDocument.load(bytes);
-        const pages = await merged.copyPages(doc, doc.getPageIndices());
-        pages.forEach(p => merged.addPage(p));
-      }
-      const pdfBytes = await merged.save();
-      const blob = new Blob([pdfBytes as unknown as BlobPart], { type: "application/pdf" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a"); a.href = url; a.download = "merged-cosmoxhub.pdf"; a.click();
-      URL.revokeObjectURL(url);
-      setDone(true);
-    } catch (error) {
-      console.error(error);
-      alert("Error merging PDFs. Please ensure all files are valid PDFs.");
+    if (files.length < 2) {
+      setError("Please select at least 2 PDF files to merge.");
+      return;
     }
-    setMerging(false);
+
+    setIsMerging(true);
+    setError(null);
+
+    try {
+      const mergedPdf = await PDFDocument.create();
+      
+      for (const fileObj of files) {
+        const arrayBuffer = await fileObj.file.arrayBuffer();
+        const pdf = await PDFDocument.load(arrayBuffer);
+        const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+        copiedPages.forEach((page) => mergedPdf.addPage(page));
+      }
+
+      const mergedPdfBytes = await mergedPdf.save();
+      const blob = new Blob([mergedPdfBytes as unknown as BlobPart], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `cosmoxhub-merged-${Date.now()}.pdf`;
+      link.click();
+      
+      setIsMerging(false);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      setError("Failed to merge PDFs. Ensure files are not password protected. " + message);
+      setIsMerging(false);
+    }
+  };
+
+  const jsonLd = {
+     "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "CosmoxHub Elite PDF Merger",
+    "operatingSystem": "Any",
+    "applicationCategory": "PDFTool",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+       "No-upload client-side PDF merging",
+       "High-fidelity document combination",
+       "Precision reordering manifest",
+       "Zero-server-risk architecture",
+       "Elite byte-level manipulation"
+    ]
   };
 
   return (
     <ToolLayout
-      title="Merge PDF Elite"
-      description="Combine multiple PDF files into one high-quality document. Now with Cloud Support (Beta). 100% Client-side — your files never leave your device."
-      icon={FileStack}
-      color="#ef4444"
+      title="Elite PDF Merger"
+      description="Combine multiple PDF documents into a single high-fidelity file. Precision reordering with 100% client-side security."
+      icon={Combine}
+      color="#f43f5e"
     >
-      <div className="flex flex-col md:flex-row gap-4 mb-8">
-          <button 
-            onClick={() => document.getElementById("pdf-input")?.click()}
-            className="flex-1 p-6 bg-[#050510]/60 border border-white/5 rounded-3xl hover:border-indigo-500/30 transition-all group flex flex-col items-center justify-center text-center"
-          >
-              <div className="w-12 h-12 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-indigo-400 mb-4 group-hover:scale-110 transition-transform">
-                  <Upload size={24} />
-              </div>
-              <span className="text-slate-200 font-bold uppercase tracking-widest text-xs">Browse Local Files</span>
-          </button>
-
-          <button 
-            onClick={simulateCloudPicker}
-            className="flex-1 p-6 bg-[#050510]/60 border border-white/5 rounded-3xl hover:border-blue-500/30 transition-all group flex flex-col items-center justify-center text-center"
-          >
-              <div className="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-400 mb-4 group-hover:scale-110 transition-transform">
-                  <Database size={24} />
-              </div>
-              <span className="text-slate-200 font-bold uppercase tracking-widest text-xs">Import from Cloud</span>
-          </button>
-      </div>
-
-      <input 
-        id="pdf-input" 
-        type="file" 
-        accept="application/pdf" 
-        multiple 
-        className="hidden"
-        title="Upload PDF files to merge"
-        onChange={(e) => addFiles(e.target.files)} 
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Drop Zone */}
-      <div
-        className={`upload-zone p-20 flex flex-col items-center justify-center text-center border-2 border-dashed rounded-[2.5rem] transition-all duration-500 ${dragOver ? "border-indigo-500 bg-indigo-500/10 scale-[1.01]" : "border-white/5 bg-[#050510]/40 hover:border-white/10"}`}
-        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-        onDragLeave={() => setDragOver(false)}
-        onDrop={(e) => { e.preventDefault(); setDragOver(false); addFiles(e.dataTransfer.files); }}
-      >
-        <div className="w-20 h-20 bg-white/5 rounded-[2rem] flex items-center justify-center text-slate-500 mb-6 font-space text-4xl">
-            {files.length || "+"}
-        </div>
-        <p className="text-slate-300 font-bold text-xl mb-2">Drag & Drop PDFs</p>
-        <p className="text-slate-500 text-sm max-w-xs mx-auto leading-relaxed">Combine any number of documents instantly. Files are never uploaded to our servers.</p>
-      </div>
+      <div className="grid lg:grid-cols-[1fr_340px] gap-8 items-start">
+        {/* Manifest Area */}
+        <div className="space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="group relative"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-rose-500/5 to-transparent rounded-[3.5rem] -z-10" />
+            
+            <div className="bg-[#0a0a1a]/80 backdrop-blur-2xl border border-white/5 rounded-[3.5rem] p-10 shadow-2xl relative min-h-[500px]">
+                {/* Drag & Drop Header */}
+                <label className="w-full flex flex-col items-center justify-center py-16 px-8 border-2 border-dashed border-rose-500/10 hover:border-rose-500/30 bg-rose-500/[0.02] rounded-[2.5rem] cursor-pointer transition-all group mb-8">
+                    <div className="w-20 h-20 bg-rose-500/10 rounded-3xl flex items-center justify-center mb-6 border border-rose-500/20 group-hover:scale-110 group-hover:bg-rose-500/20 transition-all duration-500">
+                        <FilePlus className="text-rose-500 w-10 h-10" />
+                    </div>
+                    <h3 className="text-xl font-black text-white uppercase tracking-widest mb-2">Ingest PDF Files</h3>
+                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-loose max-w-xs text-center">
+                        Select multiple documents. They will be processed entirely on this device.
+                    </p>
+                    <input type="file" multiple accept="application/pdf" className="hidden" onChange={handleFileChange} />
+                </label>
 
-      {/* File List */}
-      {files.length > 0 && (
-        <div className="mt-12 space-y-6">
-          <div className="flex items-center justify-between px-2">
-            <h4 className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2">
-              <Cloud size={14} className="text-blue-400" /> Documents in Queue ({files.length})
-            </h4>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {files.map((file, i) => (
-              <div key={i} className="p-4 bg-[#050510] border border-white/5 rounded-2xl flex items-center gap-4 group hover:border-indigo-500/30 transition-all">
-                <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center text-red-400 text-xl">
-                  📄
+                {/* File List */}
+                <div className="space-y-3">
+                    <AnimatePresence mode="popLayout">
+                        {files.map((file, idx) => (
+                            <motion.div
+                                key={file.id}
+                                layout
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                className="flex items-center justify-between p-5 bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/5 transition-all group"
+                            >
+                                <div className="flex items-center gap-4">
+                                    <div className="w-10 h-10 bg-rose-500/10 rounded-xl flex items-center justify-center border border-rose-500/20">
+                                        <FileText size={18} className="text-rose-500" />
+                                    </div>
+                                    <div>
+                                        <div className="text-xs font-black text-white uppercase tracking-widest truncate max-w-[200px]">{file.name}</div>
+                                        <div className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">
+                                            {(file.size / 1024 / 1024).toFixed(2)} MB
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <button 
+                                        disabled={idx === 0}
+                                        onClick={() => moveFile(idx, 'up')}
+                                        aria-label="Move file up"
+                                        title="Move up"
+                                        className="p-2 text-slate-500 hover:text-white hover:bg-white/5 rounded-lg disabled:opacity-0 transition-all"
+                                    >
+                                        <ArrowUp size={14} />
+                                    </button>
+                                    <button 
+                                        disabled={idx === files.length - 1}
+                                        onClick={() => moveFile(idx, 'down')}
+                                        aria-label="Move file down"
+                                        title="Move down"
+                                        className="p-2 text-slate-500 hover:text-white hover:bg-white/5 rounded-lg disabled:opacity-0 transition-all"
+                                    >
+                                        <ArrowDown size={14} />
+                                    </button>
+                                    <div className="w-px h-6 bg-white/5 mx-2" />
+                                    <button 
+                                        onClick={() => removeFile(file.id)}
+                                        aria-label="Remove file"
+                                        title="Remove file"
+                                        className="p-2 text-slate-500 hover:text-rose-500 transition-colors"
+                                    >
+                                        <Trash2 size={16} />
+                                    </button>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
                 </div>
-                <div className="flex-1 min-w-0 text-left">
-                  <div className="text-slate-200 text-sm font-bold truncate">{file.name}</div>
-                  <div className="text-[10px] text-slate-500 uppercase tracking-widest mt-0.5">{(file.size / 1024).toFixed(0)} KB</div>
-                </div>
-                <div className="flex items-center gap-1">
-                  <button onClick={() => moveUp(i)} title="Move file up" aria-label="Move file up" className="p-2 text-slate-500 hover:text-white transition-colors"><ArrowUp size={16} /></button>
-                  <button onClick={() => moveDown(i)} title="Move file down" aria-label="Move file down" className="p-2 text-slate-500 hover:text-white transition-colors"><ArrowDown size={16} /></button>
-                  <button onClick={() => removeFile(i)} title="Remove file" aria-label="Remove file" className="p-2 text-slate-500 hover:text-red-400 transition-colors"><Trash2 size={16} /></button>
-                </div>
-              </div>
-            ))}
-          </div>
 
-          <div className="flex gap-4 pt-8 border-t border-white/5">
-            <button 
-              className="flex-1 py-4 bg-gradient-to-r from-red-600 to-rose-600 text-white font-black rounded-2xl shadow-[0_0_30px_rgba(239,68,68,0.3)] hover:shadow-[0_0_50px_rgba(239,68,68,0.5)] hover:-translate-y-1 transition-all disabled:opacity-50 disabled:translate-y-0 disabled:shadow-none flex items-center justify-center gap-2"
-              onClick={mergePDFs} 
-              disabled={files.length < 2 || merging}
-            >
-              <Download size={18} />
-              {merging ? "Merging Elite Documents..." : "Merge & Download PDF"}
-            </button>
-            <button 
-              className="px-8 py-4 bg-white/5 border border-white/10 text-slate-300 font-bold rounded-2xl hover:bg-white/10 transition-all" 
-              onClick={() => { setFiles([]); setDone(false); }}
-            >
-              Clear
-            </button>
-          </div>
-
-          {done && (
-            <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center gap-2 animate-pulse">
-              ✅ Elite PDF Merge Successful!
+                {files.length === 0 && (
+                     <div className="h-[200px] flex flex-col items-center justify-center text-center opacity-20">
+                        <Combine size={48} className="text-slate-500 mb-4" />
+                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Manifest Empty</p>
+                    </div>
+                )}
             </div>
-          )}
+          </motion.div>
         </div>
-      )}
+
+        {/* Sidebar Controls */}
+        <aside className="space-y-6 sticky top-8">
+          <div className="bg-[#0a0a1a]/90 backdrop-blur-2xl border border-white/5 rounded-[2.5rem] p-8 relative overflow-hidden shadow-2xl">
+            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-rose-600 to-rose-400 shadow-[0_2px_15px_rgba(244,63,94,0.3)]" />
+            
+            <div className="flex items-center gap-3 mb-8">
+              <div className="p-2.5 bg-rose-500/10 rounded-2xl">
+                <Settings className="w-5 h-5 text-rose-500" />
+              </div>
+              <h3 className="text-xl font-black text-white tracking-tight">Merger Manifest</h3>
+            </div>
+
+            <div className="space-y-8">
+                <div className="space-y-2">
+                    <div className="flex justify-between items-center mb-1">
+                        <span className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Active Jobs</span>
+                        <span className="text-rose-500 font-black text-xs">{files.length} FILES</span>
+                    </div>
+                    <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                        <motion.div 
+                            animate={{ width: `${(files.length / 10) * 100}%` }}
+                            className="h-full bg-rose-500"
+                        />
+                    </div>
+                </div>
+
+                <div className="pt-4 space-y-3">
+                    {error && (
+                        <div className="p-4 bg-rose-500/10 border border-rose-500/20 rounded-2xl flex gap-3 text-rose-500 mb-4">
+                            <AlertCircle size={14} className="shrink-0 mt-0.5" />
+                            <p className="text-[10px] font-bold uppercase leading-tight tracking-wider">{error}</p>
+                        </div>
+                    )}
+
+                    <button
+                        onClick={mergePDFs}
+                        disabled={files.length < 2 || isMerging}
+                        className="w-full bg-rose-500 hover:bg-rose-600 disabled:bg-white/5 disabled:text-slate-600 text-black font-black text-[11px] uppercase tracking-[0.15em] py-4 rounded-2xl transition-all shadow-xl shadow-rose-500/20 active:scale-95 flex items-center justify-center gap-2 group"
+                    >
+                        {isMerging ? (
+                            <>
+                                <RefreshCw size={16} className="animate-spin" /> SYNCHRONIZING...
+                            </>
+                        ) : (
+                            <>
+                                <Download size={16} className="group-hover:scale-110 transition-transform" /> COMMAND MERGE
+                            </>
+                        )}
+                    </button>
+                    
+                    <button
+                        onClick={() => setFiles([])}
+                        className="w-full bg-white/5 border border-white/10 hover:border-rose-500/30 text-white font-black text-[11px] uppercase tracking-[0.15em] py-4 rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-2 group"
+                    >
+                        <Trash2 size={16} className="text-rose-500" /> Purge Manifest
+                    </button>
+                </div>
+
+                <div className="pt-6 border-t border-white/5">
+                    <div className="p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl flex gap-3 text-emerald-500 relative overflow-hidden group">
+                        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent translate-x-full group-hover:translate-x-0 transition-transform duration-700" />
+                        <Zap size={16} className="shrink-0 mt-0.5" />
+                        <p className="text-[9px] font-bold uppercase leading-tight tracking-wider relative z-10">
+                            Elite documents remain local. Your proprietary data never leaves the terminal sandbox.
+                        </p>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+          <div className="bg-[#0a0a1a]/40 border border-white/5 rounded-3xl p-6 shadow-xl relative overflow-hidden group flex items-start gap-4">
+            <Sparkles size={18} className="text-rose-500 shrink-0" />
+            <p className="text-[10px] text-slate-500 font-medium italic leading-relaxed">
+                PDF merging uses byte-level stream orchestration, preserving all internal hyperlinks and vector definitions.
+            </p>
+          </div>
+        </aside>
+      </div>
     </ToolLayout>
   );
 }

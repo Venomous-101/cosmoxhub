@@ -1,0 +1,2 @@
+﻿src/app/tools/bg-remover/page.tsx(54,9): error TS2322: Type 'typeof import("E:/Cosmoxhub/cosmoxhub-app/node_modules/@imgly/background-removal/dist/src/index")' is not assignable to type '(source: string | File | Blob, options?: any) => Promise<Blob>'.
+  Type 'typeof import("E:/Cosmoxhub/cosmoxhub-app/node_modules/@imgly/background-removal/dist/src/index")' provides no match for the signature '(source: string | File | Blob, options?: any): Promise<Blob>'.
