@@ -94,18 +94,23 @@ export default function BackgroundRemoverPage() {
 
     try {
       const blob = await removeBackground(img.file, {
+        publicPath: "https://static.imgly.com/@imgly/background-removal-data/1.4.3/dist/",
         progress: (key: string, current: number, total: number) => {
-          const p = Math.round((current / (total || 1)) * 100);
-          setImages(prev => prev.map(i => i.id === img.id ? { 
-            ...i, 
-            status: key === "fetch" ? "fetching-weights" : "processing",
-            progress: p 
-          } : i));
+          try {
+              const p = total ? Math.round((current / total) * 100) : 0;
+              setImages(prev => prev.map(i => i.id === img.id ? { 
+                ...i, 
+                status: "processing",
+                progress: p 
+              } : i));
+          } catch (e) {
+              console.error("Progress update error", e);
+          }
         },
         model: modelType,
         output: {
             format: "image/png",
-            quality: 0.8
+            quality: 1
         }
       });
       
@@ -331,34 +336,34 @@ export default function BackgroundRemoverPage() {
         </div>
 
         {/* Sidebar */}
-        <aside className="space-y-6 sticky top-8">
-          <div className="bg-[#0a0a1a]/80 backdrop-blur-2xl border border-white/5 rounded-[2.5rem] p-8 relative overflow-hidden shadow-2xl">
-            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-pink-600 to-pink-400" />
-            
-            <div className="flex items-center gap-3 mb-8">
-              <div className="p-2.5 bg-pink-500/10 rounded-2xl">
-                <Palette className="w-5 h-5 text-pink-500" />
+        <aside className="space-y-6 lg:sticky lg:top-8">
+          <div className="bg-[#0a0a1a]/80 backdrop-blur-2xl border border-white/5 rounded-3xl p-6 relative overflow-hidden shadow-2xl">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2.5 bg-indigo-500/10 rounded-2xl ring-1 ring-indigo-500/20">
+                <Settings className="w-5 h-5 text-indigo-400" />
               </div>
-              <h3 className="text-xl font-black text-white tracking-tight">AI Cosmetics</h3>
+              <div>
+                <h3 className="text-lg font-black text-white tracking-tight leading-none">Settings</h3>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Background Removal</p>
+              </div>
             </div>
 
-            <div className="space-y-8">
-              {/* Model Choice */}
-              <div className="space-y-4">
-                <label className="text-slate-400 text-[10px] font-black uppercase tracking-widest flex items-center justify-between">
-                    AI Energy Mode
-                    <Cpu className="w-3 h-3 text-pink-500" />
+            <div className="space-y-6">
+              {/* Quality / Speed Model */}
+              <div className="space-y-3">
+                <label className="text-slate-400 text-[9px] font-black uppercase tracking-[0.2em] flex items-center justify-between">
+                    Process Quality
                 </label>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-2 bg-black/40 p-1 rounded-2xl border border-white/5">
                     {[
                         { id: "small", label: "Fast" },
-                        { id: "medium", label: "Pro" }
+                        { id: "medium", label: "High Quality" }
                     ].map((m) => (
                         <button
                             key={m.id}
                             onClick={() => setModelType(m.id as any)}
-                            className={`py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
-                                modelType === m.id ? "bg-pink-500/20 border-pink-500/40 text-pink-400 shadow-lg" : "bg-white/5 border-white/5 text-slate-500"
+                            className={`py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                                modelType === m.id ? "bg-indigo-500/20 text-indigo-400 font-bold border border-indigo-500/20 shadow-md" : "text-slate-500 hover:text-slate-300"
                             }`}
                         >
                             {m.label}
@@ -367,62 +372,69 @@ export default function BackgroundRemoverPage() {
                 </div>
               </div>
 
-              {/* Background Color switcher */}
-              <div className="space-y-4 pt-4 border-t border-white/5">
-                <label className="text-slate-400 text-[10px] font-black uppercase tracking-widest block">Environment fill</label>
+              {/* Background Options */}
+              <div className="space-y-3 pt-6 border-t border-white/5">
+                <label className="text-slate-400 text-[9px] font-black uppercase tracking-[0.2em] block">Background Option</label>
                 <div className="grid grid-cols-4 gap-2">
                     {[
-                        { id: "transparent", color: "bg-black border-white/10" },
-                        { id: "#ffffff", color: "bg-white border-transparent" },
-                        { id: "#000000", color: "bg-slate-900 border-white/10" },
-                        { id: "custom", color: "bg-gradient-to-tr from-pink-500 to-rose-500 border-transparent" }
+                        { id: "transparent", label: "None", color: "bg-[#050510] border-white/10" },
+                        { id: "#ffffff", label: "White", color: "bg-white border-transparent" },
+                        { id: "#000000", label: "Black", color: "bg-black border-white/20" },
+                        { id: "custom", label: "Custom", color: "bg-gradient-to-tr from-indigo-500 to-purple-500 border-transparent" }
                     ].map((c) => (
                         <button
                             key={c.id}
+                            title={c.label}
                             onClick={() => setBgColor(c.id)}
-                            className={`aspect-square rounded-xl border-2 transition-all ${c.color} ${bgColor === c.id ? "border-pink-500 scale-110 shadow-lg" : "border-transparent opacity-60 hover:opacity-100"}`}
-                        />
+                            className={`aspect-square rounded-[1rem] border-2 transition-all ${c.color} ${bgColor === c.id ? "border-indigo-500 scale-105 shadow-lg shadow-indigo-500/20" : "border-transparent opacity-60 hover:opacity-100"}`}
+                        >
+                            {c.id === "transparent" && <div className="w-full h-full rounded-[0.8rem]" style={{backgroundImage: "url('https://www.transparenttextures.com/patterns/carbon-fibre.png')"}}></div>}
+                        </button>
                     ))}
                 </div>
                 {bgColor === "custom" && (
-                    <div className="flex gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
-                        <input 
-                            type="color" 
-                            value={customColor}
-                            onChange={(e) => setCustomColor(e.target.value)}
-                            className="w-10 h-10 rounded-xl bg-transparent border-none cursor-pointer p-0 overflow-hidden"
-                        />
-                        <div className="flex-1 px-4 bg-white/5 border border-white/5 rounded-xl flex items-center">
-                            <span className="text-white font-mono text-[10px] uppercase tracking-widest">{customColor}</span>
+                    <div className="flex gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <div className="relative w-12 h-10 rounded-xl overflow-hidden shrink-0 border border-white/10">
+                            <input 
+                                type="color" 
+                                value={customColor}
+                                onChange={(e) => setCustomColor(e.target.value)}
+                                className="absolute -inset-2 w-[200%] h-[200%] cursor-pointer p-0 m-0"
+                            />
+                        </div>
+                        <div className="flex-1 px-4 bg-black/40 border border-white/5 rounded-xl flex items-center justify-between">
+                            <span className="text-slate-500 font-mono text-[9px] uppercase tracking-widest">HEX</span>
+                            <span className="text-white font-mono text-xs font-bold uppercase tracking-widest">{customColor}</span>
                         </div>
                     </div>
                 )}
               </div>
 
-              {/* Actions */}
-              <div className="pt-4 space-y-4">
+              {/* Action Button */}
+              <div className="pt-6 border-t border-white/5 space-y-4">
                 <button
                   disabled={images.length === 0 || isProcessing || !aiLoaded || images.every(i => i.status === "completed")}
                   onClick={processAll}
-                  className="w-full btn-primary h-14 flex items-center justify-center gap-3 bg-gradient-to-r from-pink-600 to-pink-400 shadow-[0_4px_30px_rgba(236,72,153,0.3)] hover:shadow-[0_4px_40px_rgba(236,72,153,0.5)] disabled:opacity-50 disabled:translate-y-0 disabled:shadow-none text-white text-[11px] font-black uppercase tracking-[0.15em] rounded-2xl transition-all hover:-translate-y-1"
+                  className={`w-full h-14 flex items-center justify-center gap-3 rounded-2xl font-black uppercase tracking-[0.15em] transition-all duration-300 text-[11px] ${
+                    isProcessing 
+                        ? "bg-indigo-500/20 text-indigo-400 border border-indigo-500/20 cursor-wait" 
+                        : (images.length === 0 || !aiLoaded)
+                            ? "bg-white/5 text-slate-500 cursor-not-allowed"
+                            : "bg-indigo-600 hover:bg-indigo-500 text-white hover:shadow-[0_0_20px_max(0px,rgba(79,70,229,0.5))] hover:-translate-y-0.5 shadow-lg"
+                  }`}
                 >
-                  {isProcessing ? "Analyzing Pixels..." : "Execute Elite Removal"}
+                  {isProcessing ? (
+                    <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Processing...
+                    </>
+                  ) : "Remove Background"}
                 </button>
 
-                <div className="p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl flex gap-3 items-start">
-                    <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <div className="text-[9px] text-emerald-500/80 font-bold leading-tight uppercase">
-                        AI Weights Local. Zero Server exposure.
-                    </div>
+                <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex gap-2 items-center">
+                    <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span className="text-[9px] text-emerald-400 font-bold uppercase tracking-wider">Processed locally on device</span>
                 </div>
-
-                <button
-                    disabled={images.length === 0}
-                    onClick={() => setImages([])}
-                    className="w-full py-2 text-rose-500/60 text-[9px] font-black uppercase tracking-[0.2em] hover:text-rose-400 disabled:opacity-0 transition-opacity"
-                >
-                    Wipe session
-                </button>
               </div>
             </div>
           </div>

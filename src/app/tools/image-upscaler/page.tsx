@@ -78,64 +78,42 @@ export default function ImageUpscalerPage() {
     setImages(prev => prev.map(i => i.id === img.id ? { ...i, status: "upscaling" } : i));
 
     try {
-      const result = await new Promise<{url: string, w: number, h: number}>((resolve) => {
+      const result = await new Promise<{url: string, w: number, h: number}>((resolve, reject) => {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
         const imageObj = new Image();
         
         imageObj.onload = () => {
-          const w = imageObj.width * scaleFactor;
-          const h = imageObj.height * scaleFactor;
-          canvas.width = w;
-          canvas.height = h;
-          
-          if (ctx) {
-            // High quality scaling
-            ctx.imageSmoothingEnabled = true;
-            ctx.imageSmoothingQuality = "high";
-            ctx.drawImage(imageObj, 0, 0, w, h);
-
-            if (enhanceDetails) {
-              // Apply basic sharpening convolution matrix to simulate "AI" enhancement
-              const imageData = ctx.getImageData(0, 0, w, h);
-              const data = imageData.data;
-              const weights = [0, -0.5, 0, -0.5, 3, -0.5, 0, -0.5, 0]; // Sharpen matrix
-              const side = Math.round(Math.sqrt(weights.length));
-              const halfSide = Math.floor(side / 2);
-              const output = ctx.createImageData(w, h);
-              const dst = output.data;
-
-              for (let y = 0; y < h; y++) {
-                for (let x = 0; x < w; x++) {
-                  const sy = y;
-                  const sx = x;
-                  const dstOff = (y * w + x) * 4;
-                  let r = 0, g = 0, b = 0;
-                  for (let cy = 0; cy < side; cy++) {
-                    for (let cx = 0; cx < side; cx++) {
-                      const scy = sy + cy - halfSide;
-                      const scx = sx + cx - halfSide;
-                      if (scy >= 0 && scy < h && scx >= 0 && scx < w) {
-                        const srcOff = (scy * w + scx) * 4;
-                        const wt = weights[cy * side + cx];
-                        r += data[srcOff] * wt;
-                        g += data[srcOff + 1] * wt;
-                        b += data[srcOff + 2] * wt;
-                      }
-                    }
-                  }
-                  dst[dstOff] = r;
-                  dst[dstOff + 1] = g;
-                  dst[dstOff + 2] = b;
-                  dst[dstOff + 3] = data[dstOff + 3];
-                }
-              }
-              ctx.putImageData(output, 0, 0);
-            }
+          try {
+            const w = imageObj.width * scaleFactor;
+            const h = imageObj.height * scaleFactor;
             
-            resolve({ url: canvas.toDataURL("image/png"), w, h });
+            // To prevent browser crashes on gigapixel sizes, strictly constrain max dimensions
+            const MAX_DIM = 8192;
+            const finalW = Math.min(w, MAX_DIM);
+            const finalH = Math.min(h, Math.floor((MAX_DIM / w) * h));
+
+            canvas.width = finalW;
+            canvas.height = finalH;
+            
+            if (ctx) {
+              if (enhanceDetails) {
+                  // Hardware-accelerated CSS filter instead of JS pixel looping
+                  ctx.filter = "contrast(1.05) saturate(1.1) brightness(1.02)";
+              }
+              ctx.imageSmoothingEnabled = true;
+              ctx.imageSmoothingQuality = "high";
+              ctx.drawImage(imageObj, 0, 0, finalW, finalH);
+              
+              resolve({ url: canvas.toDataURL("image/png", 1.0), w: finalW, h: finalH });
+            } else {
+              reject(new Error("Canvas context failed"));
+            }
+          } catch(e) {
+            reject(e);
           }
         };
+        imageObj.onerror = reject;
         imageObj.src = img.preview;
       });
 
@@ -241,6 +219,7 @@ export default function ImageUpscalerPage() {
                   accept="image/*"
                   className="hidden"
                   onChange={handleUpload}
+                  aria-label="Upload images for upscaling"
                 />
               </motion.div>
             ) : (
@@ -308,6 +287,8 @@ export default function ImageUpscalerPage() {
                       <button
                         onClick={() => removeImage(img.id)}
                         className="absolute top-4 right-4 p-1.5 bg-rose-500/10 text-rose-500 rounded-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-rose-500 hover:text-white"
+                        aria-label="Remove image"
+                        title="Remove image"
                       >
                         <X className="w-4 h-4" />
                       </button>
@@ -329,29 +310,32 @@ export default function ImageUpscalerPage() {
         </div>
 
         {/* Sidebar Controls */}
-        <aside className="space-y-6 sticky top-8">
-          <div className="bg-[#0a0a1a]/80 backdrop-blur-2xl border border-white/5 rounded-[2.5rem] p-8 relative overflow-hidden shadow-2xl">
-            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-amber-600 to-amber-400" />
-            
-            <div className="flex items-center gap-3 mb-8">
-              <div className="p-2.5 bg-amber-500/10 rounded-2xl">
+        <aside className="space-y-6 lg:sticky lg:top-8">
+          <div className="bg-[#0a0a1a]/80 backdrop-blur-2xl border border-white/5 rounded-3xl p-6 relative overflow-hidden shadow-2xl">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2.5 bg-amber-500/10 rounded-2xl ring-1 ring-amber-500/20">
                 <Settings className="w-5 h-5 text-amber-500" />
               </div>
-              <h3 className="text-xl font-black text-white tracking-tight">Upscale Engine</h3>
+              <div>
+                <h3 className="text-lg font-black text-white tracking-tight leading-none">Settings</h3>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Image Upscaler</p>
+              </div>
             </div>
 
-            <div className="space-y-8">
+            <div className="space-y-6">
               {/* Scale Options */}
-              <div className="space-y-4">
-                <label className="text-slate-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
-                    <Maximize size={12} className="text-amber-500" /> Resolution Factor
+              <div className="space-y-3">
+                <label className="text-slate-400 text-[9px] font-black uppercase tracking-[0.2em] flex items-center justify-between">
+                    Resolution Factor
                 </label>
-                <div className="grid grid-cols-2 gap-2 bg-white/5 p-1 rounded-2xl border border-white/5">
+                <div className="grid grid-cols-2 gap-2 bg-black/40 p-1 rounded-2xl border border-white/5">
                   {[2, 4].map((scale) => (
                     <button
                       key={scale}
                       onClick={() => setScaleFactor(scale)}
-                      className={`py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${scaleFactor === scale ? "bg-amber-500 text-white shadow-lg" : "text-slate-500 hover:text-slate-300"}`}
+                      className={`py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                          scaleFactor === scale ? "bg-amber-500/20 text-amber-500 font-bold border border-amber-500/20 shadow-md" : "text-slate-500 hover:text-slate-300"
+                      }`}
                     >
                       {scale}X Clear
                     </button>
@@ -360,44 +344,38 @@ export default function ImageUpscalerPage() {
               </div>
 
               {/* Enhance Options */}
-              <div className="space-y-4">
-                <label className="text-slate-400 text-[10px] font-black uppercase tracking-widest flex items-center justify-between">
-                    Enhance Details
-                    <input 
-                      type="checkbox" 
-                      className="hidden" 
-                      checked={enhanceDetails}
-                      onChange={() => setEnhanceDetails(!enhanceDetails)}
-                    />
-                    <div 
-                        onClick={() => setEnhanceDetails(!enhanceDetails)}
-                        className={`w-10 h-5 rounded-full relative cursor-pointer transition-colors ${enhanceDetails ? "bg-amber-500" : "bg-slate-700"}`}
-                    >
+              <div className="space-y-3 pt-6 border-t border-white/5">
+                <label className="text-slate-400 text-[9px] font-black uppercase tracking-[0.2em] flex items-center justify-between cursor-pointer" onClick={() => setEnhanceDetails(!enhanceDetails)}>
+                    Details Enhancement
+                    <div className={`w-8 h-4 rounded-full relative transition-colors ${enhanceDetails ? "bg-amber-500" : "bg-white/10"}`}>
                         <motion.div 
-                            animate={{ x: enhanceDetails ? 20 : 2 }}
-                            className="absolute top-1 w-3 h-3 bg-white rounded-full"
+                            animate={{ x: enhanceDetails ? 16 : 2 }}
+                            className="absolute top-[2px] w-3 h-3 bg-white rounded-full shadow-sm"
                         />
                     </div>
                 </label>
-                <p className="text-[10px] text-slate-500 font-medium leading-relaxed italic">
-                    AI-driven sharpening pass to rebuild lost textural details during upscale.
-                </p>
               </div>
 
               {/* Actions */}
-              <div className="pt-4 space-y-4">
+              <div className="pt-6 border-t border-white/5 space-y-4">
                 <button
                   disabled={images.length === 0 || isProcessing || images.every(i => i.status === "completed")}
                   onClick={processAll}
-                  className="w-full btn-primary h-14 flex items-center justify-center gap-3 bg-gradient-to-r from-amber-600 to-amber-400 shadow-[0_4px_30px_rgba(245,158,11,0.3)] hover:shadow-[0_4px_40px_rgba(245,158,11,0.5)] disabled:opacity-50 disabled:translate-y-0 disabled:shadow-none text-white text-[11px] font-black uppercase tracking-[0.15em] rounded-2xl transition-all hover:-translate-y-1"
+                  className={`w-full h-14 flex items-center justify-center gap-3 rounded-2xl font-black uppercase tracking-[0.15em] transition-all duration-300 text-[11px] ${
+                    isProcessing 
+                        ? "bg-amber-500/20 text-amber-500 border border-amber-500/20 cursor-wait" 
+                        : images.length === 0
+                            ? "bg-white/5 text-slate-500 cursor-not-allowed"
+                            : "bg-amber-500 hover:bg-amber-400 text-white shadow-lg shadow-amber-500/20 hover:-translate-y-0.5"
+                  }`}
                 >
-                  {isProcessing ? "Processing..." : "Launch Upscaling"}
+                  {isProcessing ? "Processing..." : "Upscale Images"}
                 </button>
 
                 {images.some(img => img.status === "completed") && (
                     <button
                         onClick={downloadAll}
-                        className="w-full h-12 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-slate-200 text-[10px] font-black uppercase tracking-widest rounded-2xl border border-white/5 transition-all shadow-lg"
+                        className="w-full h-12 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-slate-200 text-[10px] font-black uppercase tracking-widest rounded-2xl border border-white/5 transition-all shadow-lg mt-2"
                     >
                         <Download size={16} /> Bulk Export
                     </button>
@@ -406,31 +384,11 @@ export default function ImageUpscalerPage() {
                 <button
                     disabled={images.length === 0}
                     onClick={() => setImages([])}
-                    className="w-full py-2 text-rose-500/60 text-[9px] font-black uppercase tracking-[0.2em] hover:text-rose-400 disabled:opacity-0 transition-opacity"
+                    className="w-full py-2.5 text-rose-500/60 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl text-[9px] font-black uppercase tracking-[0.2em] disabled:opacity-0 transition-all mt-4"
                 >
                     Wipe session
                 </button>
               </div>
-            </div>
-          </div>
-
-          <div className="bg-[#0a0a1a]/40 border border-white/5 rounded-3xl p-6">
-            <h4 className="text-white font-bold text-sm mb-4 flex items-center gap-2">
-              <Layers size={16} className="text-amber-500" /> Technical Info
-            </h4>
-            <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                    <Search className="w-4 h-4 text-slate-500 mt-0.5" />
-                    <div className="text-[11px] text-slate-500 leading-normal">
-                        Uses high-fidelity spectral bicubic interpolation for resizing.
-                    </div>
-                </div>
-                <div className="flex items-start gap-3">
-                    <Sparkles className="w-4 h-4 text-slate-500 mt-0.5" />
-                    <div className="text-[11px] text-slate-500 leading-normal">
-                        Optional 3x3 convolution sharpening simulates AI structural recovery.
-                    </div>
-                </div>
             </div>
           </div>
         </aside>
