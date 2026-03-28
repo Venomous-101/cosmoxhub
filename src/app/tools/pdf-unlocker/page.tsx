@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Unlock, FileText, ShieldCheck, Download, Trash2, Key, AlertCircle } from "lucide-react";
+import { Unlock, FileText, ShieldCheck, Download, Trash2, Key, AlertCircle, Zap } from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
 
 export default function PDFUnlockerPage() {
