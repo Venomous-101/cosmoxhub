@@ -1,39 +1,45 @@
-import { MetadataRoute } from 'next';
+import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://cosmoxhub.com';
+  const baseUrl = "https://cosmoxhub.com";
 
-  const routes = [
-    '',
-    '/tools/merge-pdf',
-    '/tools/split-pdf',
-    '/tools/image-to-pdf',
-    '/tools/pdf-to-image',
-    '/tools/word-counter',
-    '/tools/case-converter',
-    '/tools/whitespace-remover',
-    '/tools/lorem-ipsum',
-    '/tools/png-to-jpg',
-    '/tools/jpg-to-png',
-    '/tools/image-resizer',
-    '/tools/whatsapp-link',
-    '/tools/qr-generator',
-    '/tools/age-calculator',
-    '/tools/password-generator',
-    '/tools/claude-skills-creator',
-    '/tools/text-to-pdf',
-    '/tools/youtube-thumbnail',
-    '/tools/json-formatter',
-    '/tools/image-upscaler',
-    '/about',
-    '/privacy',
-    '/terms',
+  // Core Tools (already checked)
+  const coreTools = [
+    "",
+    "/tools/word-counter",
+    "/tools/case-converter",
+    "/tools/age-calculator",
+    "/tools/image-resizer",
+    "/tools/password-generator",
+    "/tools/merge-pdf",
+    "/tools/split-pdf",
+    "/tools/qr-generator",
+    "/tools/whitespace-remover",
+    "/tools/lorem-ipsum",
+    "/tools/jpg-to-png",
+    "/tools/png-to-jpg",
+    "/tools/json-formatter",
+    "/tools/youtube-thumbnail",
+    "/tools/whatsapp-link",
+    "/tools/text-to-pdf",
+    "/tools/pdf-to-image",
+    "/tools/image-to-pdf",
+    "/tools/image-upscaler",
+    // New Elite Tools
+    "/tools/code-beautifier",
+    "/tools/pdf-unlocker",
+    "/tools/ai-prompt-optimizer",
+    "/tools/bg-remover",
+    // Legal Pages
+    "/about",
+    "/privacy",
+    "/terms",
   ];
 
-  return routes.map((route) => ({
+  return coreTools.map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
-    changeFrequency: route === '' ? 'daily' : 'weekly',
-    priority: route === '' ? 1 : 0.8,
+    changeFrequency: "weekly",
+    priority: route === "" ? 1.0 : 0.8,
   }));
 }

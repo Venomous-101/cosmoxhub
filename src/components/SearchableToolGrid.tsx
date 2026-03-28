@@ -13,7 +13,11 @@ import {
   FileText,
   Video,
   Code,
-  Maximize
+  Maximize,
+  Unlock,
+  Sparkles,
+  Eraser,
+  Code2
 } from "lucide-react";
 import ToolCard from "./ToolCard";
 
@@ -36,23 +40,24 @@ interface Category {
 const categories: Category[] = [
   {
     id: "pdf-tools",
-    label: "📄 PDF Tools",
+    label: "📄 Elite PDF Tools",
     description: "Process PDFs instantly in your browser. No upload required.",
     color: "#ef4444",
     tools: [
       { title: "Merge PDF", description: "Combine multiple PDF files into one document in seconds.", href: "/tools/merge-pdf", icon: FileStack, badge: "Popular" },
       { title: "Split PDF", description: "Extract specific pages from a PDF or split into multiple files.", href: "/tools/split-pdf", icon: Scissors },
+      { title: "PDF Password Remover", description: "Unlock protected PDF files instantly. 100% Client-side privacy.", href: "/tools/pdf-unlocker", icon: Unlock, badge: "Elite" },
       { title: "Image to PDF", description: "Convert JPG, PNG, or any image into a PDF document.", href: "/tools/image-to-pdf", icon: ImagePlus, badge: "Hot" },
       { title: "PDF to Image", description: "Export every page of a PDF as a high-quality image.", href: "/tools/pdf-to-image", icon: FileImage },
     ],
   },
   {
     id: "text-tools",
-    label: "✍️ Text Tools",
+    label: "✍️ Text Intelligence",
     description: "Powerful text utilities for writers, students, and developers.",
     color: "#6366f1",
     tools: [
-      { title: "Word Counter", description: "Count words, characters, sentences & reading time instantly.", href: "/tools/word-counter", icon: Type, badge: "Popular" },
+      { title: "Word Counter 2.0", description: "Advanced metrics, keyword density, and SEO analysis.", href: "/tools/word-counter", icon: Type, badge: "Elite" },
       { title: "Case Converter", description: "Convert text to UPPERCASE, lowercase, Title Case and more.", href: "/tools/case-converter", icon: CaseSensitive },
       { title: "Whitespace Remover", description: "Remove extra spaces, tabs, and blank lines from any text.", href: "/tools/whitespace-remover", icon: RemoveFormatting },
       { title: "Lorem Ipsum Generator", description: "Generate dummy placeholder text for designs and prototypes.", href: "/tools/lorem-ipsum", icon: AlignLeft },
@@ -60,11 +65,24 @@ const categories: Category[] = [
     ],
   },
   {
+    id: "ai-dev-tools",
+    label: "🚀 AI & Developer Focus",
+    description: "Next-gen tools for the modern workforce. 100% Secure.",
+    color: "#8b5cf6",
+    tools: [
+      { title: "AI Prompt Optimizer", description: "Turn simple ideas into 10x better professional AI prompts.", href: "/tools/ai-prompt-optimizer", icon: Sparkles, badge: "Elite" },
+      { title: "Code Beautifier 2.0", description: "Format and clean JSON, JS, CSS, and HTML instantly.", href: "/tools/code-beautifier", icon: Code2, badge: "New" },
+      { title: "AI Agent Creator", description: "Generate professional skills.md files for AI agents.", href: "/tools/claude-skills-creator", icon: Brain, badge: "New" },
+      { title: "JSON Formatter", description: "Standard prettifier and validator for small JSON snippets.", href: "/tools/json-formatter", icon: Code },
+    ],
+  },
+  {
     id: "image-tools",
-    label: "🖼️ Image Tools",
-    description: "Convert and resize images without any quality loss.",
+    label: "🖼️ Image Magic",
+    description: "Convert, resize and edit images without any quality loss.",
     color: "#10b981",
     tools: [
+      { title: "BG Remover", description: "Remove background from images and add custom colors.", href: "/tools/bg-remover", icon: Eraser, badge: "Elite" },
       { title: "PNG to JPG", description: "Convert PNG images to JPG format instantly in your browser.", href: "/tools/png-to-jpg", icon: Image, badge: "Fast" },
       { title: "JPG to PNG", description: "Convert JPG images to PNG (with transparency support).", href: "/tools/jpg-to-png", icon: FileDown },
       { title: "Image Resizer", description: "Resize images to any dimension while preserving quality.", href: "/tools/image-resizer", icon: Maximize2 },
@@ -77,13 +95,11 @@ const categories: Category[] = [
     description: "Quick-access tools for daily tasks and productivity.",
     color: "#f59e0b",
     tools: [
-      { title: "WhatsApp Link Generator", description: "Create a WhatsApp chat link without saving the number.", href: "/tools/whatsapp-link", icon: MessageSquare, badge: "Useful" },
-      { title: "QR Code Generator", description: "Generate a QR code for any URL, text, WiFi or contact.", href: "/tools/qr-generator", icon: QrCode, badge: "Popular" },
-      { title: "YouTube Thumbnail Downloader", description: "Download HD thumbnails from any YouTube video.", href: "/tools/youtube-thumbnail", icon: Video, badge: "New" },
+      { title: "WhatsApp Link", description: "Create a WhatsApp chat link without saving the number.", href: "/tools/whatsapp-link", icon: MessageSquare, badge: "Useful" },
+      { title: "QR Generator", description: "Generate a QR code for any URL, text, WiFi or contact.", href: "/tools/qr-generator", icon: QrCode, badge: "Popular" },
+      { title: "YouTube Thumbnail", description: "Download HD thumbnails from any YouTube video.", href: "/tools/youtube-thumbnail", icon: Video, badge: "New" },
       { title: "Age Calculator", description: "Calculate exact age in years, months, days and hours.", href: "/tools/age-calculator", icon: CalendarDays },
       { title: "Password Generator", description: "Generate strong, secure, random passwords instantly.", href: "/tools/password-generator", icon: KeyRound },
-      { title: "AI Agent Skills Creator", description: "Generate a professional skills.md file for AI agents.", href: "/tools/claude-skills-creator", icon: Brain, badge: "New" },
-      { title: "JSON Formatter", description: "Clean, prettify and validate JSON data instantly.", href: "/tools/json-formatter", icon: Code, badge: "New" },
     ],
   },
 ];
@@ -109,7 +125,7 @@ export default function SearchableToolGrid() {
             <Search className="text-slate-500 group-focus-within:text-indigo-400 transition-colors" size={22} aria-hidden="true" />
             <input 
               type="text"
-              placeholder="Search for a tool (e.g. PDF, Image, JPG)..."
+              placeholder="Search for a tool (e.g. PDF, AI, Code)..."
               className="w-full bg-transparent border-none outline-none px-4 py-3 text-slate-100 placeholder:text-slate-600 font-medium"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -156,7 +172,7 @@ export default function SearchableToolGrid() {
           <div className="text-center py-20">
             <div className="text-6xl mb-6" aria-hidden="true">🔍</div>
             <h3 className="text-2xl font-space font-bold text-white mb-2">No tools found for &quot;{searchQuery}&quot;</h3>
-            <p className="text-slate-500">Try searching for something else like &quot;PDF&quot; or &quot;PNG&quot;.</p>
+            <p className="text-slate-500">Try searching for something else like &quot;AI&quot; or &quot;Elite&quot;.</p>
             <button 
               onClick={() => setSearchQuery("")}
               className="mt-6 text-indigo-400 hover:text-indigo-300 font-bold underline"
