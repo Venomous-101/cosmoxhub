@@ -43,7 +43,14 @@ export default function AdScripts() {
       {/* Adsterra: Social Bar (After Grace Period) */}
       <Script 
         id="adsterra-social-bar"
-        src="https://pl28987162.profitablecpmratenetwork.com/1a/29/bc/1a29bcd189ce74300c56e9ae7c4f6ec7.js" 
+        src="https://pl28997791.profitablecpmratenetwork.com/da/cf/3c/dacf3cfc20bc19fd9857f843d4937bef.js" 
+        strategy="afterInteractive" 
+      />
+
+      {/* Adsterra: Popunder (After Grace Period) */}
+      <Script 
+        id="adsterra-popunder"
+        src="https://pl28997788.profitablecpmratenetwork.com/8e/db/ca/8edbca55e5c02996547e78e61fd8b641.js" 
         strategy="afterInteractive" 
       />
 

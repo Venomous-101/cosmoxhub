@@ -25,7 +25,7 @@ export default function AdBanner({ type, label = "Advertisement", className = ""
         const script1 = document.createElement("script");
         script1.innerHTML = `
           atOptions = {
-            'key' : '40accf62397b36ec50bd1c324f50cc09',
+            'key' : 'e52394ac3aaaefdae5a8b8ce39bc8d88',
             'format' : 'iframe',
             'height' : 90,
             'width' : 728,
@@ -33,7 +33,7 @@ export default function AdBanner({ type, label = "Advertisement", className = ""
           };
         `;
         const script2 = document.createElement("script");
-        script2.src = "https://www.highperformanceformat.com/40accf62397b36ec50bd1c324f50cc09/invoke.js";
+        script2.src = "https://www.highperformanceformat.com/e52394ac3aaaefdae5a8b8ce39bc8d88/invoke.js";
         
         adContainerRef.current.innerHTML = "";
         adContainerRef.current.appendChild(script1);
@@ -43,10 +43,10 @@ export default function AdBanner({ type, label = "Advertisement", className = ""
         const script = document.createElement("script");
         script.async = true;
         script.setAttribute("data-cfasync", "false");
-        script.src = "https://pl28987163.profitablecpmratenetwork.com/6268a2ea20765f6c9b2f7ce5f78e3815/invoke.js";
+        script.src = "https://pl28997789.profitablecpmratenetwork.com/d0458bee189e95a0f0d922f7d9da722e/invoke.js";
         
         const container = document.createElement("div");
-        container.id = "container-6268a2ea20765f6c9b2f7ce5f78e3815";
+        container.id = "container-d0458bee189e95a0f0d922f7d9da722e";
         
         adContainerRef.current.innerHTML = "";
         adContainerRef.current.appendChild(script);
