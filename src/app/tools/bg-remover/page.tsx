@@ -70,6 +70,17 @@ export default function BackgroundRemoverPage() {
     setProgress(0);
 
     try {
+      // Safety timeout: If it gets stuck at 0% for 15 seconds, force an error
+      const timeoutFallback = setTimeout(() => {
+        setStatus(prev => {
+          if (prev === "processing") {
+             setUseSmallModel(true);
+             return "error";
+          }
+          return prev;
+        });
+      }, 15000);
+
       const blob = await removeBackground(file, {
         progress: (key: string, current: number, total: number) => {
           try {
@@ -81,14 +92,16 @@ export default function BackgroundRemoverPage() {
             console.error(e);
           }
         },
-        publicPath: "https://static.imgly.com/@imgly/background-removal-data/1.7.0/dist/",
-        model: useSmallModel ? "small" : "isnet",
+        // Relying on library's default CDN (unpkg) which is more reliable than static.imgly in some regions
+        model: useSmallModel ? "small" : "medium",
+        debug: true,
         output: {
           format: "image/png",
           quality: 0.8
         }
       });
       
+      clearTimeout(timeoutFallback);
       const url = URL.createObjectURL(blob);
       setResult(url);
       setStatus("completed");
