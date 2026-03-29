@@ -33,7 +33,7 @@ export default function ToolLayout({ title, description, icon: Icon, color = "#6
     <div className="min-h-screen flex flex-col bg-[#050510] text-[#f1f5f9]">
       <Navbar />
       <main className="flex-grow">
-        <div className="container mx-auto px-4 max-w-4xl py-12">
+        <div className="container mx-auto px-4 max-w-6xl py-12">
           {/* Back link */}
           <Link
             href="/"
@@ -62,7 +62,7 @@ export default function ToolLayout({ title, description, icon: Icon, color = "#6
           <AdBanner type="native" label="Sponsored Tool" className="mb-8" />
 
           {/* Tool content */}
-          <div className="bg-[#0f111a] border border-indigo-500/10 rounded-2xl shadow-xl overflow-hidden">
+          <div className="bg-[#0f111a] border border-indigo-500/10 rounded-2xl shadow-xl">
             {children}
           </div>
 
