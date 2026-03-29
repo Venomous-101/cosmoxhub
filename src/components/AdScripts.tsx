@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 
 export default function AdScripts() {
   const [clickCount, setClickCount] = useState(0);
-  const THRESHOLD = 20;
+  const THRESHOLD = 30;
 
   useEffect(() => {
     const savedCount = sessionStorage.getItem("cosmox_click_count");
