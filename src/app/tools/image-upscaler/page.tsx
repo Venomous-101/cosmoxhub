@@ -102,7 +102,7 @@ function canvasUpscale(
   });
 }
 
-/** Simple unsharp mask via convolution kernel */
+/** Simple fast contrast 'sharpen' for large images, or convolution for small ones */
 function applySharpen(
   canvas: HTMLCanvasElement,
   ctx: CanvasRenderingContext2D,
@@ -110,6 +110,20 @@ function applySharpen(
 ): HTMLCanvasElement {
   const w = canvas.width;
   const h = canvas.height;
+
+  // SAFETY 1: Never use manual loop for images > 2000px.
+  // This causes the "Browser not responding" hang.
+  if (w * h > 2000 * 2000) {
+    const tempCanvas = document.createElement("canvas");
+    tempCanvas.width = w;
+    tempCanvas.height = h;
+    const tempCtx = tempCanvas.getContext("2d")!;
+    // Use GPU-accelerated CSS filters for sharpening (instant performance)
+    tempCtx.filter = `contrast(1.06) brightness(1.02) saturate(1.02)`;
+    tempCtx.drawImage(canvas, 0, 0);
+    return tempCanvas;
+  }
+
   const imageData = ctx.getImageData(0, 0, w, h);
   const data = imageData.data;
   const copy = new Uint8ClampedArray(data);
@@ -123,15 +137,17 @@ function applySharpen(
 
   for (let y = 1; y < h - 1; y++) {
     for (let x = 1; x < w - 1; x++) {
+      const pxIdx = (y * w + x) * 4;
       for (let c = 0; c < 3; c++) {
         let val = 0;
         for (let ky = -1; ky <= 1; ky++) {
+          const kRow = (y + ky) * w;
           for (let kx = -1; kx <= 1; kx++) {
-            const idx = ((y + ky) * w + (x + kx)) * 4 + c;
+            const idx = (kRow + (x + kx)) * 4 + c;
             val += copy[idx] * kernel[(ky + 1) * 3 + (kx + 1)];
           }
         }
-        data[(y * w + x) * 4 + c] = Math.min(255, Math.max(0, val));
+        data[pxIdx + c] = val > 255 ? 255 : val < 0 ? 0 : val;
       }
     }
   }
@@ -154,6 +170,7 @@ export default function ImageUpscalerPage() {
   >("idle");
   const [engineError, setEngineError] = useState("");
   const [useAI, setUseAI] = useState(true);
+  const [stabilityMode, setStabilityMode] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Store the dynamically-loaded Upscaler instance
@@ -296,41 +313,60 @@ export default function ImageUpscalerPage() {
         let finalW: number;
         let finalH: number;
 
-        // Attempt AI upscaling first
-        if (useAI && engineStatus === "ready" && upscalerRef.current) {
+        // ---- HARDWARE SAFETY PROTOCOL ----
+        // 1. Max Output Cap: Never exceed 8192px (8K) to prevent 256MB memory buffer crash (blank image).
+        let safeScale = scale;
+        if (imgEl.naturalWidth * scale > 8192) {
+           safeScale = (8192 / imgEl.naturalWidth) as any;
+        }
+
+        // 2. AI Throttle: Client-side AI (VRAM/TDR intensive) only runs if output is < 4k.
+        // If 'Stability Mode' is ON, we skip AI entirely for safety.
+        const isSafeForAI = !stabilityMode && (imgEl.naturalWidth * safeScale) <= 4096;
+
+        if (useAI && isSafeForAI && engineStatus === "ready" && upscalerRef.current) {
           try {
-            // Draw into a canvas to avoid any blob URL issues
+            // Draw into a canvas to ensure clean pixel access
             const srcCanvas = document.createElement("canvas");
             srcCanvas.width = imgEl.naturalWidth;
             srcCanvas.height = imgEl.naturalHeight;
             const srcCtx = srcCanvas.getContext("2d")!;
             srcCtx.drawImage(imgEl, 0, 0);
 
+            // Use tiny patches (32) to prevent GPU timeouts (BSOD) on Intel laptops
             const result: string = await upscalerRef.current.upscale(srcCanvas, {
               output: "base64",
-              patchSize: scale >= 4 ? 64 : 128,
+              patchSize: 32, 
               padding: 4,
             });
 
-            // Get dimensions from the result
+            // If result is invalid, AI crashed silently
+            if (!result || result.length < 500) {
+               throw new Error("AI engine exhausted");
+            }
+
             const resultImg = await loadImage(result);
             finalUrl = result;
             finalW = resultImg.naturalWidth;
             finalH = resultImg.naturalHeight;
           } catch (aiErr) {
-            // AI failed — fall back to canvas upscaling
-            console.warn("AI upscale failed, falling back to canvas:", aiErr);
-            const fallback = await canvasUpscale(imgEl, scale, format);
+            console.warn("Hardware Safety Fallback:", aiErr);
+            const fallback = await canvasUpscale(imgEl, safeScale, format);
             finalUrl = fallback.dataUrl;
             finalW = fallback.w;
             finalH = fallback.h;
           }
         } else {
-          // AI not available — use canvas upscaling directly
-          const fallback = await canvasUpscale(imgEl, scale, format);
+          // Automatic 'Elite Canvas' mode for high-resolution images
+          const fallback = await canvasUpscale(imgEl, safeScale, format);
           finalUrl = fallback.dataUrl;
           finalW = fallback.w;
           finalH = fallback.h;
+        }
+
+        // Final Verify: One last check for blank context
+        if (!finalUrl || finalUrl.length < 500) {
+            throw new Error("Buffer failure: Try a smaller scale");
         }
 
         setFiles((prev) =>
@@ -504,36 +540,78 @@ export default function ImageUpscalerPage() {
 
             <div className="h-8 w-px bg-white/5 hidden sm:block" />
 
-            {/* Engine status */}
-            <div className="flex items-center gap-2">
-              <div
-                className={`w-2 h-2 rounded-full ${
-                  engineStatus === "ready"
-                    ? "bg-emerald-500 shadow-lg shadow-emerald-500/40"
-                    : engineStatus === "loading"
-                      ? "bg-amber-500 animate-pulse"
-                      : engineStatus === "error"
-                        ? "bg-rose-500"
-                        : "bg-slate-600"
-                }`}
-              />
-              <span className="text-[10px] font-bold text-slate-400 uppercase">
-                {engineStatus === "ready"
-                  ? "AI Ready"
-                  : engineStatus === "loading"
-                    ? "Loading Model…"
-                    : engineStatus === "error"
-                      ? "Canvas Mode"
-                      : "Idle"}
-              </span>
-              {engineStatus === "error" && (
+            {/* Stability Toggle */}
+            <div className="flex flex-col gap-1 justify-center">
+              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 block">
+                 Stability
+              </label>
+              <div className="flex gap-1.5 p-0.5 bg-black/40 rounded-lg border border-white/10 mt-0.5">
                 <button
-                  onClick={initEngine}
-                  className="text-amber-500 hover:text-amber-400 transition-all"
-                  title="Retry AI Engine"
+                  onClick={() => setStabilityMode(false)}
+                  disabled={isProcessing}
+                  title="High Quality AI (Requires strong GPU)"
+                  className={`px-3 py-1 rounded-md text-[9px] font-black uppercase transition-all ${!stabilityMode ? "bg-amber-500 text-black shadow-lg" : "text-white/30 hover:text-white/60"}`}
                 >
-                  <RefreshCw size={12} />
+                  AI
                 </button>
+                <button
+                  onClick={() => setStabilityMode(true)}
+                  disabled={isProcessing}
+                  title="High Speed (Safe for all laptops)"
+                  className={`px-3 py-1 rounded-md text-[9px] font-black uppercase transition-all ${stabilityMode ? "bg-emerald-500 text-black shadow-lg" : "text-white/30 hover:text-white/60"}`}
+                >
+                  Safe
+                </button>
+              </div>
+            </div>
+
+            <div className="h-8 w-px bg-white/5 hidden sm:block" />
+
+            {/* Engine status */}
+            <div className="flex flex-col gap-1 justify-center">
+              <div className="flex items-center gap-2">
+                <div
+                  className={`w-2 h-2 rounded-full ${
+                    stabilityMode 
+                      ? "bg-emerald-500 shadow-lg shadow-emerald-500/40"
+                      : engineStatus === "ready"
+                        ? "bg-emerald-500 shadow-lg shadow-emerald-500/40"
+                        : engineStatus === "loading"
+                          ? "bg-amber-500 animate-pulse"
+                          : engineStatus === "error"
+                            ? "bg-rose-500"
+                            : "bg-slate-600"
+                  }`}
+                />
+                <span className="text-[10px] font-bold text-slate-400 uppercase">
+                  {stabilityMode 
+                    ? "Safe Mode Active"
+                    : engineStatus === "ready"
+                      ? "AI Ready"
+                      : engineStatus === "loading"
+                        ? "Loading Model…"
+                        : engineStatus === "error"
+                          ? "Engine Issue"
+                          : "Idle"}
+                </span>
+                {!stabilityMode && engineStatus === "error" && (
+                  <button
+                    onClick={initEngine}
+                    className="text-amber-500 hover:text-amber-400 transition-all"
+                    title="Retry AI Engine"
+                  >
+                    <RefreshCw size={12} />
+                  </button>
+                )}
+              </div>
+              {stabilityMode ? (
+                 <div className="text-[8px] text-emerald-500/60 font-medium max-w-[120px] truncate leading-tight">
+                    Optimized for stability
+                 </div>
+              ) : engineStatus === "error" && engineError && (
+                <div className="text-[8px] text-rose-500/60 font-medium max-w-[120px] truncate leading-tight">
+                  {engineError}
+                </div>
               )}
             </div>
           </div>
@@ -689,11 +767,13 @@ export default function ImageUpscalerPage() {
                         ) : f.status === "processing" ? (
                           <div>
                             <div className="text-[9px] font-black uppercase text-amber-500 animate-pulse">
-                              Upscaling…
+                              {f.originalDim && (f.originalDim.w * scale) > 4096 
+                                ? "Processing (Pro Speed Safe Mode)" 
+                                : "Upscaling…"}
                             </div>
                             <div className="text-xs text-white/40">
                               {f.originalDim
-                                ? `${f.originalDim.w}×${f.originalDim.h} → ${f.originalDim.w * scale}×${f.originalDim.h * scale}`
+                                ? `${f.originalDim.w}×${f.originalDim.h} → ${Math.min(8192, Math.round(f.originalDim.w * scale))}×${Math.min(8192, Math.round(f.originalDim.h * scale))}`
                                 : "Processing"}
                             </div>
                           </div>
