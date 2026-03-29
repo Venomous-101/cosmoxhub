@@ -2,14 +2,9 @@
 
 import { useState } from "react";
 import { 
-  Type, 
-  Mic2, 
-  FileText, 
-  Hash, 
   Copy, 
   Trash2, 
   AlignLeft,
-  BookOpen,
   CheckCircle2
 } from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";

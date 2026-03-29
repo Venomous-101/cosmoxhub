@@ -163,7 +163,7 @@ export default function AIPromptOptimizerPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Input */}
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
-            className="bg-[#0a0a1a]/60 border border-white/5 rounded-[2rem] overflow-hidden shadow-xl flex flex-col min-h-[380px]">
+            className="bg-white/[0.03] border border-white/10 rounded-[2.5rem] overflow-hidden shadow-xl flex flex-col min-h-[380px]">
             <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
               <div className="flex items-center gap-2"><Type size={13} className="text-purple-500" /><span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Raw Idea Input</span></div>
               <button onClick={() => setInput("")} aria-label="Clear input" title="Clear input" className="p-1.5 text-slate-600 hover:text-rose-400 transition-colors"><Trash2 size={14} /></button>
@@ -173,10 +173,10 @@ export default function AIPromptOptimizerPage() {
               placeholder={"Describe what you want the AI to do...\n\nExample: Write a compelling homepage for a B2B SaaS startup that helps small businesses manage their finances."}
               value={input} onChange={(e) => setInput(e.target.value)}
             />
-            <div className="px-6 py-3 border-t border-white/5 flex items-center justify-between">
-              <span className="text-[10px] text-slate-600 font-mono">{input.length} chars</span>
+            <div className="px-6 pb-6 pt-4 border-t border-white/5 flex items-center justify-between">
+              <span className="text-[10px] text-slate-500 font-mono tracking-tighter">{input.length} characters</span>
               <button onClick={optimizePrompt} disabled={isProcessing || !input.trim()}
-                className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:-translate-y-0.5 disabled:opacity-50 transition-all">
+                className="flex items-center gap-2 px-6 py-2.5 bg-violet-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-violet-500 disabled:opacity-50 transition-all">
                 {isProcessing ? <><Sparkles size={13} className="animate-spin" /> Building...</> : <><ArrowRightLeft size={13} /> Optimize</>}
               </button>
             </div>
@@ -184,14 +184,14 @@ export default function AIPromptOptimizerPage() {
 
           {/* Output */}
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}
-            className="bg-[#0a0a1a]/80 border border-purple-500/10 rounded-[2rem] overflow-hidden shadow-xl flex flex-col min-h-[380px] relative">
+            className="bg-white/[0.03] border border-violet-500/20 rounded-[2.5rem] overflow-hidden shadow-xl flex flex-col min-h-[380px] relative">
             <div className="absolute inset-0 bg-gradient-to-br from-purple-500/3 to-transparent pointer-events-none" />
             <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between relative z-10">
-              <div className="flex items-center gap-2"><BrainCircuit size={13} className="text-amber-400" /><span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Optimized Prompt · {framework}</span></div>
+              <div className="flex items-center gap-2"><BrainCircuit size={13} className="text-amber-400" /><span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Optimized Result</span></div>
               {optimized && (
-                <button onClick={handleCopy} className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${copied ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30" : "bg-white/5 text-slate-400 border-white/10 hover:border-purple-500/30"}`}>
+                <button onClick={handleCopy} className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${copied ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30" : "bg-white/5 text-slate-400 border-white/10 hover:border-violet-500/30"}`}>
                   {copied ? <CheckCircle2 size={13} /> : <Copy size={13} />}
-                  {copied ? "Copied!" : "Copy"}
+                  {copied ? "COPIED" : "COPY"}
                 </button>
               )}
             </div>
