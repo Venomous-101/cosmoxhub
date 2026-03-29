@@ -140,9 +140,9 @@ export default function MergePDFPage() {
                     <div className="w-20 h-20 bg-rose-500/10 rounded-3xl flex items-center justify-center mb-6 border border-rose-500/20 group-hover:scale-110 group-hover:bg-rose-500/20 transition-all duration-500">
                         <FilePlus className="text-rose-500 w-10 h-10" />
                     </div>
-                    <h3 className="text-xl font-black text-white uppercase tracking-widest mb-2">Ingest PDF Files</h3>
+                    <h3 className="text-xl font-black text-white uppercase tracking-widest mb-2">Add PDF Files</h3>
                     <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-loose max-w-xs text-center">
-                        Select multiple documents. They will be processed entirely on this device.
+                        Select multiple documents. They will be merged entirely on this device.
                     </p>
                     <input type="file" multiple accept="application/pdf" className="hidden" onChange={handleFileChange} />
                 </label>
@@ -207,7 +207,7 @@ export default function MergePDFPage() {
                 {files.length === 0 && (
                      <div className="h-[200px] flex flex-col items-center justify-center text-center opacity-20">
                         <Combine size={48} className="text-slate-500 mb-4" />
-                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Manifest Empty</p>
+                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">No Files Selected</p>
                     </div>
                 )}
             </div>
@@ -223,13 +223,13 @@ export default function MergePDFPage() {
               <div className="p-2.5 bg-rose-500/10 rounded-2xl">
                 <Settings className="w-5 h-5 text-rose-500" />
               </div>
-              <h3 className="text-xl font-black text-white tracking-tight">Merger Manifest</h3>
+              <h3 className="text-xl font-black text-white tracking-tight">Selected Files</h3>
             </div>
 
             <div className="space-y-8">
                 <div className="space-y-2">
                     <div className="flex justify-between items-center mb-1">
-                        <span className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Active Jobs</span>
+                        <span className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Files Added</span>
                         <span className="text-rose-500 font-black text-xs">{files.length} FILES</span>
                     </div>
                     <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
@@ -255,11 +255,11 @@ export default function MergePDFPage() {
                     >
                         {isMerging ? (
                             <>
-                                <RefreshCw size={16} className="animate-spin" /> SYNCHRONIZING...
+                                <RefreshCw size={16} className="animate-spin" /> MERGING...
                             </>
                         ) : (
                             <>
-                                <Download size={16} className="group-hover:scale-110 transition-transform" /> COMMAND MERGE
+                                <Download size={16} className="group-hover:scale-110 transition-transform" /> MERGE NOW
                             </>
                         )}
                     </button>
@@ -268,7 +268,7 @@ export default function MergePDFPage() {
                         onClick={() => setFiles([])}
                         className="w-full bg-white/5 border border-white/10 hover:border-rose-500/30 text-white font-black text-[11px] uppercase tracking-[0.15em] py-4 rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-2 group"
                     >
-                        <Trash2 size={16} className="text-rose-500" /> Purge Manifest
+                        <Trash2 size={16} className="text-rose-500" /> Clear All Files
                     </button>
                 </div>
 
@@ -277,7 +277,7 @@ export default function MergePDFPage() {
                         <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent translate-x-full group-hover:translate-x-0 transition-transform duration-700" />
                         <Zap size={16} className="shrink-0 mt-0.5" />
                         <p className="text-[9px] font-bold uppercase leading-tight tracking-wider relative z-10">
-                            Elite documents remain local. Your proprietary data never leaves the terminal sandbox.
+                            Safe and Private. Your data never leaves your device and is never uploaded.
                         </p>
                     </div>
                 </div>
@@ -287,7 +287,7 @@ export default function MergePDFPage() {
           <div className="bg-[#0a0a1a]/40 border border-white/5 rounded-3xl p-6 shadow-xl relative overflow-hidden group flex items-start gap-4">
             <Sparkles size={18} className="text-rose-500 shrink-0" />
             <p className="text-[10px] text-slate-500 font-medium italic leading-relaxed">
-                PDF merging uses byte-level stream orchestration, preserving all internal hyperlinks and vector definitions.
+                High-performance merging that preserves all links, orientation, and vector data.
             </p>
           </div>
         </aside>
