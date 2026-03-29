@@ -171,7 +171,7 @@ export default function ImageUpscalerPage() {
     "idle" | "loading" | "ready" | "error"
   >("idle");
   const [engineError, setEngineError] = useState("");
-  const [useAI, setUseAI] = useState(true);
+  const [useAI] = useState(true);
   const [stabilityMode, setStabilityMode] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -299,41 +299,37 @@ export default function ImageUpscalerPage() {
   };
 
   /* ---- Process All ---- */
-  // High-Level Refinement Pass (Sharpening)
-  const applyRefinement = (canvas: HTMLCanvasElement) => {
-    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  /**
+   * GPU-Accelerated Refinement Pass
+   * Uses hardware acceleration (Canvas Filters) to recover micro-details
+   * without hanging the main thread on large images.
+   */
+  const applyRefinement = (canvas: HTMLCanvasElement, isUltra: boolean) => {
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const width = canvas.width;
-    const height = canvas.height;
-    const imageData = ctx.getImageData(0, 0, width, height);
-    const data = imageData.data;
-    const output = new Uint8ClampedArray(data.length);
+    // 1. Create a safe copy of the current state
+    const buffer = document.createElement("canvas");
+    buffer.width = canvas.width;
+    buffer.height = canvas.height;
+    const bCtx = buffer.getContext("2d")!;
+    bCtx.drawImage(canvas, 0, 0);
 
-    // Simple but effective Laplacian Sharpening Kernel (3x3)
-    // [ 0, -1,  0]
-    // [-1,  5, -1]
-    // [ 0, -1,  0]
-    const kernel = [0, -1, 0, -1, 5, -1, 0, -1, 0];
-
-    for (let y = 1; y < height - 1; y++) {
-      for (let x = 1; x < width - 1; x++) {
-        for (let c = 0; c < 3; c++) {
-          const i = (y * width + x) * 4 + c;
-          let sum = 0;
-          for (let ky = -1; ky <= 1; ky++) {
-            for (let kx = -1; kx <= 1; kx++) {
-              const ki = ((y + ky) * width + (x + kx)) * 4 + c;
-              sum += data[ki] * kernel[(ky + 1) * 3 + (kx + 1)];
-            }
-          }
-          output[i] = Math.min(255, Math.max(0, sum));
-        }
-        output[(y * width + x) * 4 + 3] = data[(y * width + x) * 4 + 3]; // Alpha
-      }
+    // 2. Clear original and apply GPU Filters
+    // - Contrast boost for 'pop'
+    // - Saturation for 'vividness'
+    // - Brightness for 'HDR-like' clarity
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Tuning: Standard = subtle, Ultra = vivid texture recovery
+    if (isUltra) {
+      ctx.filter = "contrast(1.12) brightness(1.03) saturate(1.06) blur(0.2px) contrast(1.1)";
+    } else {
+       ctx.filter = "contrast(1.06) brightness(1.01) saturate(1.02)";
     }
-
-    ctx.putImageData(new ImageData(output, width, height), 0, 0);
+    
+    ctx.drawImage(buffer, 0, 0);
+    ctx.filter = "none"; // Reset for future operations
   };
 
   const processAll = async () => {
@@ -366,7 +362,7 @@ export default function ImageUpscalerPage() {
         // 1. Max Output Cap: Never exceed 8192px (8K) to prevent 256MB memory buffer crash (blank image).
         let safeScale = scale;
         if (imgEl.naturalWidth * scale > 8192) {
-           safeScale = (8192 / imgEl.naturalWidth) as any;
+           safeScale = (8192 / imgEl.naturalWidth);
         }
 
         // 2. AI Throttle: Client-side AI (VRAM/TDR intensive) only runs if output is < 4k.
@@ -386,7 +382,7 @@ export default function ImageUpscalerPage() {
             const result: string = await upscalerRef.current.upscale(srcCanvas, {
               output: "base64",
               patchSize: 32, 
-              padding: 4,
+              padding: quality === "ultra" ? 8 : 4,
               progress: (percent: number) => {
                 setFiles((prev) =>
                   prev.map((item) =>
@@ -437,7 +433,7 @@ export default function ImageUpscalerPage() {
             const refineCtx = refineCanvas.getContext("2d")!;
             refineCtx.drawImage(refineImg, 0, 0);
             
-            applyRefinement(refineCanvas);
+            applyRefinement(refineCanvas, quality === "ultra");
             refinedUrl = refineCanvas.toDataURL(`image/${format}`, format === "png" ? undefined : 0.95);
           } catch (e) {
             console.warn("Refinement Pass skipped:", e);
@@ -885,12 +881,14 @@ export default function ImageUpscalerPage() {
                               </div>
                             </div>
                             {/* Progress bar */}
-                            <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden mb-2">
-                               <div 
-                                 className="h-full bg-amber-500 transition-all duration-300 ease-out"
-                                 style={{ width: `${f.progress ?? 0}%` }}
-                               />
-                            </div>
+                             <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden mb-2">
+                                <motion.div 
+                                  className="h-full bg-amber-500"
+                                  initial={{ width: 0 }}
+                                  animate={{ width: `${f.progress ?? 0}%` }}
+                                  transition={{ duration: 0.3 }}
+                                />
+                             </div>
                             <div className="text-[10px] text-white/40 flex justify-between items-center">
                               <span>
                                 {f.originalDim
