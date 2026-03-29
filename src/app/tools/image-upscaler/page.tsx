@@ -218,9 +218,6 @@ export default function ImageUpscalerPage() {
       // 4. Create new Upscaler with safety patches
       upscalerRef.current = new Upscaler({ 
         model,
-        warmupConfigs: {
-          default: [{ patchSize: 32, padding: 4 }],
-        }
       });
 
       // 5. Warm-up: run a tiny 4×4 upscale to force model download & compile
