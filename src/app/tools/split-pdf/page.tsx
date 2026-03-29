@@ -146,9 +146,9 @@ export default function SplitPDFPage() {
                     <div className="w-20 h-20 bg-pink-500/10 rounded-3xl flex items-center justify-center mb-6 border border-pink-500/20 group-hover:scale-110 group-hover:bg-pink-500/20 transition-all duration-500">
                         <FileUp className="text-pink-500 w-10 h-10" />
                     </div>
-                    <h3 className="text-xl font-black text-white uppercase tracking-widest mb-2">Ingest PDF Source</h3>
+                    <h3 className="text-xl font-black text-white uppercase tracking-widest mb-2">Add PDF File</h3>
                     <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-loose max-w-xs text-center px-4">
-                        Select a single PDF file to analyze and decompose.
+                        Select a single PDF file to extract pages.
                     </p>
                     <input type="file" accept="application/pdf" className="hidden" onChange={handleFileChange} />
                 </label>
@@ -197,7 +197,7 @@ export default function SplitPDFPage() {
                          onClick={() => setFile(null)}
                          className="mx-auto text-[10px] font-black text-slate-700 hover:text-rose-500 uppercase tracking-widest transition-colors"
                     >
-                        Purge Local Memory Cache
+                        Remove File
                     </button>
                 </div>
               )}
@@ -205,7 +205,7 @@ export default function SplitPDFPage() {
               {file && (
                  <div className="pt-8 mt-8 border-t border-white/5 flex flex-col items-center">
                     <div className="flex items-center gap-3 text-emerald-500/40 text-[9px] font-black uppercase tracking-[0.2em]">
-                        <CheckCircle2 size={12} /> Privacy Guaranteed: Processing 100% In-Terminal
+                        <CheckCircle2 size={12} /> Privacy Guaranteed: Processing 100% On-Device
                     </div>
                  </div>
               )}
@@ -215,14 +215,10 @@ export default function SplitPDFPage() {
 
         {/* Sidebar Controls */}
         <aside className="space-y-6 sticky top-8">
-          <div className="bg-[#0a0a1a]/90 backdrop-blur-2xl border border-white/5 rounded-[2.5rem] p-8 relative overflow-hidden shadow-2xl">
-            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-pink-600 to-rose-600 shadow-[0_2px_15px_rgba(236,72,153,0.3)]" />
+          <div className="bg-white/[0.03] border border-white/10 rounded-3xl p-6 relative overflow-hidden shadow-xl">
             
-            <div className="flex items-center gap-3 mb-8">
-              <div className="p-2.5 bg-pink-500/10 rounded-2xl">
-                <Settings className="w-5 h-5 text-pink-500" />
-              </div>
-              <h3 className="text-xl font-black text-white tracking-tight">Split Config</h3>
+            <div className="flex justify-between items-end mb-6 border-b border-white/5 pb-4">
+              <h3 className="text-lg font-bold text-white tracking-tight">Split Settings</h3>
             </div>
 
             <div className="space-y-8">
@@ -237,37 +233,21 @@ export default function SplitPDFPage() {
                     <button
                         onClick={splitPDF}
                         disabled={!file || !ranges || isSplitting}
-                        className="w-full bg-pink-500 hover:bg-pink-600 disabled:bg-white/5 disabled:text-slate-600 text-black font-black text-[11px] uppercase tracking-[0.15em] py-4 rounded-2xl transition-all shadow-xl shadow-pink-500/20 active:scale-95 flex items-center justify-center gap-2 group"
+                        className="w-full bg-pink-500 hover:bg-pink-600 disabled:bg-white/5 disabled:text-slate-600 text-black font-black text-[11px] uppercase tracking-[0.15em] py-4 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2"
                     >
                         {isSplitting ? (
                             <>
-                                <FileDigit size={16} className="animate-pulse" /> EXTRACTING BYTES...
+                                <FileDigit size={16} className="animate-spin" /> SPLITTING...
                             </>
                         ) : (
                             <>
-                                <Download size={16} className="group-hover:scale-110 transition-transform" /> COMMAND SPLIT
+                                <Download size={16} /> SPLIT NOW
                             </>
                         )}
                     </button>
                 </div>
 
-                <div className="pt-6 border-t border-white/5">
-                    <div className="p-4 bg-pink-500/5 border border-pink-500/10 rounded-2xl flex gap-3 text-pink-500 relative overflow-hidden group">
-                        <div className="absolute inset-0 bg-gradient-to-br from-pink-500/5 to-transparent translate-x-full group-hover:translate-x-0 transition-transform duration-700" />
-                        <Zap size={16} className="shrink-0 mt-0.5" />
-                        <p className="text-[9px] font-bold uppercase leading-tight tracking-wider relative z-10">
-                            Decomposition logic ensures internal metadata and bookmarks are preserved in extracted ranges.
-                        </p>
-                    </div>
-                </div>
             </div>
-          </div>
-
-          <div className="bg-[#0a0a1a]/40 border border-white/5 rounded-3xl p-6 shadow-xl relative overflow-hidden group flex items-start gap-4">
-            <Sparkles size={18} className="text-pink-500 shrink-0" />
-            <p className="text-[10px] text-slate-500 font-medium italic leading-relaxed">
-                Elite extraction doesn&apos;t re-encode images inside the PDF, ensuring zero quality loss in the extracted ranges.
-            </p>
           </div>
         </aside>
       </div>
