@@ -2,8 +2,9 @@
 import { useState } from "react";
 import {
   Brain, Download, Copy, Check, Settings, Sparkles,
-  Zap, ShieldCheck, FileCode2, User, Tag
+  Zap, FileCode2
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import ToolLayout from "@/components/ToolLayout";
 
 interface AgentForm {
@@ -28,6 +29,7 @@ export default function ClaudeSkillsCreatorPage() {
     name: "", role: "", skills: "", style: "", instructions: "", persona: "", outputFormat: ""
   });
   const [copied, setCopied] = useState(false);
+  const [activeTab, setActiveTab] = useState<"Identity" | "Training" | "Behavior">("Identity");
 
   const update = (key: keyof AgentForm, val: string) => setForm(prev => ({ ...prev, [key]: val }));
 
@@ -113,111 +115,128 @@ ${instructionLines}
         "featureList": ["SKILLS.md generator", "Skill presets", "Live preview", "Multi-model compatible", "One-click export"]
       })}} />
 
-      <div className="grid lg:grid-cols-[1fr_1fr] gap-8 items-start">
+      <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-8 items-start">
         {/* Input Form */}
-        <div className="space-y-5">
-          <div className="bg-[#0a0a1a]/80 backdrop-blur-2xl border border-white/5 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-purple-600 to-violet-400 shadow-[0_2px_15px_rgba(168,85,247,0.4)]" />
-            <div className="flex items-center gap-3 mb-8">
-              <div className="p-2.5 bg-purple-500/10 rounded-2xl"><Settings className="w-5 h-5 text-purple-500" /></div>
-              <h3 className="text-xl font-black text-white tracking-tight">Agent Configuration</h3>
+        <div className="space-y-6">
+          <div className="bg-white/[0.03] border border-white/10 rounded-[2.5rem] p-8 shadow-2xl relative">
+            <div className="flex items-center justify-between mb-8 pb-6 border-b border-white/5">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 bg-violet-500/10 rounded-2xl"><Settings className="w-5 h-5 text-violet-500" /></div>
+                <h3 className="text-xl font-black text-white tracking-tight italic">Agent Configuration</h3>
+              </div>
+              <div className="flex bg-white/5 p-1 rounded-2xl border border-white/5">
+                {(["Identity", "Training", "Behavior"] as const).map(tab => (
+                  <button 
+                    key={tab} 
+                    onClick={() => setActiveTab(tab)}
+                    className={`px-5 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${activeTab === tab ? "bg-violet-600 text-white shadow-lg" : "text-slate-500 hover:text-slate-300"}`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div className="space-y-6">
-              {/* Agent Name */}
-              <div className="space-y-2">
-                <label className="text-slate-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-2"><User size={11} className="text-purple-500" /> Agent Name</label>
-                <input type="text" value={form.name} onChange={e => update("name", e.target.value)} placeholder="e.g. CodeArchitect, ResearchMaster, DataOracle"
-                  className="w-full bg-white/5 border border-white/5 rounded-2xl px-5 py-4 text-sm text-white focus:border-purple-500/40 outline-none transition-all font-medium placeholder:text-slate-800" />
-              </div>
+            <div className="space-y-8 min-h-[450px]">
+              <AnimatePresence mode="wait">
+                {activeTab === "Identity" && (
+                  <motion.div key="identity" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
+                    <div className="space-y-3">
+                      <label className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2">Agent Name</label>
+                      <input type="text" value={form.name} onChange={e => update("name", e.target.value)} placeholder="CodeArchitect, ResearchMaster..."
+                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm text-white focus:border-violet-500/40 outline-none transition-all font-medium placeholder:text-slate-800 shadow-inner" />
+                    </div>
+                    <div className="space-y-3">
+                      <label className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em]">Primary Mission</label>
+                      <textarea value={form.role} onChange={e => update("role", e.target.value)} placeholder="What is this agent's core purpose? What problem does it solve?"
+                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm text-white focus:border-violet-500/40 outline-none transition-all font-medium placeholder:text-slate-800 resize-none h-32 shadow-inner" />
+                    </div>
+                    <div className="space-y-3">
+                      <label className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em]">Persona Description</label>
+                      <textarea value={form.persona} onChange={e => update("persona", e.target.value)} placeholder="Describe the agent's character and expertise level..."
+                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm text-white focus:border-violet-500/40 outline-none transition-all font-medium placeholder:text-slate-800 resize-none h-32 shadow-inner" />
+                    </div>
+                  </motion.div>
+                )}
 
-              {/* Role */}
-              <div className="space-y-2">
-                <label className="text-slate-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-2"><Tag size={11} className="text-purple-500" /> Primary Role & Mission</label>
-                <textarea value={form.role} onChange={e => update("role", e.target.value)} placeholder="What is this agent's core purpose? What problem does it solve?"
-                  className="w-full bg-white/5 border border-white/5 rounded-2xl px-5 py-4 text-sm text-white focus:border-purple-500/40 outline-none transition-all font-medium placeholder:text-slate-800 resize-none h-24" />
-              </div>
+                {activeTab === "Training" && (
+                  <motion.div key="training" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <label className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em]">Quick Presets</label>
+                      </div>
+                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+                        {SKILL_PRESETS.map(p => (
+                          <button key={p.label} onClick={() => applyPreset(p)}
+                            className="px-4 py-3 bg-white/5 hover:bg-violet-600/20 border border-white/5 hover:border-violet-500/40 rounded-xl text-[9px] font-black text-slate-400 hover:text-violet-400 uppercase tracking-widest transition-all">
+                            {p.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <label className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em]">Core Capabilities (one per line)</label>
+                      <textarea value={form.skills} onChange={e => update("skills", e.target.value)} placeholder="React/Next.js\nPython Data Analysis\nSEO Strategy\n..."
+                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm text-white focus:border-violet-500/40 outline-none transition-all font-medium font-mono placeholder:text-slate-800 resize-none h-64 shadow-inner" />
+                    </div>
+                  </motion.div>
+                )}
 
-              {/* Persona */}
-              <div className="space-y-2">
-                <label className="text-slate-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-2"><Sparkles size={11} className="text-purple-500" /> Persona Description</label>
-                <textarea value={form.persona} onChange={e => update("persona", e.target.value)} placeholder="Describe the agent's character, expertise level, and how it thinks..."
-                  className="w-full bg-white/5 border border-white/5 rounded-2xl px-5 py-4 text-sm text-white focus:border-purple-500/40 outline-none transition-all font-medium placeholder:text-slate-800 resize-none h-24" />
-              </div>
-
-              {/* Skills with Presets */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <label className="text-slate-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-2"><Zap size={11} className="text-purple-500" /> Skills (one per line)</label>
-                  <span className="text-[9px] text-slate-600 font-bold uppercase">Presets →</span>
-                </div>
-                <div className="flex gap-2 flex-wrap mb-2">
-                  {SKILL_PRESETS.map(p => (
-                    <button key={p.label} onClick={() => applyPreset(p)}
-                      className="px-3 py-1.5 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/20 hover:border-purple-500/40 rounded-xl text-[9px] font-black text-purple-400 uppercase tracking-widest transition-all">
-                      {p.label}
-                    </button>
-                  ))}
-                </div>
-                <textarea value={form.skills} onChange={e => update("skills", e.target.value)} placeholder={"React/Next.js\nPython Data Analysis\nSEO Strategy\n..."}
-                  className="w-full bg-white/5 border border-white/5 rounded-2xl px-5 py-4 text-sm text-white focus:border-purple-500/40 outline-none transition-all font-medium font-mono placeholder:text-slate-800 resize-none h-28" />
-              </div>
-
-              {/* Communication Style */}
-              <div className="space-y-2">
-                <label className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Communication Style</label>
-                <input type="text" value={form.style} onChange={e => update("style", e.target.value)} placeholder="e.g. Professional yet approachable, Technical and precise, Concise and direct"
-                  className="w-full bg-white/5 border border-white/5 rounded-2xl px-5 py-4 text-sm text-white focus:border-purple-500/40 outline-none transition-all font-medium placeholder:text-slate-800" />
-              </div>
-
-              {/* Output Format */}
-              <div className="space-y-2">
-                <label className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Output Format Preferences</label>
-                <input type="text" value={form.outputFormat} onChange={e => update("outputFormat", e.target.value)} placeholder="e.g. Markdown with headers, JSON responses, Code blocks with explanations"
-                  className="w-full bg-white/5 border border-white/5 rounded-2xl px-5 py-4 text-sm text-white focus:border-purple-500/40 outline-none transition-all font-medium placeholder:text-slate-800" />
-              </div>
-
-              {/* Guardrails */}
-              <div className="space-y-2">
-                <label className="text-slate-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-2"><ShieldCheck size={11} className="text-purple-500" /> Guardrails & Rules (one per line)</label>
-                <textarea value={form.instructions} onChange={e => update("instructions", e.target.value)} placeholder={"Always cite sources\nDecline unethical requests\nAsk for clarification when ambiguous\n..."}
-                  className="w-full bg-white/5 border border-white/5 rounded-2xl px-5 py-4 text-sm text-white focus:border-purple-500/40 outline-none transition-all font-medium placeholder:text-slate-800 resize-none h-24" />
-              </div>
+                {activeTab === "Behavior" && (
+                  <motion.div key="behavior" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
+                    <div className="space-y-3">
+                      <label className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em]">Communication Tone</label>
+                      <input type="text" value={form.style} onChange={e => update("style", e.target.value)} placeholder="Professional yet approachable, Concise and direct..."
+                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm text-white focus:border-violet-500/40 outline-none transition-all font-medium placeholder:text-slate-800 shadow-inner" />
+                    </div>
+                    <div className="space-y-3">
+                      <label className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em]">Output Preferences</label>
+                      <input type="text" value={form.outputFormat} onChange={e => update("outputFormat", e.target.value)} placeholder="Markdown with headers, JSON responses..."
+                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm text-white focus:border-violet-500/40 outline-none transition-all font-medium placeholder:text-slate-800 shadow-inner" />
+                    </div>
+                    <div className="space-y-3">
+                      <label className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em]">Guardrails & Ethics (one per line)</label>
+                      <textarea value={form.instructions} onChange={e => update("instructions", e.target.value)} placeholder="Always cite sources\nDecline unethical requests..."
+                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-sm text-white focus:border-violet-500/40 outline-none transition-all font-medium placeholder:text-slate-800 resize-none h-44 shadow-inner" />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </div>
 
         {/* Live Preview & Actions */}
         <div className="space-y-5 sticky top-8">
-          <div className="bg-[#0a0a1a]/80 border border-purple-500/10 rounded-[2.5rem] overflow-hidden shadow-2xl">
-            <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-purple-500/[0.03]">
+          <div className="bg-white/[0.03] border border-violet-500/20 rounded-[2.5rem] overflow-hidden shadow-2xl">
+            <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-violet-500/[0.03]">
               <div className="flex items-center gap-2">
-                <FileCode2 size={13} className="text-purple-400" />
+                <FileCode2 size={13} className="text-violet-400" />
                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Live Preview · SKILLS.md</span>
               </div>
               <div className="flex items-center gap-2">
-                <button onClick={handleCopy} className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${copied ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30" : "bg-white/5 text-slate-400 border-white/10 hover:border-purple-500/30 hover:text-purple-400"}`}>
+                <button onClick={handleCopy} className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${copied ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30" : "bg-white/5 text-slate-400 border-white/10 hover:border-violet-500/30 hover:text-violet-400"}`}>
                   {copied ? <Check size={12} /> : <Copy size={12} />}
-                  {copied ? "Copied!" : "Copy"}
+                  {copied ? "COPIED" : "COPY"}
                 </button>
               </div>
             </div>
 
-            <pre className="p-8 text-slate-300 text-xs font-mono whitespace-pre-wrap min-h-[500px] leading-relaxed overflow-auto max-h-[600px]">
+            <pre className="p-8 text-slate-300 text-[11px] font-mono whitespace-pre-wrap min-h-[500px] leading-relaxed overflow-auto max-h-[600px] selection:bg-violet-500/40">
               {generateMarkdown()}
             </pre>
           </div>
 
           {/* Action Buttons */}
           <button onClick={downloadFile} disabled={!hasContent}
-            className="w-full py-5 bg-gradient-to-r from-purple-600 to-violet-600 text-white font-black rounded-2xl shadow-[0_4px_30px_rgba(168,85,247,0.3)] hover:shadow-[0_4px_40px_rgba(168,85,247,0.5)] hover:-translate-y-1 transition-all disabled:opacity-40 disabled:translate-y-0 disabled:shadow-none flex items-center justify-center gap-3 uppercase tracking-[0.15em] text-xs">
+            className="w-full py-5 bg-violet-600 text-white font-black rounded-2xl shadow-[0_4px_30px_rgba(139,92,246,0.3)] hover:shadow-[0_4px_40px_rgba(139,92,246,0.5)] hover:-translate-y-1 transition-all disabled:opacity-40 disabled:translate-y-0 disabled:shadow-none flex items-center justify-center gap-3 uppercase tracking-[0.2em] text-xs">
             <Download size={18} /> Download skills.md
           </button>
 
-          <div className="p-6 bg-purple-500/5 border border-purple-500/10 rounded-3xl flex items-start gap-4">
-            <Zap size={16} className="text-purple-500 shrink-0 mt-0.5" />
-            <p className="text-[10px] text-slate-500 font-bold leading-relaxed uppercase tracking-wider">
-              Generated files are fully compatible with Claude&apos;s SKILLS.md system, OpenAI Assistant instructions, and Gemini System Prompts.
+          <div className="p-6 bg-white/[0.02] border border-white/5 rounded-3xl flex items-start gap-4">
+            <Zap size={16} className="text-violet-500 shrink-0 mt-0.5" />
+            <p className="text-[10px] text-slate-500 font-bold leading-relaxed uppercase tracking-widest">
+              Generated files are compatible with Claude, GPT-4, and Gemini system protocols.
             </p>
           </div>
         </div>
