@@ -6,7 +6,8 @@ import {
   Eraser, 
   Upload,
   RefreshCw,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Sparkles
 } from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
 
@@ -23,6 +24,7 @@ export default function BackgroundRemoverPage() {
   const [status, setStatus] = useState<"idle" | "processing" | "completed" | "error">("idle");
   const [progress, setProgress] = useState<number>(0);
   const [aiLoaded, setAiLoaded] = useState(false);
+  const [bgMode, setBgMode] = useState<"transparent" | "white" | "blue">("transparent");
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -81,7 +83,7 @@ export default function BackgroundRemoverPage() {
         model: "medium",
         output: {
           format: "image/png",
-          quality: 1
+          quality: 0.9
         }
       });
       
@@ -94,12 +96,41 @@ export default function BackgroundRemoverPage() {
     }
   };
 
-  const downloadImage = () => {
+  const downloadImage = async () => {
     if (!result || !file) return;
-    const link = document.createElement("a");
-    link.href = result;
-    link.download = `nobg-${file.name.replace(/\.[^/.]+$/, "")}.png`;
-    link.click();
+
+    // If transparent, download normally
+    if (bgMode === "transparent") {
+      const link = document.createElement("a");
+      link.href = result;
+      link.download = `nobg-${file.name.replace(/\.[^/.]+$/, "")}.png`;
+      link.click();
+      return;
+    }
+
+    // Apply colored background via Canvas
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const img = new Image();
+    
+    img.onload = () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      
+      if (ctx) {
+        // Draw background
+        ctx.fillStyle = bgMode === "white" ? "#ffffff" : "#0055ff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // Draw isolated image
+        ctx.drawImage(img, 0, 0);
+        
+        const link = document.createElement("a");
+        link.href = canvas.toDataURL("image/jpeg", 0.95);
+        link.download = `${bgMode}-bg-${file.name.replace(/\.[^/.]+$/, "")}.jpg`;
+        link.click();
+      }
+    };
+    img.src = result;
   };
 
   const resetAll = () => {
@@ -116,44 +147,58 @@ export default function BackgroundRemoverPage() {
   return (
     <ToolLayout 
       title="Background Remover" 
-      description="Instantly remove backgrounds from images for free using pure client-side AI processing." 
+      description="Instantly remove backgrounds and apply professional white or blue backdrops for free." 
       icon={Eraser}
-      color="#ec4899"
+      color="#8b5cf6"
     >
+      <style jsx global>{`
+        .checkerboard-bg {
+          background-image: linear-gradient(45deg, #121221 25%, transparent 25%), 
+                            linear-gradient(-45deg, #121221 25%, transparent 25%), 
+                            linear-gradient(45deg, transparent 75%, #121221 75%), 
+                            linear-gradient(-45deg, transparent 75%, #121221 75%);
+          background-size: 20px 20px;
+          background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+      `}</style>
       <div className="max-w-3xl mx-auto space-y-8">
         
         {/* Upload State */}
         {!file && (
-          <div 
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             onClick={() => fileInputRef.current?.click()}
-            className="w-full flex flex-col items-center justify-center border-2 border-dashed border-pink-500/30 rounded-3xl bg-pink-500/5 hover:bg-pink-500/10 transition-all cursor-pointer h-80"
+            className="w-full flex flex-col items-center justify-center border-2 border-dashed border-violet-500/30 rounded-[2.5rem] bg-violet-500/5 hover:bg-violet-500/10 transition-all cursor-pointer h-96 group"
           >
-            <div className="w-20 h-20 bg-pink-500/10 rounded-2xl flex items-center justify-center mb-4 text-pink-500">
-              <Upload className="w-10 h-10" />
+            <div className="w-24 h-24 bg-violet-500/10 rounded-3xl flex items-center justify-center mb-6 text-violet-500 group-hover:scale-110 transition-transform">
+              <Upload className="w-12 h-12" />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">Upload an Image</h3>
-            <p className="text-slate-400 text-sm">PNG, JPG or WEBP (Max 10MB)</p>
-          </div>
+            <h3 className="text-2xl font-black text-white mb-2 tracking-tight italic">Drop or Upload Image</h3>
+            <p className="text-slate-500 text-sm font-bold uppercase tracking-widest">Supports PNG, JPG, WEBP · Max 10MB</p>
+          </motion.div>
         )}
 
         {/* Workspace State */}
         {file && preview && (
-          <div className="bg-[#0f0f1b] border border-white/5 rounded-3xl p-6">
-            <div className="flex flex-col md:flex-row gap-6 mb-6 h-auto md:h-80">
+          <div className="bg-white/[0.03] border border-white/10 rounded-[2.5rem] p-8 shadow-2xl">
+            <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 mb-8 h-auto">
               
               {/* Original Preview */}
-              <div className="flex-1 flex flex-col gap-2">
-                <span className="text-xs font-bold font-mono text-slate-500 uppercase">Original</span>
-                <div className="flex-1 rounded-2xl overflow-hidden bg-black/50 border border-white/10 relative flex items-center justify-center">
+              <div className="flex flex-col gap-4">
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Input Image</span>
+                <div className="aspect-square rounded-[2rem] overflow-hidden bg-black/40 border border-white/5 relative flex items-center justify-center">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={preview} alt="Original" className="max-w-full max-h-full object-contain" />
                 </div>
               </div>
 
               {/* Result Preview */}
-              <div className="flex-1 flex flex-col gap-2">
-                <span className="text-xs font-bold font-mono text-pink-500 uppercase">Result</span>
-                <div className="flex-1 rounded-2xl overflow-hidden bg-black/50 border border-white/10 relative flex items-center justify-center">
+              <div className="flex flex-col gap-4">
+                <span className="text-[10px] font-black text-violet-500 uppercase tracking-widest">Isolated Result</span>
+                <div className={`aspect-square rounded-[2rem] overflow-hidden border border-violet-500/20 relative flex items-center justify-center transition-colors duration-500 ${
+                  bgMode === "white" ? "bg-white" : bgMode === "blue" ? "bg-[#0055ff]" : "bg-black/40 checkerboard-bg"
+                }`}>
                   
                   {status === "idle" && (
                      <div className="text-center text-slate-500 flex flex-col items-center">
@@ -178,54 +223,83 @@ export default function BackgroundRemoverPage() {
                   )}
 
                   {status === "error" && (
-                    <div className="text-center text-rose-500 flex flex-col items-center px-4">
-                       <span className="text-sm font-medium mb-1">Processing Failed</span>
-                       <span className="text-xs text-rose-500/70">Please try a different image.</span>
+                    <div className="text-center text-rose-500 flex flex-col items-center px-8">
+                       <RefreshCw className="w-8 h-8 mb-4 opacity-50" />
+                       <span className="text-sm font-black uppercase tracking-widest mb-1">AI Engine Failed</span>
+                       <span className="text-xs text-slate-500 font-medium">This usually happens due to browser memory limits. Please reload and try again.</span>
                     </div>
                   )}
 
                   {result && (
                      // eslint-disable-next-line @next/next/no-img-element
-                     <img src={result} alt="Result" className="max-w-full max-h-full object-contain" />
+                     <img src={result} alt="Result" className="max-w-full max-h-full object-contain drop-shadow-2xl" />
                   )}
                 </div>
               </div>
-
             </div>
 
+            {/* Background Style Selector */}
+            {status === "completed" && (
+              <div className="mb-8 p-6 bg-white/5 rounded-3xl border border-white/10">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-violet-500/20 rounded-xl"><Sparkles className="w-4 h-4 text-violet-400" /></div>
+                    <span className="text-[10px] font-black text-white uppercase tracking-widest">Customize Background</span>
+                  </div>
+                  <div className="flex gap-2 p-1 bg-black/40 rounded-2xl border border-white/5">
+                    {[
+                      { id: "transparent", label: "None", class: "bg-white/10" },
+                      { id: "white", label: "White", class: "bg-white" },
+                      { id: "blue", label: "Blue", class: "bg-[#0055ff]" }
+                    ].map(opt => (
+                      <button
+                        key={opt.id}
+                        onClick={() => setBgMode(opt.id as any)}
+                        className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                          bgMode === opt.id ? "bg-violet-600 text-white" : "text-slate-500 hover:text-slate-300"
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Actions */}
-            <div className="flex items-center justify-between mt-6 pt-6 border-t border-white/10">
+            <div className="flex items-center justify-between mt-2 pt-6 border-t border-white/10">
               <button
                 onClick={resetAll}
-                className="px-5 py-2.5 rounded-xl border border-white/10 text-slate-300 hover:bg-white/5 transition-colors text-sm font-medium"
+                className="px-8 py-3 rounded-2xl border border-white/10 text-slate-500 hover:text-slate-300 hover:bg-white/5 transition-all text-[11px] font-black uppercase tracking-[0.2em]"
               >
-                Choose Another
+                Reset
               </button>
 
               {status === "idle" && (
                  <button
                     onClick={processImage}
                     disabled={!aiLoaded}
-                    className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-pink-600 hover:bg-pink-500 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-colors font-bold text-sm shadow-lg shadow-pink-500/20"
+                    className="flex items-center gap-3 px-10 py-4 rounded-2xl bg-violet-600 hover:bg-violet-500 disabled:opacity-40 disabled:cursor-not-allowed text-white transition-all font-black text-xs shadow-2xl shadow-violet-500/20 uppercase tracking-[0.2em]"
                  >
-                    <Eraser className="w-4 h-4" />
-                    {aiLoaded ? "Auto Remove Background" : "Loading AI Engine..."}
+                    <Eraser className="w-5 h-5" />
+                    {aiLoaded ? "Auto Remove" : "Initializing AI..."}
                  </button>
               )}
 
               {status === "processing" && (
-                 <button disabled className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-pink-600/50 text-white cursor-not-allowed font-bold text-sm">
-                    <RefreshCw className="w-4 h-4 animate-spin" /> Processing
+                 <button disabled className="flex items-center gap-3 px-10 py-4 rounded-2xl bg-violet-600/40 text-white cursor-not-allowed font-black text-xs uppercase tracking-[0.2em]">
+                    <RefreshCw className="w-5 h-5 animate-spin" /> Processing
                  </button>
               )}
 
               {status === "completed" && (
                  <button
                     onClick={downloadImage}
-                    className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-pink-600 hover:bg-pink-500 text-white transition-colors font-bold text-sm shadow-lg shadow-pink-500/20"
+                    className="flex items-center gap-3 px-10 py-4 rounded-2xl bg-violet-600 hover:bg-violet-500 text-white transition-all font-black text-xs shadow-2xl shadow-violet-500/20 uppercase tracking-[0.2em]"
                  >
-                    <Download className="w-4 h-4" />
-                    Download HD Image
+                    <Download className="w-5 h-5" />
+                    Download HD
                  </button>
               )}
             </div>
