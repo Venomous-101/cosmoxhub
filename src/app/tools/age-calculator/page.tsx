@@ -129,8 +129,9 @@ export default function AgeCalculatorPage() {
           
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div className="space-y-3">
-              <label className="text-slate-400 text-sm font-bold block">Date of Birth</label>
+              <label htmlFor="birthDate" className="text-slate-400 text-sm font-bold block">Date of Birth</label>
               <input 
+                  id="birthDate"
                   type="date"
                   value={birthDate}
                   onChange={(e) => setBirthDate(e.target.value)}
@@ -139,8 +140,9 @@ export default function AgeCalculatorPage() {
             </div>
 
             <div className="space-y-3">
-              <label className="text-slate-400 text-sm font-bold block">Calculate Age At</label>
+              <label htmlFor="targetDate" className="text-slate-400 text-sm font-bold block">Calculate Age At</label>
               <input 
+                  id="targetDate"
                   type="date"
                   value={targetDate}
                   onChange={(e) => setTargetDate(e.target.value)}
