@@ -18,18 +18,19 @@ import {
 import ToolLayout from "@/components/ToolLayout";
 import { motion, AnimatePresence } from "framer-motion";
 
-const AnalyticCard = ({ icon: Icon, label, value, color }: { icon: React.ElementType, label: string, value: number, color: string }) => (
+const AnalyticCard = ({ icon: Icon, label, value, iconBg, iconColor }: { icon: React.ElementType, label: string, value: number, iconBg: string, iconColor: string }) => (
   <motion.div 
-    initial={{ opacity: 0, scale: 0.95 }}
-    animate={{ opacity: 1, scale: 1 }}
-    className={`bg-[#0a0a1a]/60 backdrop-blur-xl border border-white/5 rounded-3xl p-6 hover:border-${color}-500/20 transition-all group overflow-hidden relative shadow-2xl`}
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    className="bg-white/[0.04] border border-white/10 rounded-[2rem] p-6 hover:bg-white/[0.08] transition-all flex flex-col shadow-lg"
   >
-    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-    <div className={`p-2.5 rounded-xl bg-${color}-500/10 border border-${color}-500/20 w-fit mb-4`}>
-      <Icon size={18} className={`text-${color}-500`} />
+    <div className="flex items-center gap-4 mb-4">
+      <div className={`p-3 rounded-2xl ${iconBg} ${iconColor}`}>
+        <Icon size={22} className="shrink-0" />
+      </div>
+      <div className="text-xs font-black uppercase tracking-widest text-slate-400">{label}</div>
     </div>
-    <div className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">{label}</div>
-    <div className="text-2xl font-black text-white tracking-tighter tabular-nums truncate">
+    <div className="text-3xl sm:text-4xl font-black text-white tabular-nums tracking-tighter truncate">
       {value.toLocaleString()}
     </div>
   </motion.div>
@@ -146,14 +147,6 @@ export default function AgeCalculatorPage() {
                 </div>
               </div>
 
-              <div className="pt-6 border-t border-white/5">
-                <div className="p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl flex gap-3 text-emerald-500">
-                    <History size={16} className="shrink-0 mt-0.5" />
-                    <p className="text-[9px] font-bold uppercase leading-tight tracking-wider">
-                        Client-side compute active. Genesis data remains local to this terminal.
-                    </p>
-                </div>
-              </div>
             </div>
           </div>
         </aside>
@@ -205,27 +198,12 @@ export default function AgeCalculatorPage() {
 
                 {/* Detailed Analytics Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <AnalyticCard icon={TrendingUp} label="Total Months" value={lifeStats.months} color="blue" />
-                    <AnalyticCard icon={CalendarDays} label="Total Weeks" value={lifeStats.weeks} color="cyan" />
-                    <AnalyticCard icon={Calendar} label="Total Days" value={lifeStats.days} color="amber" />
-                    <AnalyticCard icon={Clock} label="Total Hours" value={lifeStats.hours} color="emerald" />
-                    <AnalyticCard icon={Timer} label="Total Minutes" value={lifeStats.minutes} color="indigo" />
-                    <AnalyticCard icon={Zap} label="Total Seconds" value={lifeStats.seconds} color="rose" />
-                </div>
-
-                {/* Insight Row */}
-                <div className="p-8 bg-[#0a0a1a]/40 border border-white/5 rounded-[2.5rem] flex items-center gap-6 group hover:bg-[#0a0a1a]/60 transition-all">
-                    <div className="w-16 h-16 bg-pink-500/10 rounded-[1.5rem] flex items-center justify-center shrink-0 border border-pink-500/20 group-hover:scale-110 transition-transform shadow-xl">
-                        <Hourglass className="text-pink-500" size={28} />
-                    </div>
-                    <div>
-                        <h4 className="text-white font-black text-[13px] uppercase tracking-widest mb-2 flex items-center gap-2">
-                           Atomic Chronology <Sparkles size={14} className="text-pink-500" />
-                        </h4>
-                        <p className="text-slate-500 text-[11px] leading-relaxed italic font-medium">
-                            Calculations are synchronized to Unix Epoch time markers, ensuring absolute precision including leap-year adjustments and solar-rotational variance. Optimized for high-fidelity personal retrospectives.
-                        </p>
-                    </div>
+                    <AnalyticCard icon={TrendingUp} label="Total Months" value={lifeStats.months} iconBg="bg-blue-500/20" iconColor="text-blue-400" />
+                    <AnalyticCard icon={CalendarDays} label="Total Weeks" value={lifeStats.weeks} iconBg="bg-cyan-500/20" iconColor="text-cyan-400" />
+                    <AnalyticCard icon={Calendar} label="Total Days" value={lifeStats.days} iconBg="bg-amber-500/20" iconColor="text-amber-400" />
+                    <AnalyticCard icon={Clock} label="Total Hours" value={lifeStats.hours} iconBg="bg-emerald-500/20" iconColor="text-emerald-400" />
+                    <AnalyticCard icon={Timer} label="Total Minutes" value={lifeStats.minutes} iconBg="bg-indigo-500/20" iconColor="text-indigo-400" />
+                    <AnalyticCard icon={Zap} label="Total Seconds" value={lifeStats.seconds} iconBg="bg-rose-500/20" iconColor="text-rose-400" />
                 </div>
               </motion.div>
             )}
