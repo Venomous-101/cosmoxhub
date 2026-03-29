@@ -14,6 +14,7 @@ import {
   AlertCircle,
   ImageIcon,
   RefreshCw,
+  Sparkles,
 } from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
 import { motion, AnimatePresence } from "framer-motion";
@@ -162,6 +163,7 @@ function applySharpen(
 export default function ImageUpscalerPage() {
   const [files, setFiles] = useState<UpscaleFile[]>([]);
   const [scale, setScale] = useState<ScaleMode>(2);
+  const [quality, setQuality] = useState<"standard" | "ultra">("standard");
   const [format, setFormat] = useState<OutputFormat>("png");
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -192,12 +194,20 @@ export default function ImageUpscalerPage() {
       const Upscaler = UpscalerModule.default;
 
       let model;
-      if (scale === 4) {
-        model = (await import("@upscalerjs/esrgan-slim/4x")).default;
-      } else if (scale === 3) {
-        model = (await import("@upscalerjs/esrgan-slim/3x")).default;
+      if (quality === "ultra") {
+        if (scale === 4) {
+          model = (await import("@upscalerjs/esrgan-thick/4x")).default;
+        } else {
+          model = (await import("@upscalerjs/esrgan-thick/2x")).default;
+        }
       } else {
-        model = (await import("@upscalerjs/esrgan-slim/2x")).default;
+        if (scale === 4) {
+          model = (await import("@upscalerjs/esrgan-medium/4x")).default;
+        } else if (scale === 3) {
+          model = (await import("@upscalerjs/esrgan-slim/3x")).default; // Medium has no 3x
+        } else {
+          model = (await import("@upscalerjs/esrgan-medium/2x")).default;
+        }
       }
 
       // 3. Dispose previous instance, if any
@@ -205,8 +215,13 @@ export default function ImageUpscalerPage() {
         try { await upscalerRef.current.dispose(); } catch { /* ok */ }
       }
 
-      // 4. Create new Upscaler
-      upscalerRef.current = new Upscaler({ model });
+      // 4. Create new Upscaler with safety patches
+      upscalerRef.current = new Upscaler({ 
+        model,
+        warmupConfigs: {
+          default: [{ patchSize: 32, padding: 4 }],
+        }
+      });
 
       // 5. Warm-up: run a tiny 4×4 upscale to force model download & compile
       const warmCanvas = document.createElement("canvas");
@@ -224,7 +239,7 @@ export default function ImageUpscalerPage() {
       setEngineError(msg);
       setEngineStatus("error");
     }
-  }, [scale]);
+  }, [scale, quality]);
 
   // Auto-init on mount
   useEffect(() => {
@@ -237,7 +252,7 @@ export default function ImageUpscalerPage() {
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scale, useAI]);
+  }, [scale, useAI, quality]);
 
   /* ---- File Upload ---- */
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -287,6 +302,43 @@ export default function ImageUpscalerPage() {
   };
 
   /* ---- Process All ---- */
+  // High-Level Refinement Pass (Sharpening)
+  const applyRefinement = (canvas: HTMLCanvasElement) => {
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    if (!ctx) return;
+
+    const width = canvas.width;
+    const height = canvas.height;
+    const imageData = ctx.getImageData(0, 0, width, height);
+    const data = imageData.data;
+    const output = new Uint8ClampedArray(data.length);
+
+    // Simple but effective Laplacian Sharpening Kernel (3x3)
+    // [ 0, -1,  0]
+    // [-1,  5, -1]
+    // [ 0, -1,  0]
+    const kernel = [0, -1, 0, -1, 5, -1, 0, -1, 0];
+
+    for (let y = 1; y < height - 1; y++) {
+      for (let x = 1; x < width - 1; x++) {
+        for (let c = 0; c < 3; c++) {
+          const i = (y * width + x) * 4 + c;
+          let sum = 0;
+          for (let ky = -1; ky <= 1; ky++) {
+            for (let kx = -1; kx <= 1; kx++) {
+              const ki = ((y + ky) * width + (x + kx)) * 4 + c;
+              sum += data[ki] * kernel[(ky + 1) * 3 + (kx + 1)];
+            }
+          }
+          output[i] = Math.min(255, Math.max(0, sum));
+        }
+        output[(y * width + x) * 4 + 3] = data[(y * width + x) * 4 + 3]; // Alpha
+      }
+    }
+
+    ctx.putImageData(new ImageData(output, width, height), 0, 0);
+  };
+
   const processAll = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
@@ -376,13 +428,32 @@ export default function ImageUpscalerPage() {
             throw new Error("Buffer failure: Try a smaller scale");
         }
 
+        // ---- HIGH-LEVEL REFINEMENT PASS ----
+        // Recovers micro-details and textures for a 'Pro' look
+        let refinedUrl = finalUrl;
+        if (imgEl.naturalWidth * safeScale < 4096) {
+          try {
+            const refineCanvas = document.createElement("canvas");
+            const refineImg = await loadImage(finalUrl);
+            refineCanvas.width = refineImg.naturalWidth;
+            refineCanvas.height = refineImg.naturalHeight;
+            const refineCtx = refineCanvas.getContext("2d")!;
+            refineCtx.drawImage(refineImg, 0, 0);
+            
+            applyRefinement(refineCanvas);
+            refinedUrl = refineCanvas.toDataURL(`image/${format}`, format === "png" ? undefined : 0.95);
+          } catch (e) {
+            console.warn("Refinement Pass skipped:", e);
+          }
+        }
+
         setFiles((prev) =>
           prev.map((item) =>
             item.id === f.id
               ? {
                   ...item,
                   status: "completed",
-                  result: finalUrl,
+                  result: refinedUrl,
                   upscaledDim: { w: finalW, h: finalH },
                   progress: 100,
                 }
@@ -624,6 +695,27 @@ export default function ImageUpscalerPage() {
           </div>
 
           {/* Queue count */}
+          <div className="bg-white/[0.03] border border-white/10 rounded-3xl p-5 flex flex-col justify-center min-w-[120px]">
+             <div className="flex items-center gap-2 mb-3 text-white/30">
+                <Sparkles size={12} className={quality === "ultra" ? "text-amber-500" : ""} />
+                <span className="text-[9px] font-black uppercase tracking-widest">Detail</span>
+             </div>
+             <div className="flex gap-1">
+                <button
+                  onClick={() => setQuality("standard")}
+                  className={`flex-1 py-1.5 rounded-lg text-[8px] font-black uppercase transition-all ${quality === "standard" ? "bg-white/10 text-white" : "text-white/20 hover:text-white/40"}`}
+                >
+                  Std
+                </button>
+                <button
+                  onClick={() => setQuality("ultra")}
+                  className={`flex-1 py-1.5 rounded-lg text-[8px] font-black uppercase transition-all ${quality === "ultra" ? "bg-amber-500 text-black shadow-lg shadow-amber-500/20" : "text-white/20 hover:text-white/40"}`}
+                >
+                  Ultra
+                </button>
+             </div>
+          </div>
+
           <div className="bg-white/[0.03] border border-white/10 rounded-3xl p-5 flex flex-col justify-center">
             <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-1">
               Queue
