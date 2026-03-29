@@ -8,7 +8,6 @@ import {
   Sparkles, 
   Zap, 
   CalendarDays,
-  Target,
   Timer,
   TrendingUp,
 } from "lucide-react";
