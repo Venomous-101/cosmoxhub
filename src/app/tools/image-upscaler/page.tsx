@@ -338,6 +338,13 @@ export default function ImageUpscalerPage() {
               output: "base64",
               patchSize: 32, 
               padding: 4,
+              progress: (percent: number) => {
+                setFiles((prev) =>
+                  prev.map((item) =>
+                    item.id === f.id ? { ...item, progress: Math.min(99, Math.round(percent * 100)) } : item
+                  )
+                );
+              }
             });
 
             // If result is invalid, AI crashed silently
@@ -639,13 +646,25 @@ export default function ImageUpscalerPage() {
             className="bg-amber-500 hover:bg-amber-400 disabled:opacity-30 disabled:hover:bg-amber-500 rounded-3xl flex items-center justify-center gap-3 text-black font-black uppercase tracking-widest text-sm transition-all hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-amber-500/20 min-h-[80px]"
           >
             {isProcessing ? (
-              <Zap className="animate-pulse" size={20} />
+              <div className="flex flex-col items-center">
+                <Zap className="animate-pulse mb-1" size={20} />
+                <span className="text-[10px] lowercase font-medium text-black/60 tracking-normal leading-tight">
+                  {currentIdx}/{pendingCount}
+                </span>
+              </div>
+            ) : engineStatus === "loading" ? (
+              <div className="flex flex-col items-center gap-1">
+                 <RefreshCw className="animate-spin text-black/60" size={18} />
+                 <span className="text-[10px] font-black opacity-50">Loading…</span>
+              </div>
             ) : (
               <Play size={20} fill="currentColor" />
             )}
             {isProcessing
-              ? `${currentIdx}/${pendingCount}`
-              : "Start Bulk"}
+              ? "Upscaling"
+              : engineStatus === "loading"
+                ? ""
+                : "Start Bulk"}
           </button>
         </div>
 
@@ -765,16 +784,30 @@ export default function ImageUpscalerPage() {
                             </div>
                           </div>
                         ) : f.status === "processing" ? (
-                          <div>
-                            <div className="text-[9px] font-black uppercase text-amber-500 animate-pulse">
-                              {f.originalDim && (f.originalDim.w * scale) > 4096 
-                                ? "Processing (Pro Speed Safe Mode)" 
-                                : "Upscaling…"}
+                          <div className="w-full">
+                            <div className="flex justify-between items-center mb-1.5">
+                              <div className="text-[9px] font-black uppercase text-amber-500 animate-pulse">
+                                {f.originalDim && (f.originalDim.w * scale) > 4096 
+                                  ? "Stability Mode Scaling" 
+                                  : "AI Super-Res…"}
+                              </div>
+                              <div className="text-[10px] font-black text-amber-500/80">
+                                {f.progress ?? 0}%
+                              </div>
                             </div>
-                            <div className="text-xs text-white/40">
-                              {f.originalDim
-                                ? `${f.originalDim.w}×${f.originalDim.h} → ${Math.min(8192, Math.round(f.originalDim.w * scale))}×${Math.min(8192, Math.round(f.originalDim.h * scale))}`
-                                : "Processing"}
+                            {/* Progress bar */}
+                            <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden mb-2">
+                               <div 
+                                 className="h-full bg-amber-500 transition-all duration-300 ease-out"
+                                 style={{ width: `${f.progress ?? 0}%` }}
+                               />
+                            </div>
+                            <div className="text-[10px] text-white/40 flex justify-between items-center">
+                              <span>
+                                {f.originalDim
+                                  ? `${f.originalDim.w}×${f.originalDim.h} → ${Math.min(8192, Math.round(f.originalDim.w * scale))}×${Math.min(8192, Math.round(f.originalDim.h * scale))}`
+                                  : "Processing"}
+                              </span>
                             </div>
                           </div>
                         ) : (
@@ -844,28 +877,7 @@ export default function ImageUpscalerPage() {
           </span>
         </div>
 
-        {/* ── Engine Loading Overlay ── */}
-        {engineStatus === "loading" && (
-          <div className="fixed inset-0 bg-[#0a0a1a]/90 backdrop-blur-xl z-[100] flex flex-col items-center justify-center text-center p-8">
-            <div className="w-24 h-24 bg-amber-500/10 rounded-[2.5rem] flex items-center justify-center mb-8 relative">
-              <div className="absolute inset-0 border-4 border-amber-500/20 border-t-amber-500 rounded-[2.5rem] animate-spin" />
-              <Zap className="text-amber-500 w-10 h-10" />
-            </div>
-            <h3 className="text-3xl font-black text-white mb-4 tracking-tight">
-              Loading AI Engine
-            </h3>
-            <p className="max-w-md text-slate-400 font-medium leading-relaxed">
-              Downloading the{" "}
-              <span className="text-amber-500 font-bold">
-                {scale}× ESRGAN
-              </span>{" "}
-              neural network. First load may take 10-20 seconds.
-            </p>
-            <div className="mt-12 text-xs font-black uppercase tracking-[0.3em] text-white/20">
-              CosmoxHub
-            </div>
-          </div>
-        )}
+        {/* Full-screen loader removed per user request for smoother UX */}
 
         <input
           ref={fileInputRef}
@@ -875,6 +887,7 @@ export default function ImageUpscalerPage() {
           onChange={handleUpload}
           className="hidden"
           id="image-upload-input"
+          aria-label="Upload images"
         />
       </div>
     </ToolLayout>
