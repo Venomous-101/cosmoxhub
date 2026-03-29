@@ -27,7 +27,7 @@ export default function TermsOfService() {
             <h2 className="text-xl font-bold text-white mb-4">2. Description of Service</h2>
             <p>
               CosmoxHub provides various free online utility tools (such as PDF editors, Image converters, 
-              and text tools). These tools are provided "as is" and "as available." While we strive for 
+              and text tools). These tools are provided &quot;as is&quot; and &quot;as available.&quot; While we strive for 
               perfection, output accuracy is not 100% guaranteed.
             </p>
           </section>
@@ -46,7 +46,7 @@ export default function TermsOfService() {
             <p>
               The CosmoxHub branding, original user interface designs, and site-specific code are 
               the property of the CosmoxHub founder. You may use our tools freely for personal or 
-              commercial use, but you may not scrape, clone, or redistribute our site's original assets without permission.
+              commercial use, but you may not scrape, clone, or redistribute our site&apos;s original assets without permission.
             </p>
           </section>
 
@@ -72,7 +72,7 @@ export default function TermsOfService() {
             <h2 className="text-xl font-bold text-white mb-4">7. Changes to Terms</h2>
             <p>
               We reserve the right to modify these terms at any time. Changes will be reflected with 
-              an updated "Last Modified" date at the bottom. Continued use of the site signifies your 
+              an updated &quot;Last Modified&quot; date at the bottom. Continued use of the site signifies your 
               acceptance of any new terms.
             </p>
           </section>

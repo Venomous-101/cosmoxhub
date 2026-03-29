@@ -111,6 +111,7 @@ export default function YouTubeThumbnailPage() {
                         <input 
                             type="text"
                             value={url}
+                            title="YouTube Video URL"
                             onChange={(e) => handleUrlChange(e.target.value)}
                             placeholder="Paste YouTube Video URL (e.g. https://youtu.be/...)"
                             className="w-full bg-black/40 border border-white/5 text-white font-mono text-sm px-6 py-5 rounded-2xl outline-none focus:border-red-500/30 transition-all shadow-inner placeholder:text-slate-800"
@@ -124,6 +125,7 @@ export default function YouTubeThumbnailPage() {
                 <div className="shrink-0 flex gap-2">
                     <button 
                         onClick={() => { setUrl(""); setVideoId(null); }}
+                        title="Clear Input"
                         className="p-5 bg-white/5 hover:bg-rose-500/10 rounded-2xl text-slate-600 hover:text-rose-500 border border-white/5 hover:border-rose-500/30 transition-all active:scale-95"
                     >
                         <Trash2 size={20} />
@@ -189,6 +191,7 @@ export default function YouTubeThumbnailPage() {
                                 
                                 <button 
                                     onClick={() => downloadImage(videoId, res.id)}
+                                    title={`Download ${res.label}`}
                                     className="p-4 bg-red-500 hover:bg-red-600 rounded-2xl text-black shadow-lg shadow-red-500/20 active:scale-90 transition-all"
                                 >
                                     <Download size={20} strokeWidth={3} />

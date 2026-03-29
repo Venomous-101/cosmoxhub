@@ -34,16 +34,17 @@ export default function PDFUnlockerPage() {
       // Real functional logic using pdf-lib
       // Real functional logic using pdf-lib
       // load() with password will attempt to decrypt the PDF
-      // Using type casting to bypass strict LoadOptions check
+      // Using an intersection type to satisfy the compiler without using 'any'
+      type PDFLoadSchema = { password?: string; ignoreEncryption?: boolean };
       const pdfDoc = await PDFDocument.load(arrayBuffer, { 
         password: password,
         ignoreEncryption: false 
-      } as any);
+      } as Parameters<typeof PDFDocument.load>[1] & PDFLoadSchema);
       
       // If load succeeds, we save it (which produces an unencrypted version)
       const pdfBytes = await pdfDoc.save();
       
-      const blob = new Blob([pdfBytes as unknown as BlobPart], { type: "application/pdf" });
+      const blob = new Blob([pdfBytes.buffer as ArrayBuffer], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
       
       const link = document.createElement("a");
@@ -54,9 +55,10 @@ export default function PDFUnlockerPage() {
       URL.revokeObjectURL(url);
       setSuccess(true);
       setPassword("");
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Decryption Error:", err);
-      if (err.message?.includes("password")) {
+      const msg = err instanceof Error ? err.message : "";
+      if (msg.toLowerCase().includes("password")) {
         setError("Error: Incorrect password. Please try again.");
       } else {
         setError("Failed to process PDF. It might be corrupted or use unsupported encryption.");

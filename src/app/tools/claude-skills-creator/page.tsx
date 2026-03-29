@@ -5,7 +5,6 @@ import {
   Zap, ShieldCheck, FileCode2, User, Tag
 } from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
-import { motion, AnimatePresence } from "framer-motion";
 
 interface AgentForm {
   name: string;
@@ -218,7 +217,7 @@ ${instructionLines}
           <div className="p-6 bg-purple-500/5 border border-purple-500/10 rounded-3xl flex items-start gap-4">
             <Zap size={16} className="text-purple-500 shrink-0 mt-0.5" />
             <p className="text-[10px] text-slate-500 font-bold leading-relaxed uppercase tracking-wider">
-              Generated files are fully compatible with Claude's SKILLS.md system, OpenAI Assistant instructions, and Gemini System Prompts.
+              Generated files are fully compatible with Claude&apos;s SKILLS.md system, OpenAI Assistant instructions, and Gemini System Prompts.
             </p>
           </div>
         </div>

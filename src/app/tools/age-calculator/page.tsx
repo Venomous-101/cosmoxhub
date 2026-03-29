@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { 
   Calendar, 
   Clock, 
@@ -11,7 +11,6 @@ import {
   CalendarDays,
   Target,
   Timer,
-  TimerOff,
   History,
   TrendingUp,
   Settings
@@ -19,23 +18,34 @@ import {
 import ToolLayout from "@/components/ToolLayout";
 import { motion, AnimatePresence } from "framer-motion";
 
+const AnalyticCard = ({ icon: Icon, label, value, color }: { icon: React.ElementType, label: string, value: number, color: string }) => (
+  <motion.div 
+    initial={{ opacity: 0, scale: 0.95 }}
+    animate={{ opacity: 1, scale: 1 }}
+    className={`bg-[#0a0a1a]/60 backdrop-blur-xl border border-white/5 rounded-3xl p-6 hover:border-${color}-500/20 transition-all group overflow-hidden relative shadow-2xl`}
+  >
+    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+    <div className={`p-2.5 rounded-xl bg-${color}-500/10 border border-${color}-500/20 w-fit mb-4`}>
+      <Icon size={18} className={`text-${color}-500`} />
+    </div>
+    <div className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">{label}</div>
+    <div className="text-2xl font-black text-white tracking-tighter tabular-nums truncate">
+      {value.toLocaleString()}
+    </div>
+  </motion.div>
+);
+
 export default function AgeCalculatorPage() {
   const [birthDate, setBirthDate] = useState<string>("");
   const [targetDate, setTargetDate] = useState<string>(new Date().toISOString().split("T")[0]);
-  const [lifeStats, setLifeStats] = useState<any>(null);
-
-  useEffect(() => {
-    if (birthDate) calculateLife();
-  }, [birthDate, targetDate]);
-
-  const calculateLife = () => {
+  const lifeStats = React.useMemo(() => {
     const start = new Date(birthDate);
     const end = new Date(targetDate);
     
-    if (isNaN(start.getTime()) || isNaN(end.getTime())) return;
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) return null;
 
     const diffMs = end.getTime() - start.getTime();
-    if (diffMs < 0) return;
+    if (diffMs < 0) return null;
 
     const years = Math.floor(diffMs / (365.25 * 24 * 60 * 60 * 1000));
     const months = Math.floor(diffMs / (30.44 * 24 * 60 * 60 * 1000));
@@ -50,7 +60,7 @@ export default function AgeCalculatorPage() {
     if (nextBday < end) nextBday.setFullYear(end.getFullYear() + 1);
     const daysUntil = Math.ceil((nextBday.getTime() - end.getTime()) / (24 * 60 * 60 * 1000));
 
-    setLifeStats({
+    return {
       years,
       months,
       weeks,
@@ -59,8 +69,8 @@ export default function AgeCalculatorPage() {
       minutes,
       seconds,
       daysUntilNext: daysUntil === 366 ? 0 : daysUntil
-    });
-  };
+    };
+  }, [birthDate, targetDate]);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -81,23 +91,6 @@ export default function AgeCalculatorPage() {
        "Elite glassmorphic dashboard"
     ]
   };
-
-  const AnalyticCard = ({ icon: Icon, label, value, color }: any) => (
-    <motion.div 
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      className="bg-[#0a0a1a]/60 backdrop-blur-xl border border-white/5 rounded-3xl p-6 hover:border-violet-500/20 transition-all group overflow-hidden relative shadow-2xl"
-    >
-      <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-      <div className={`p-2.5 rounded-xl bg-${color}-500/10 border border-${color}-500/20 w-fit mb-4`}>
-        <Icon size={18} className={`text-${color}-500`} />
-      </div>
-      <div className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">{label}</div>
-      <div className="text-2xl font-black text-white tracking-tighter tabular-nums truncate">
-        {value.toLocaleString()}
-      </div>
-    </motion.div>
-  );
 
   return (
     <ToolLayout
@@ -131,6 +124,7 @@ export default function AgeCalculatorPage() {
                     <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within/input:text-pink-500 transition-colors" />
                     <input 
                     type="date"
+                    aria-label="Date of Genesis"
                     value={birthDate}
                     onChange={(e) => setBirthDate(e.target.value)}
                     className="w-full bg-white/5 border border-white/5 text-white text-xs font-bold rounded-xl pl-12 pr-4 py-3.5 outline-none focus:border-pink-500/30 transition-all shadow-inner"
@@ -144,6 +138,7 @@ export default function AgeCalculatorPage() {
                     <Target className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within/input:text-rose-500 transition-colors" />
                     <input 
                     type="date"
+                    aria-label="Target Horizon"
                     value={targetDate}
                     onChange={(e) => setTargetDate(e.target.value)}
                     className="w-full bg-white/5 border border-white/5 text-white text-xs font-bold rounded-xl pl-12 pr-4 py-3.5 outline-none focus:border-rose-500/30 transition-all"

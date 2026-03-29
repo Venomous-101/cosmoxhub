@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { 
   Type, 
   Copy, 
@@ -26,23 +26,25 @@ export default function LoremIpsumPage() {
   const [count, setCount] = useState(3);
   const [startWithLorem, setStartWithLorem] = useState(true);
   const [wrapWithHtml, setWrapWithHtml] = useState(false);
-  const [generatedText, setGeneratedText] = useState("");
+  const [refreshSeed, setRefreshSeed] = useState(0);
   const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
-    generateText();
-  }, [type, count, startWithLorem, wrapWithHtml]);
+  const generatedText = useMemo(() => {
+    // Stateless hash-based deterministic 'randomness' to satisfy React 19 purity rules
+    const getRand = (i: number, j: number): number => {
+      const h = Math.cos(refreshSeed * 1.5 + i * 0.73 + j * 0.19) * 10000;
+      return h - Math.floor(h);
+    };
 
-  const generateText = () => {
     let result = "";
     
     if (type === "paragraphs") {
       const paras = [];
       for (let i = 0; i < count; i++) {
-        let para = [];
-        const wordCount = 50 + Math.floor(Math.random() * 50);
+        const para = [];
+        const wordCount = 50 + Math.floor(getRand(i, -1) * 50);
         for (let j = 0; j < wordCount; j++) {
-          para.push(LOREM_WORDS[Math.floor(Math.random() * LOREM_WORDS.length)]);
+          para.push(LOREM_WORDS[Math.floor(getRand(i, j) * LOREM_WORDS.length)]);
         }
         let pText = para.join(" ") + ".";
         pText = pText.charAt(0).toUpperCase() + pText.slice(1);
@@ -55,9 +57,9 @@ export default function LoremIpsumPage() {
       }
       result = paras.join("\n\n");
     } else if (type === "words") {
-      let words = [];
+      const words = [];
       for (let i = 0; i < count; i++) {
-        words.push(LOREM_WORDS[Math.floor(Math.random() * LOREM_WORDS.length)]);
+        words.push(LOREM_WORDS[Math.floor(getRand(0, i) * LOREM_WORDS.length)]);
       }
       if (startWithLorem && count >= 5) {
         words.splice(0, 5, "lorem", "ipsum", "dolor", "sit", "amet");
@@ -65,20 +67,22 @@ export default function LoremIpsumPage() {
       result = words.join(" ");
       if (wrapWithHtml) result = `<span>${result}</span>`;
     } else {
-      let sentences = [];
+      const sentences = [];
       for (let i = 0; i < count; i++) {
-          let s = [];
-          const words = 8 + Math.floor(Math.random() * 10);
-          for(let j=0; j<words; j++) s.push(LOREM_WORDS[Math.floor(Math.random() * LOREM_WORDS.length)]);
-          let stext = s.join(" ") + ".";
+          const s = [];
+          const words = 8 + Math.floor(getRand(i, -1) * 10);
+          for(let j=0; j<words; j++) s.push(LOREM_WORDS[Math.floor(getRand(i, j) * LOREM_WORDS.length)]);
+          const stext = s.join(" ") + ".";
           sentences.push(stext.charAt(0).toUpperCase() + stext.slice(1));
       }
       result = sentences.join(" ");
       if (wrapWithHtml) result = `<p>${result}</p>`;
     }
     
-    setGeneratedText(result);
-  };
+    return result;
+  }, [type, count, startWithLorem, wrapWithHtml, refreshSeed]);
+
+  const regenerate = () => setRefreshSeed(prev => prev + 1);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(generatedText);
@@ -147,7 +151,7 @@ export default function LoremIpsumPage() {
                 </div>
                 <div className="flex items-center gap-3">
                     <button 
-                        onClick={generateText}
+                        onClick={regenerate}
                         className="p-2 hover:bg-white/5 rounded-xl text-slate-400 hover:text-cyan-400 transition-colors"
                         title="Regenerate"
                     >
@@ -167,6 +171,7 @@ export default function LoremIpsumPage() {
 
               <textarea
                 readOnly
+                title="Generated content"
                 value={generatedText}
                 className="flex-1 w-full bg-transparent p-8 text-slate-300 font-medium leading-relaxed resize-none outline-none selection:bg-cyan-500/30 font-mono text-sm"
               />
@@ -228,6 +233,7 @@ export default function LoremIpsumPage() {
                   min="1"
                   max={type === 'words' ? 500 : 20}
                   value={count}
+                  title="Magnitude"
                   onChange={(e) => setCount(parseInt(e.target.value))}
                   className="w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-cyan-500"
                 />
@@ -236,9 +242,10 @@ export default function LoremIpsumPage() {
               {/* Toggles */}
               <div className="space-y-4 pt-4 border-t border-white/5">
                 <div className="flex items-center justify-between">
-                    <span className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Start with "Lorem"</span>
+                    <span className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Start with &quot;Lorem&quot;</span>
                     <button 
                         onClick={() => setStartWithLorem(!startWithLorem)}
+                        title="Toggle start with lorem"
                         className={`w-10 h-5 rounded-full relative transition-colors ${startWithLorem ? "bg-cyan-500" : "bg-slate-700"}`}
                     >
                         <motion.div animate={{ x: startWithLorem ? 22 : 2 }} className="absolute top-1 w-3 h-3 bg-white rounded-full shadow-md" />
@@ -248,6 +255,7 @@ export default function LoremIpsumPage() {
                     <span className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Inject HTML Tags</span>
                     <button 
                         onClick={() => setWrapWithHtml(!wrapWithHtml)}
+                        title="Toggle inject HTML"
                         className={`w-10 h-5 rounded-full relative transition-colors ${wrapWithHtml ? "bg-cyan-500" : "bg-slate-700"}`}
                     >
                         <motion.div animate={{ x: wrapWithHtml ? 22 : 2 }} className="absolute top-1 w-3 h-3 bg-white rounded-full shadow-md" />

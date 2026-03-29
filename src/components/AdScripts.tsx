@@ -4,34 +4,29 @@ import { useState, useEffect } from "react";
 
 export default function AdScripts() {
   const [clickCount, setClickCount] = useState(0);
-  const [isActivated, setIsActivated] = useState(false);
-  const THRESHOLD = 20; // Number of clicks before ads activate (Increased to 20 for elite experience)
+  const THRESHOLD = 20;
 
   useEffect(() => {
-    // Initialize from sessionStorage to maintain state across pages in the same tab
     const savedCount = sessionStorage.getItem("cosmox_click_count");
     if (savedCount) {
-      const count = parseInt(savedCount, 10);
-      setClickCount(count);
-      if (count >= THRESHOLD) setIsActivated(true);
+      setTimeout(() => {
+        setClickCount(parseInt(savedCount, 10));
+      }, 0);
     }
 
     const handleGlobalClick = () => {
       setClickCount((prev) => {
         const newCount = prev + 1;
         sessionStorage.setItem("cosmox_click_count", newCount.toString());
-        
-        if (newCount >= THRESHOLD && !isActivated) {
-          setIsActivated(true);
-        }
         return newCount;
       });
     };
 
-    // Attach listener to capture all user intent
     document.addEventListener("click", handleGlobalClick);
     return () => document.removeEventListener("click", handleGlobalClick);
-  }, [isActivated]);
+  }, []);
+
+  const isActivated = clickCount >= THRESHOLD;
 
   // Don't render aggressive scripts until threshold is met
   if (!isActivated) {

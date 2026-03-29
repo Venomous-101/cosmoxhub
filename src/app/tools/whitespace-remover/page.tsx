@@ -24,7 +24,7 @@ export default function WhitespaceRemoverPage() {
   const [stats, setStats] = useState({ saved: 0 });
 
   const cleanText = (mode: "all" | "lines" | "double" | "single-line") => {
-    let originalLength = text.length;
+    const originalLength = text.length;
     let result = text;
 
     switch (mode) {

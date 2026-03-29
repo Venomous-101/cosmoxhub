@@ -18,7 +18,7 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-xl font-bold text-white mb-4">1. Our Core Privacy Commitment</h2>
             <p>
-              At CosmoxHub, privacy is not an afterthought—it's the core of everything we build. We believe that 
+              At CosmoxHub, privacy is not an afterthought&mdash;it&apos;s the core of everything we build. We believe that 
               utility should never come at the cost of your personal data. We are committed to maintaining a 
               transparent, secure environment for all users.
             </p>
@@ -67,7 +67,7 @@ export default function PrivacyPolicy() {
             <h2 className="text-xl font-bold text-white mb-4">6. Security</h2>
             <p>
               While no method of internet transmission is 100% secure, we use industry-standard HTTPS encryption 
-              and client-side processing to minimize risks. Since we don't store your data, there is no database 
+              and client-side processing to minimize risks. Since we don&apos;t store your data, there is no database 
               of user files to be compromised.
             </p>
           </section>

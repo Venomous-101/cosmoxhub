@@ -54,33 +54,21 @@ function MetricCard({ icon: Icon, label, value, unit, color }: MetricCardProps) 
 export default function WordCounterPage() {
   const [text, setText] = useState("");
   const [copied, setCopied] = useState(false);
-  const [stats, setStats] = useState({
-    words: 0,
-    chars: 0,
-    charsNoSpaces: 0,
-    sentences: 0,
-    paragraphs: 0,
-    readingTime: 0,
-    speakingTime: 0
-  });
-
-  useEffect(() => {
-    const words = text.trim().split(/\s+/).filter(w => w).length;
-    const chars = text.length;
-    const charsNoSpaces = text.replace(/\s/g, "").length;
-    const sentences = text.split(/[.!?]+/).filter(s => s.trim()).length;
-    const paragraphs = text.split(/\n+/).filter(p => p.trim()).length;
-    
-    setStats({
-      words,
-      chars,
-      charsNoSpaces,
-      sentences,
-      paragraphs,
-      readingTime: Math.ceil(words / 225), 
-      speakingTime: Math.ceil(words / 140)
-    });
-  }, [text]);
+  const words = text.trim().split(/\s+/).filter(w => w).length;
+  const chars = text.length;
+  const charsNoSpaces = text.replace(/\s/g, "").length;
+  const sentences = text.split(/[.!?]+/).filter(s => s.trim()).length;
+  const paragraphs = text.split(/\n+/).filter(p => p.trim()).length;
+  
+  const stats = {
+    words,
+    chars,
+    charsNoSpaces,
+    sentences,
+    paragraphs,
+    readingTime: Math.ceil(words / 225), 
+    speakingTime: Math.ceil(words / 140)
+  };
 
   const copyToClipboard = () => {
     if (!text) return;

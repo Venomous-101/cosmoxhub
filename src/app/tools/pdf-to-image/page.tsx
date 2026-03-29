@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { FileImage, Upload, Download, Settings, Maximize, Camera } from "lucide-react";
+import Image from "next/image";
 import ToolLayout from "@/components/ToolLayout";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -39,7 +40,9 @@ export default function PDFToImagePage() {
         if (context) {
           canvas.height = viewport.height;
           canvas.width = viewport.width;
-          await page.render({ canvasContext: context, viewport } as any).promise;
+          // Specifying the render parameters explicitly to avoid 'any'
+          const renderTask = (page as unknown as { render: (params: { canvasContext: CanvasRenderingContext2D; viewport: unknown }) => { promise: Promise<void> } }).render({ canvasContext: context, viewport });
+          await renderTask.promise;
           results.push({
             url: canvas.toDataURL(format, format === "image/jpeg" ? 0.9 : undefined),
             page: i
@@ -47,9 +50,10 @@ export default function PDFToImagePage() {
         }
       }
       setImages(results);
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error(e);
-      alert(`Elite Engine Error: ${e?.message || "Could not process PDF. Please try a different document."}`); 
+      const msg = e instanceof Error ? e.message : "Could not process PDF. Please try a different document.";
+      alert(`Elite Engine Error: ${msg}`); 
     }
     setConverting(false);
   };
@@ -114,6 +118,7 @@ export default function PDFToImagePage() {
                         key={f}
                         onClick={() => setFormat(f)}
                         className={`py-2 px-1 rounded-xl text-[10px] font-bold uppercase transition-all border ${format === f ? "bg-red-500/10 border-red-500 text-red-400" : "bg-white/5 border-white/5 text-slate-500 hover:border-white/10"}`}
+                        title={`Select ${f === "image/jpeg" ? "JPG" : "PNG"} format`}
                       >
                          {f === "image/jpeg" ? "JPG" : "PNG"}
                       </button>
@@ -132,6 +137,7 @@ export default function PDFToImagePage() {
                         key={r}
                         onClick={() => setResolution(r)}
                         className={`py-2 px-1 rounded-xl text-[10px] font-bold uppercase transition-all border ${resolution === r ? "bg-red-500/10 border-red-500 text-red-400" : "bg-white/5 border-white/5 text-slate-500 hover:border-white/10"}`}
+                        title={`Set resolution to ${r}x scale`}
                       >
                          {r}x {r === 1 ? "(Low)" : r === 2 ? "(Mid)" : "(HD)"}
                       </button>
@@ -233,12 +239,20 @@ export default function PDFToImagePage() {
                       className="group relative p-3 bg-[#050510] border border-white/5 rounded-2xl overflow-hidden hover:border-red-500/30 transition-all"
                     >
                       <div className="aspect-[3/4] rounded-xl bg-white/5 mb-3 overflow-hidden relative">
-                         <img src={img.url} alt={`Page ${img.page}`} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                         <Image 
+                           src={img.url} 
+                           alt={`Extracted PDF Page ${img.page}`} 
+                           width={300}
+                           height={400}
+                           unoptimized
+                           className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" 
+                         />
                          <div className="absolute top-2 left-2 px-2 py-1 bg-black/60 rounded-lg text-[8px] font-black text-white uppercase tracking-widest">Page {img.page}</div>
                       </div>
                       <button 
                         onClick={() => downloadImage(img.url, img.page)}
                         className="w-full py-2 bg-white/5 hover:bg-red-500 hover:text-white transition-all rounded-lg text-slate-400 text-[10px] font-bold uppercase flex items-center justify-center gap-1"
+                        title={`Download page ${img.page} as image`}
                       >
                          <Download size={12} /> Save
                       </button>

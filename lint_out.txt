@@ -1,0 +1,200 @@
+﻿
+> cosmoxhub-app@0.1.0 lint
+> eslint
+
+
+E:\Cosmoxhub\cosmoxhub-app\src\app\about\page.tsx
+  31:129  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  31:134  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+E:\Cosmoxhub\cosmoxhub-app\src\app\privacy\page.tsx
+  21:62  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  70:73  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+E:\Cosmoxhub\cosmoxhub-app\src\app\terms\page.tsx
+  30:57  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  30:63  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  30:69  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  30:83  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  49:86  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  75:26  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  75:40  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+E:\Cosmoxhub\cosmoxhub-app\src\app\tools\case-converter\page.tsx
+   3:20  warning  'useEffect' is defined but never used        @typescript-eslint/no-unused-vars
+  10:3   warning  'Sparkles' is defined but never used         @typescript-eslint/no-unused-vars
+  15:3   warning  'ZapOff' is defined but never used           @typescript-eslint/no-unused-vars
+  18:18  warning  'AnimatePresence' is defined but never used  @typescript-eslint/no-unused-vars
+
+E:\Cosmoxhub\cosmoxhub-app\src\app\tools\claude-skills-creator\page.tsx
+    8:10  warning  'motion' is defined but never used                               @typescript-eslint/no-unused-vars
+    8:18  warning  'AnimatePresence' is defined but never used                      @typescript-eslint/no-unused-vars
+  221:63  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+E:\Cosmoxhub\cosmoxhub-app\src\app\tools\heic-to-jpg\page.tsx
+    5:3   warning  'FileImage' is defined but never used                            @typescript-eslint/no-unused-vars
+   10:3   warning  'LayoutGrid' is defined but never used                           @typescript-eslint/no-unused-vars
+   14:3   warning  'Zap' is defined but never used                                  @typescript-eslint/no-unused-vars
+   38:44  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  299:72  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  360:48  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+E:\Cosmoxhub\cosmoxhub-app\src\app\tools\image-resizer\page.tsx
+    3:39  warning  'useCallback' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+   58:7   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+E:\Cosmoxhub\cosmoxhub-app\src\app\tools\image-resizer\page.tsx:58:7
+  56 |       const first = images[0];
+  57 |       const ratio = first.originalHeight / first.originalWidth;
+> 58 |       setTargetHeight(Math.round(targetWidth * ratio));
+     |       ^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  59 |     }
+  60 |   }, [targetWidth, lockAspect, images]);
+  61 |  react-hooks/set-state-in-effect
+  221:27  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @next/next/no-img-element
+
+E:\Cosmoxhub\cosmoxhub-app\src\app\tools\image-upscaler\page.tsx
+    6:3   warning  'Upload' is defined but never used                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+    8:3   warning  'Settings' is defined but never used                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+  153:22  warning  Unused eslint-disable directive (no problems were reported from '@next/next/no-img-element')
+  160:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+E:\Cosmoxhub\cosmoxhub-app\src\app\tools\json-formatter\page.tsx
+   7:3   warning  'Copy' is defined but never used                 @typescript-eslint/no-unused-vars
+   8:3   warning  'CheckCircle2' is defined but never used         @typescript-eslint/no-unused-vars
+  11:3   warning  'ChevronRight' is defined but never used         @typescript-eslint/no-unused-vars
+  12:3   warning  'ChevronDown' is defined but never used          @typescript-eslint/no-unused-vars
+  21:18  warning  'AnimatePresence' is defined but never used      @typescript-eslint/no-unused-vars
+  29:10  warning  'isMinified' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  48:17  error    Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+
+E:\Cosmoxhub\cosmoxhub-app\src\app\tools\lorem-ipsum\page.tsx
+    5:3    warning  'Type' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+   13:3    warning  'Zap' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+   14:3    warning  'AlignLeft' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+   18:18   warning  'AnimatePresence' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 @typescript-eslint/no-unused-vars
+   38:13   error    'para' is never reassigned. Use 'const' instead                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             prefer-const
+   54:11   error    'words' is never reassigned. Use 'const' instead                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            prefer-const
+   64:11   error    'sentences' is never reassigned. Use 'const' instead                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        prefer-const
+   66:15   error    's' is never reassigned. Use 'const' instead                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                prefer-const
+   69:15   error    'stext' is never reassigned. Use 'const' instead                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            prefer-const
+   80:5    error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+E:\Cosmoxhub\cosmoxhub-app\src\app\tools\lorem-ipsum\page.tsx:80:5
+  78 |
+  79 |   useEffect(() => {
+> 80 |     generateText();
+     |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  81 |   }, [generateText]);
+  82 |
+  83 |   const copyToClipboard = () => {  react-hooks/set-state-in-effect
+  241:114  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             react/no-unescaped-entities
+  241:120  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             react/no-unescaped-entities
+
+E:\Cosmoxhub\cosmoxhub-app\src\app\tools\password-generator\page.tsx
+  12:3   warning  'Eye' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+  13:3   warning  'EyeOff' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+  20:18  warning  'AnimatePresence' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+  71:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+E:\Cosmoxhub\cosmoxhub-app\src\app\tools\password-generator\page.tsx:71:5
+  69 |
+  70 |   useEffect(() => {
+> 71 |     generatePassword();
+     |     ^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  72 |   }, [generatePassword]);
+  73 |
+  74 |   const copyToClipboard = (text: string) => {  react-hooks/set-state-in-effect
+
+E:\Cosmoxhub\cosmoxhub-app\src\app\tools\pdf-to-image\page.tsx
+   42:69  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+   50:17  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  236:26  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+E:\Cosmoxhub\cosmoxhub-app\src\app\tools\pdf-unlocker\page.tsx
+  41:12  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  57:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\Cosmoxhub\cosmoxhub-app\src\app\tools\png-to-jpg\page.tsx
+   10:3   warning  'LayoutGrid' is defined but never used                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+   12:3   warning  'AlertCircle' is defined but never used                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+   13:3   warning  'Hash' is defined but never used                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+   97:14  warning  'error' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  211:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+E:\Cosmoxhub\cosmoxhub-app\src\app\tools\webp-to-png\page.tsx
+    5:3   warning  'FileImage' is defined but never used                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+   10:3   warning  'LayoutGrid' is defined but never used                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+   15:3   warning  'Eye' is defined but never used                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+   93:14  warning  'error' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  207:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+E:\Cosmoxhub\cosmoxhub-app\src\app\tools\whitespace-remover\page.tsx
+   3:20  warning  'useEffect' is defined but never used                      @typescript-eslint/no-unused-vars
+  19:18  warning  'AnimatePresence' is defined but never used                @typescript-eslint/no-unused-vars
+  27:9   error    'originalLength' is never reassigned. Use 'const' instead  prefer-const
+
+E:\Cosmoxhub\cosmoxhub-app\src\app\tools\word-counter\page.tsx
+  74:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+E:\Cosmoxhub\cosmoxhub-app\src\app\tools\word-counter\page.tsx:74:5
+  72 |     const paragraphs = text.split(/\n+/).filter(p => p.trim()).length;
+  73 |     
+> 74 |     setStats({
+     |     ^^^^^^^^ Avoid calling setState() directly within an effect
+  75 |       words,
+  76 |       chars,
+  77 |       charsNoSpaces,  react-hooks/set-state-in-effect
+
+E:\Cosmoxhub\cosmoxhub-app\src\app\tools\youtube-thumbnail\page.tsx
+  170:33  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+E:\Cosmoxhub\cosmoxhub-app\src\components\AdBanner.tsx
+  3:8  warning  'Script' is defined but never used  @typescript-eslint/no-unused-vars
+
+E:\Cosmoxhub\cosmoxhub-app\src\components\AdScripts.tsx
+   6:10  warning  'clickCount' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+  15:7   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+E:\Cosmoxhub\cosmoxhub-app\src\components\AdScripts.tsx:15:7
+  13 |     if (savedCount) {
+  14 |       const count = parseInt(savedCount, 10);
+> 15 |       setClickCount(count);
+     |       ^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  16 |       if (count >= THRESHOLD) setIsActivated(true);
+  17 |     }
+  18 |  react-hooks/set-state-in-effect
+
+Γ£û 77 problems (33 errors, 44 warnings)
+  6 errors and 1 warning potentially fixable with the `--fix` option.
+

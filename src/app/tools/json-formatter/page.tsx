@@ -4,12 +4,8 @@ import { useState, useCallback } from "react";
 import { 
   Braces, 
   Trash2, 
-  Copy, 
-  CheckCircle2, 
   AlertCircle, 
   Settings, 
-  ChevronRight, 
-  ChevronDown,
   Minimize,
   Maximize,
   ArrowRightLeft,
@@ -18,7 +14,7 @@ import {
   Sparkles
 } from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 export default function JSONFormatterPage() {
   const [input, setInput] = useState("");
@@ -26,7 +22,6 @@ export default function JSONFormatterPage() {
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [indentSize, setIndentSize] = useState(2);
-  const [isMinified, setIsMinified] = useState(false);
 
   const processJSON = useCallback((mode: "beautify" | "minify") => {
     if (!input.trim()) return;
@@ -37,16 +32,14 @@ export default function JSONFormatterPage() {
       
       if (mode === "beautify") {
         result = JSON.stringify(parsed, null, indentSize);
-        setIsMinified(false);
       } else {
         result = JSON.stringify(parsed);
-        setIsMinified(true);
       }
       
       setFormatted(result);
       setError(null);
-    } catch (e: any) {
-      setError(e.message);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
       setFormatted("");
     }
   }, [input, indentSize]);
@@ -104,13 +97,18 @@ export default function JSONFormatterPage() {
                     <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2">
                         <FileCode size={12} /> Raw Input
                     </span>
-                    <button onClick={() => setInput("")} className="p-2 hover:bg-white/5 rounded-xl text-slate-600 hover:text-rose-500 transition-colors">
+                    <button 
+                        onClick={() => setInput("")} 
+                        title="Clear Input"
+                        className="p-2 hover:bg-white/5 rounded-xl text-slate-600 hover:text-rose-500 transition-colors"
+                    >
                         <Trash2 size={16} />
                     </button>
                 </div>
                 <textarea
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
+                    title="JSON Input Area"
                     placeholder='{"key": "Paste raw JSON here..."}'
                     className="flex-1 w-full bg-black/40 border border-white/5 rounded-2xl p-6 text-slate-300 font-mono text-sm resize-none outline-none focus:border-blue-500/30 transition-all placeholder:text-slate-800"
                 />
@@ -130,6 +128,7 @@ export default function JSONFormatterPage() {
                         <button 
                             onClick={copyToClipboard}
                             disabled={!formatted}
+                            title="Copy Formated JSON"
                             className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
                                 copied ? "bg-blue-500/20 text-blue-400 border-blue-500/30" : "bg-white/5 text-slate-400 border-white/10 hover:border-blue-500/30 hover:text-white"
                             } disabled:opacity-30`}
@@ -187,6 +186,7 @@ export default function JSONFormatterPage() {
                             <button
                                 key={size}
                                 onClick={() => setIndentSize(size)}
+                                title={`Set Indent to ${size} Spaces`}
                                 className={`py-2 rounded-xl text-[10px] font-black border transition-all ${
                                     indentSize === size ? "bg-blue-500 text-white border-blue-500 shadow-lg shadow-blue-500/20" : "bg-white/5 text-slate-500 border-white/5 hover:border-blue-500/30"
                                 }`}
@@ -200,6 +200,7 @@ export default function JSONFormatterPage() {
                 <div className="pt-4 space-y-3">
                     <button
                         onClick={() => processJSON("beautify")}
+                        title="Beautify JSON"
                         className="w-full bg-blue-500 hover:bg-blue-600 text-black font-black text-[11px] uppercase tracking-[0.15em] py-4 rounded-2xl transition-all shadow-xl shadow-blue-500/20 active:scale-95 flex items-center justify-center gap-2 group"
                     >
                         <Maximize size={16} className="group-hover:scale-110 transition-transform" /> Beautify JSON
@@ -207,6 +208,7 @@ export default function JSONFormatterPage() {
                     
                     <button
                         onClick={() => processJSON("minify")}
+                        title="Minify JSON"
                         className="w-full bg-white/5 border border-white/10 hover:border-blue-500/30 text-white font-black text-[11px] uppercase tracking-[0.15em] py-4 rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-2 group"
                     >
                         <Minimize size={16} className="text-blue-500" /> Minify Content

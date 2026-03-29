@@ -7,10 +7,7 @@ import {
   Download, 
   X, 
   Settings, 
-  LayoutGrid, 
   CheckCircle2, 
-  AlertCircle,
-  Hash,
   Palette,
   Layers,
   Sparkles
@@ -94,7 +91,7 @@ export default function PNGToJPGPage() {
         status: "completed", 
         convertedUrl: result 
       } : i));
-    } catch (error) {
+    } catch {
       setImages(prev => prev.map(i => i.id === img.id ? { ...i, status: "error" } : i));
     }
   };
@@ -186,6 +183,7 @@ export default function PNGToJPGPage() {
                   ref={fileInputRef}
                   type="file"
                   multiple
+                  title="Upload PNG Images"
                   accept="image/png"
                   className="hidden"
                   onChange={handleUpload}
@@ -252,6 +250,7 @@ export default function PNGToJPGPage() {
 
                       <button
                         onClick={() => removeImage(img.id)}
+                        title="Remove Image"
                         className="absolute top-4 right-4 p-1.5 bg-rose-500/10 text-rose-500 rounded-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-rose-500 hover:text-white"
                       >
                         <X className="w-4 h-4" />
@@ -296,6 +295,7 @@ export default function PNGToJPGPage() {
                   type="range"
                   min="1"
                   max="100"
+                  title="JPEG Quality"
                   value={quality}
                   onChange={(e) => setQuality(parseInt(e.target.value))}
                   className="w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-emerald-500"
@@ -312,12 +312,11 @@ export default function PNGToJPGPage() {
                     <Palette size={12} className="text-emerald-500" /> Transparency Fill
                 </label>
                 <div className="flex items-center gap-3">
-                    <div 
-                        className="w-10 h-10 rounded-xl border border-white/10 overflow-hidden shrink-0 shadow-lg"
-                        style={{ backgroundColor: bgColor }}
-                    >
+                    <div className="w-10 h-10 rounded-xl border border-white/10 overflow-hidden shrink-0 shadow-lg transparency-preview-el">
+                        <style>{`.transparency-preview-el { background-color: ${bgColor} }`}</style>
                         <input 
                             type="color" 
+                            title="Pick Transparency Fill Color"
                             value={bgColor}
                             onChange={(e) => setBgColor(e.target.value)}
                             className="w-full h-full opacity-0 cursor-pointer"
@@ -329,6 +328,7 @@ export default function PNGToJPGPage() {
                             <input 
                                 type="text"
                                 value={bgColor.replace("#", "")}
+                                title="Hex Code for Transparency Fill"
                                 onChange={(e) => setBgColor(`#${e.target.value.replace(/[^0-9A-Fa-f]/g, "")}`)}
                                 className="w-full bg-white/5 border border-white/5 rounded-xl px-8 py-2.5 text-xs text-white uppercase font-bold outline-none focus:border-emerald-500/30 transition-all font-mono"
                                 maxLength={6}

@@ -28,7 +28,7 @@ export default function AboutPage() {
           <div className="space-y-6">
             <h2 className="text-3xl font-space font-bold text-white">Behind the Screen</h2>
             <p className="leading-relaxed">
-              CosmoxHub is the brainchild of a single visionary founder who believed that the web had become too cluttered with "free" tools that actually sold user data behind the scenes.
+              CosmoxHub is the brainchild of a single visionary founder who believed that the web had become too cluttered with &quot;free&quot; tools that actually sold user data behind the scenes.
             </p>
             <p className="leading-relaxed">
               Every tool on this platform was built with a code-first, privacy-first mindset. By leveraging modern edge computing and browser-side processing, we ensure that your files never even hit our servers.

@@ -2,16 +2,13 @@
 
 import { useState, useRef, useEffect } from "react";
 import { 
-  FileImage, 
   Upload, 
   Download, 
   X, 
   Settings, 
-  LayoutGrid, 
   CheckCircle2, 
   Sparkles,
   Smartphone,
-  Zap,
   Box,
   Share2
 } from "lucide-react";
@@ -35,7 +32,7 @@ export default function HEICToJPGPage() {
   const [targetFormat, setTargetFormat] = useState<"image/jpeg" | "image/png" | "image/webp">("image/jpeg");
   const [quality, setQuality] = useState(0.8);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [heic2any, setHeic2any] = useState<any>(null);
+  const [heic2any, setHeic2any] = useState<((options: { blob: Blob; toType?: string; quality?: number; }) => Promise<Blob | Blob[]>) | null>(null);
 
   // Dynamically load heic2any only on client side
   useEffect(() => {
@@ -194,6 +191,7 @@ export default function HEICToJPGPage() {
                   type="file"
                   multiple
                   accept=".heic,.heif"
+                  title="Choose HEIC files"
                   className="hidden"
                   onChange={handleUpload}
                 />
@@ -255,6 +253,7 @@ export default function HEICToJPGPage() {
 
                       <button
                         onClick={() => removeImage(img.id)}
+                        title="Remove image"
                         className="absolute top-4 right-4 p-1.5 bg-rose-500/10 text-rose-500 rounded-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-rose-500 hover:text-white"
                       >
                         <X className="w-4 h-4" />
@@ -296,7 +295,8 @@ export default function HEICToJPGPage() {
                 </label>
                 <select 
                     value={targetFormat}
-                    onChange={(e) => setTargetFormat(e.target.value as any)}
+                    title="Select Output Format"
+                    onChange={(e) => setTargetFormat(e.target.value as "image/jpeg" | "image/png" | "image/webp")}
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white font-bold outline-none focus:border-rose-500/30 transition-all appearance-none cursor-pointer"
                 >
                     <option value="image/jpeg">JPEG (Universal)</option>
@@ -316,6 +316,7 @@ export default function HEICToJPGPage() {
                   min="0.1"
                   max="1"
                   step="0.05"
+                  title="Compression Level"
                   value={quality}
                   onChange={(e) => setQuality(parseFloat(e.target.value))}
                   className="w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-rose-500"
@@ -357,7 +358,7 @@ export default function HEICToJPGPage() {
               <Sparkles size={16} className="text-rose-500" /> Pro Insight
             </h4>
             <div className="text-[10px] text-slate-500 font-medium italic">
-                Our elite engine converts Apple's proprietary HEIF/HEIC layers into high-contrast standards. 100MB+ files are handled with optimized WASM memory management.
+                Our elite engine converts Apple&apos;s proprietary HEIF/HEIC layers into high-contrast standards. 100MB+ files are handled with optimized WASM memory management.
             </div>
           </div>
         </aside>

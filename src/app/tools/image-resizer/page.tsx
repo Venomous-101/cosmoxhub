@@ -51,13 +51,28 @@ export default function ImageResizerPage() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (lockAspect && targetWidth > 0 && images.length > 0) {
+  const updateWidth = (w: number) => {
+    setTargetWidth(w);
+    if (lockAspect && images.length > 0) {
+      const first = images[0];
+      const ratio = first.originalHeight / first.originalWidth;
+      setTargetHeight(Math.round(w * ratio));
+    }
+  };
+
+  const updateHeight = (h: number) => {
+    setTargetHeight(h);
+  };
+
+  const toggleLock = () => {
+    const newLock = !lockAspect;
+    setLockAspect(newLock);
+    if (newLock && targetWidth > 0 && images.length > 0) {
       const first = images[0];
       const ratio = first.originalHeight / first.originalWidth;
       setTargetHeight(Math.round(targetWidth * ratio));
     }
-  }, [targetWidth, lockAspect, images]);
+  };
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -208,7 +223,7 @@ export default function ImageResizerPage() {
                   <p className="text-slate-400 text-center max-w-xs px-4 text-sm">Resize to exact dimensions or crop precisely. Bulk supported, zero cloud uploads.</p>
                   <span className="mt-6 px-5 py-2 bg-white/5 text-slate-300 text-[10px] font-black uppercase tracking-widest rounded-full border border-white/5 hover:bg-emerald-500 hover:text-white transition-all">Start Elite Session</span>
                 </div>
-                <input ref={fileInputRef} type="file" multiple accept="image/*" className="hidden" aria-label="Upload images to resize" onChange={handleUpload} />
+                <input ref={fileInputRef} type="file" multiple title="Upload Images" accept="image/*" className="hidden" onChange={handleUpload} />
               </motion.div>
             ) : (
               <motion.div key="grid" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
@@ -248,7 +263,7 @@ export default function ImageResizerPage() {
                             </div>
                           )}
                         </div>
-                        <button onClick={() => removeImage(img.id)} aria-label="Remove image" title="Remove image" className="absolute top-4 right-4 p-1.5 bg-rose-500/10 text-rose-500 rounded-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-rose-500 hover:text-white">
+                        <button onClick={() => removeImage(img.id)} title="Remove Image" className="absolute top-4 right-4 p-1.5 bg-rose-500/10 text-rose-500 rounded-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-rose-500 hover:text-white">
                           <X className="w-4 h-4" />
                         </button>
                       </motion.div>
@@ -263,7 +278,7 @@ export default function ImageResizerPage() {
               </motion.div>
             )}
           </AnimatePresence>
-          <input ref={fileInputRef} type="file" multiple accept="image/*" className="hidden" aria-label="Upload images to resize" onChange={handleUpload} />
+          <input ref={fileInputRef} type="file" multiple title="Upload Images" accept="image/*" className="hidden" onChange={handleUpload} />
         </div>
 
         {/* Sidebar */}
@@ -295,7 +310,8 @@ export default function ImageResizerPage() {
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <label className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Target Dimensions</label>
-                      <button onClick={() => setLockAspect(!lockAspect)}
+                      <button onClick={toggleLock}
+                        title={lockAspect ? "Unlock Aspect Ratio" : "Lock Aspect Ratio"}
                         className={`flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest transition-colors ${lockAspect ? "text-emerald-500" : "text-slate-500"}`}>
                         {lockAspect ? <Lock size={11} /> : <Unlock size={11} />}
                         {lockAspect ? "Locked" : "Free"}
@@ -304,12 +320,12 @@ export default function ImageResizerPage() {
                     <div className="grid grid-cols-2 gap-3">
                       <div className="space-y-1.5">
                         <span className="text-slate-600 text-[9px] font-bold uppercase ml-1">Width px</span>
-                        <input type="number" value={targetWidth || ""} onChange={(e) => setTargetWidth(parseInt(e.target.value) || 0)} placeholder="W"
+                        <input type="number" value={targetWidth || ""} title="Width in Pixels" onChange={(e) => updateWidth(parseInt(e.target.value) || 0)} placeholder="W"
                           className="w-full bg-white/5 border border-white/5 rounded-2xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none transition-all font-bold" />
                       </div>
                       <div className="space-y-1.5">
                         <span className="text-slate-600 text-[9px] font-bold uppercase ml-1">Height px</span>
-                        <input type="number" value={targetHeight || ""} onChange={(e) => setTargetHeight(parseInt(e.target.value) || 0)} placeholder="H" disabled={lockAspect}
+                        <input type="number" value={targetHeight || ""} title="Height in Pixels" onChange={(e) => updateHeight(parseInt(e.target.value) || 0)} placeholder="H" disabled={lockAspect}
                           className="w-full bg-white/5 border border-white/5 rounded-2xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none transition-all font-bold disabled:opacity-40" />
                       </div>
                     </div>
@@ -353,7 +369,7 @@ export default function ImageResizerPage() {
                       { label: "Width px", val: cropW, set: setCropW }, { label: "Height px", val: cropH, set: setCropH }].map(c => (
                       <div key={c.label} className="space-y-1.5">
                         <span className="text-slate-600 text-[9px] font-bold uppercase ml-1">{c.label}</span>
-                        <input type="number" value={c.val || ""} onChange={(e) => c.set(parseInt(e.target.value) || 0)} placeholder="0"
+                        <input type="number" value={c.val || ""} title={c.label} onChange={(e) => c.set(parseInt(e.target.value) || 0)} placeholder="0"
                           className="w-full bg-white/5 border border-white/5 rounded-2xl px-4 py-3 text-sm text-white focus:border-emerald-500/50 outline-none transition-all font-bold" />
                       </div>
                     ))}
