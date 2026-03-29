@@ -163,7 +163,7 @@ export default function AIPromptOptimizerPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Input */}
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
-            className="bg-white/[0.03] border border-white/10 rounded-[2.5rem] overflow-hidden shadow-xl flex flex-col min-h-[380px]">
+            className="bg-white/[0.03] border border-white/10 rounded-[2.5rem] shadow-xl flex flex-col min-h-[420px]">
             <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
               <div className="flex items-center gap-2"><Type size={13} className="text-purple-500" /><span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Raw Idea Input</span></div>
               <button onClick={() => setInput("")} aria-label="Clear input" title="Clear input" className="p-1.5 text-slate-600 hover:text-rose-400 transition-colors"><Trash2 size={14} /></button>
@@ -173,18 +173,28 @@ export default function AIPromptOptimizerPage() {
               placeholder={"Describe what you want the AI to do...\n\nExample: Write a compelling homepage for a B2B SaaS startup that helps small businesses manage their finances."}
               value={input} onChange={(e) => setInput(e.target.value)}
             />
-            <div className="px-6 pb-6 pt-4 border-t border-white/5 flex items-center justify-between">
-              <span className="text-[10px] text-slate-500 font-mono tracking-tighter">{input.length} characters</span>
-              <button onClick={optimizePrompt} disabled={isProcessing || !input.trim()}
-                className="flex items-center gap-2 px-6 py-2.5 bg-violet-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-violet-500 disabled:opacity-50 transition-all">
-                {isProcessing ? <><Sparkles size={13} className="animate-spin" /> Building...</> : <><ArrowRightLeft size={13} /> Optimize</>}
+            <div className="px-8 py-6 bg-white/[0.02] border-t border-white/5 flex items-center justify-between rounded-b-[2.5rem]">
+              <div className="flex flex-col">
+                <span className="text-[10px] text-white font-black uppercase tracking-widest">{input.length}</span>
+                <span className="text-[8px] text-slate-500 font-bold uppercase tracking-tighter">Total Characters</span>
+              </div>
+              <button 
+                onClick={optimizePrompt} 
+                disabled={isProcessing || !input.trim()}
+                className="group relative flex items-center gap-3 px-8 py-3 bg-violet-600 text-white text-[11px] font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-violet-500 disabled:opacity-50 transition-all shadow-xl shadow-violet-600/10 hover:shadow-violet-600/20 active:scale-95"
+              >
+                {isProcessing ? (
+                  <><Sparkles size={14} className="animate-spin" /> Building...</>
+                ) : (
+                  <><ArrowRightLeft size={14} className="group-hover:rotate-180 transition-transform duration-500" /> Optimize Prompt</>
+                )}
               </button>
             </div>
           </motion.div>
 
           {/* Output */}
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}
-            className="bg-white/[0.03] border border-violet-500/20 rounded-[2.5rem] overflow-hidden shadow-xl flex flex-col min-h-[380px] relative">
+            className="bg-white/[0.03] border border-violet-500/20 rounded-[2.5rem] shadow-xl flex flex-col min-h-[420px] relative">
             <div className="absolute inset-0 bg-gradient-to-br from-purple-500/3 to-transparent pointer-events-none" />
             <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between relative z-10">
               <div className="flex items-center gap-2"><BrainCircuit size={13} className="text-amber-400" /><span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Optimized Result</span></div>
