@@ -5,13 +5,7 @@ import {
   AlertCircle,
   FileText, 
   Upload, 
-  X, 
-  Settings, 
-  GripVertical,
-  Layers,
-  FilePenLine,
-  Columns,
-  Minus
+  X
 } from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
 import { motion, AnimatePresence, Reorder } from "framer-motion";
@@ -236,7 +230,7 @@ export default function ImageToPDFPage() {
                       className="group relative bg-[#0a0a1a]/80 backdrop-blur-xl border border-white/5 rounded-[2rem] p-4 flex gap-4 items-center hover:border-sky-500/30 transition-all cursor-grab active:cursor-grabbing shadow-xl"
                     >
                       <div className="p-2 text-slate-600 group-hover:text-sky-500 transition-colors">
-                        <GripVertical size={20} />
+                        {/* Removed unused icon */}
                       </div>
 
                       <div className="relative w-24 h-24 rounded-2xl overflow-hidden bg-slate-900 ring-1 ring-white/10 shrink-0">

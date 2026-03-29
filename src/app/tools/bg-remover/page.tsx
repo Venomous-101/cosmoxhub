@@ -25,6 +25,8 @@ export default function BackgroundRemoverPage() {
   const [progress, setProgress] = useState<number>(0);
   const [aiLoaded, setAiLoaded] = useState(false);
   const [bgMode, setBgMode] = useState<"transparent" | "white" | "blue">("transparent");
+  const [useSmallModel, setUseSmallModel] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -80,10 +82,10 @@ export default function BackgroundRemoverPage() {
           }
         },
         publicPath: "https://static.imgly.com/@imgly/background-removal-data/1.7.0/dist/",
-        model: "medium",
+        model: useSmallModel ? "small" : "isnet",
         output: {
           format: "image/png",
-          quality: 0.9
+          quality: 0.8
         }
       });
       
@@ -92,6 +94,13 @@ export default function BackgroundRemoverPage() {
       setStatus("completed");
     } catch (error) {
       console.error("AI Error:", error);
+      // Automatic fallback to small model if first attempt fails
+      if (!useSmallModel && retryCount < 1) {
+        setUseSmallModel(true);
+        setRetryCount(prev => prev + 1);
+        processImage(); // Internal retry
+        return;
+      }
       setStatus("error");
     }
   };
@@ -226,7 +235,26 @@ export default function BackgroundRemoverPage() {
                     <div className="text-center text-rose-500 flex flex-col items-center px-8">
                        <RefreshCw className="w-8 h-8 mb-4 opacity-50" />
                        <span className="text-sm font-black uppercase tracking-widest mb-1">AI Engine Failed</span>
-                       <span className="text-xs text-slate-500 font-medium">This usually happens due to browser memory limits. Please reload and try again.</span>
+                       <p className="text-xs text-slate-500 font-medium mb-4">
+                         {useSmallModel ? "Deep extraction failed even in Safe Mode." : "This tool requires high memory. Try Safe Mode for a lighter processing."}
+                       </p>
+                       <button 
+                         onClick={() => {
+                           setUseSmallModel(true);
+                           processImage();
+                         }}
+                         className="px-6 py-2 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 rounded-full text-[10px] font-black uppercase tracking-widest text-rose-400 transition-all mb-4"
+                       >
+                         Try Safe Mode
+                       </button>
+                       <div className="text-[9px] text-slate-600 bg-white/5 p-4 rounded-2xl border border-white/5 max-w-xs text-left">
+                          <p className="font-bold text-slate-400 mb-1">Opera/Brave Troubleshooting:</p>
+                          <ul className="list-disc list-inside space-y-1">
+                            <li>Turn off "Battery Saver" mode.</li>
+                            <li>Ensure "Hardware Acceleration" is ON in settings.</li>
+                            <li>Lower "Shields" or Ad-blocker if assets fail to load.</li>
+                          </ul>
+                       </div>
                     </div>
                   )}
 
@@ -251,17 +279,17 @@ export default function BackgroundRemoverPage() {
                       { id: "transparent", label: "None", class: "bg-white/10" },
                       { id: "white", label: "White", class: "bg-white" },
                       { id: "blue", label: "Blue", class: "bg-[#0055ff]" }
-                    ].map(opt => (
-                      <button
-                        key={opt.id}
-                        onClick={() => setBgMode(opt.id as any)}
-                        className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
-                          bgMode === opt.id ? "bg-violet-600 text-white" : "text-slate-500 hover:text-slate-300"
-                        }`}
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
+                      ].map(opt => (
+                        <button
+                          key={opt.id}
+                          onClick={() => setBgMode(opt.id as "transparent" | "white" | "blue")}
+                          className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                            bgMode === opt.id ? "bg-violet-600 text-white" : "text-slate-500 hover:text-slate-300"
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
                   </div>
                 </div>
               </div>
