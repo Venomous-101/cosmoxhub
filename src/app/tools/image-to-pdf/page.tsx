@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { 
+  AlertCircle,
   FileText, 
   Upload, 
   X, 
@@ -31,6 +32,7 @@ type Orientation = "portrait" | "landscape";
 export default function ImageToPDFPage() {
   const [images, setImages] = useState<ImageFile[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [pageSize, setPageSize] = useState<PageSize>("auto");
   const [margin, setMargin] = useState<MarginSize>("none");
   const [orientation, setOrientation] = useState<Orientation>("portrait");
@@ -64,69 +66,75 @@ export default function ImageToPDFPage() {
   const generatePDF = async () => {
     if (images.length === 0) return;
     setIsGenerating(true);
+    setError(null);
 
     try {
       const pdfDoc = await PDFDocument.create();
       
       for (const imgFile of images) {
-        const imageBytes = await imgFile.file.arrayBuffer();
-        let image;
-        if (imgFile.file.type === "image/jpeg" || imgFile.file.type === "image/jpg") {
-          image = await pdfDoc.embedJpg(imageBytes);
-        } else {
-          image = await pdfDoc.embedPng(imageBytes);
+        try {
+          const imageBytes = await imgFile.file.arrayBuffer();
+          let image;
+          
+          const type = imgFile.file.type;
+          if (type === "image/jpeg" || type === "image/jpg") {
+            image = await pdfDoc.embedJpg(imageBytes);
+          } else if (type === "image/png") {
+            image = await pdfDoc.embedPng(imageBytes);
+          } else {
+            // Fallback for other formats - many browsers provide lib-compat
+            throw new Error(`Unsupported format: ${type}. Please use JPG or PNG.`);
+          }
+
+          const dims = image.scale(1);
+          let pageWidth = dims.width;
+          let pageHeight = dims.height;
+
+          if (pageSize === "a4") {
+            pageWidth = 595.28;
+            pageHeight = 841.89;
+          } else if (pageSize === "letter") {
+            pageWidth = 612;
+            pageHeight = 792;
+          }
+
+          if (orientation === "landscape") {
+              const temp = pageWidth;
+              pageWidth = pageHeight;
+              pageHeight = temp;
+          }
+
+          const marginVal = margin === "none" ? 0 : margin === "small" ? 20 : 50;
+          const availableWidth = pageWidth - (marginVal * 2);
+          const availableHeight = pageHeight - (marginVal * 2);
+
+          const scale = Math.min(availableWidth / dims.width, availableHeight / dims.height);
+          const imageWidth = dims.width * scale;
+          const imageHeight = dims.height * scale;
+
+          const page = pdfDoc.addPage([pageWidth, pageHeight]);
+          page.drawImage(image, {
+            x: (pageWidth - imageWidth) / 2,
+            y: (pageHeight - imageHeight) / 2,
+            width: imageWidth,
+            height: imageHeight,
+          });
+        } catch (err) {
+          console.error("Single image failure:", err);
+          throw new Error(`Failed to process ${imgFile.name}. Check if it's a valid JPG/PNG.`);
         }
-
-        const dims = image.scale(1);
-        
-        // Handle Page Size & Margin
-        let pageWidth = dims.width;
-        let pageHeight = dims.height;
-        let imageWidth = dims.width;
-        let imageHeight = dims.height;
-
-        if (pageSize === "a4") {
-          pageWidth = 595.28;
-          pageHeight = 841.89;
-        } else if (pageSize === "letter") {
-          pageWidth = 612;
-          pageHeight = 792;
-        }
-
-        if (orientation === "landscape") {
-            const temp = pageWidth;
-            pageWidth = pageHeight;
-            pageHeight = temp;
-        }
-
-        const marginVal = margin === "none" ? 0 : margin === "small" ? 20 : 50;
-        
-        const availableWidth = pageWidth - (marginVal * 2);
-        const availableHeight = pageHeight - (marginVal * 2);
-
-        const scale = Math.min(availableWidth / dims.width, availableHeight / dims.height);
-        imageWidth = dims.width * scale;
-        imageHeight = dims.height * scale;
-
-        const page = pdfDoc.addPage([pageWidth, pageHeight]);
-        page.drawImage(image, {
-          x: (pageWidth - imageWidth) / 2,
-          y: (pageHeight - imageHeight) / 2,
-          width: imageWidth,
-          height: imageHeight,
-        });
       }
 
       const pdfBytes = await pdfDoc.save();
-      const blob = new Blob([pdfBytes as unknown as BlobPart], { type: "application/pdf" });
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
       link.download = `cosmoxhub-${Date.now()}.pdf`;
       link.click();
       URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("PDF generation failed:", error);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "PDF generation failed.");
     } finally {
       setIsGenerating(false);
     }
@@ -164,7 +172,7 @@ export default function ImageToPDFPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="grid lg:grid-cols-[1fr_320px] gap-8 items-start">
+      <div className="grid lg:grid-cols-[1fr_340px] gap-8 items-start">
         {/* Main Workspace */}
         <div className="space-y-6">
           <AnimatePresence mode="wait">
@@ -186,12 +194,12 @@ export default function ImageToPDFPage() {
                       <FileText className="w-10 h-10 text-sky-500" />
                     </div>
                   </div>
-                  <h3 className="text-2xl font-black text-white mb-2 tracking-tight">Convert Images to PDF</h3>
+                  <h3 className="text-2xl font-black text-white mb-2 tracking-tight">Add Images</h3>
                   <p className="text-slate-400 text-center max-w-xs px-4 text-sm">
                     Upload images to build your PDF. You can drag and drop them to reorder pages after uploading.
                   </p>
                   <span className="mt-6 px-5 py-2 bg-white/5 text-slate-300 text-[10px] font-black uppercase tracking-widest rounded-full border border-white/5 hover:bg-sky-500 hover:text-white transition-all shadow-lg">
-                    Build Elite PDF
+                    Build PDF
                   </span>
                 </div>
                 <input
@@ -211,6 +219,12 @@ export default function ImageToPDFPage() {
                 onReorder={setImages}
                 className="space-y-3"
               >
+                {error && (
+                   <div className="p-4 bg-rose-500/10 border border-rose-500/20 rounded-2xl flex gap-3 text-rose-500 mb-4">
+                     <AlertCircle size={14} className="shrink-0 mt-0.5" />
+                     <p className="text-[10px] font-bold uppercase leading-tight tracking-wider">{error}</p>
+                   </div>
+                 )}
                 <AnimatePresence>
                   {images.map((img) => (
                     <Reorder.Item
@@ -262,37 +276,31 @@ export default function ImageToPDFPage() {
                   className="w-full flex flex-col items-center justify-center p-6 border-2 border-dashed border-sky-500/10 rounded-[2rem] bg-sky-500/5 hover:border-sky-500/30 transition-all group mt-6"
                 >
                   <Upload className="w-6 h-6 text-sky-500/40 group-hover:text-sky-500 mb-2" />
-                  <span className="text-[10px] font-black text-sky-500/60 uppercase tracking-widest">Append More Images</span>
+                  <span className="text-[10px] font-black text-sky-500/60 uppercase tracking-widest">Add More Images</span>
                 </motion.button>
               </Reorder.Group>
             )}
           </AnimatePresence>
         </div>
 
-        {/* Sidebar Controls */}
         <aside className="space-y-6 sticky top-8">
-          <div className="bg-[#0a0a1a]/80 backdrop-blur-2xl border border-white/5 rounded-[2.5rem] p-8 relative overflow-hidden shadow-2xl">
-            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-sky-600 to-sky-400" />
+          <div className="bg-white/[0.03] border border-white/10 rounded-3xl p-6 relative overflow-hidden shadow-xl">
             
-            <div className="flex items-center gap-3 mb-8">
-              <div className="p-2.5 bg-sky-500/10 rounded-2xl">
-                <Settings className="w-5 h-5 text-sky-500" />
-              </div>
-              <h3 className="text-xl font-black text-white tracking-tight">PDF Engine</h3>
+            <div className="flex justify-between items-end mb-6 border-b border-white/5 pb-4">
+              <h3 className="text-lg font-bold text-white tracking-tight">PDF Settings</h3>
             </div>
 
             <div className="space-y-8">
-                {/* Page Size */}
               <div className="space-y-4">
                 <label className="text-slate-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
-                    <Columns size={12} className="text-sky-500" /> Page Size
+                    Page Size
                 </label>
                 <div className="grid grid-cols-1 gap-2 bg-white/5 p-1 rounded-2xl border border-white/5">
                   {(["auto", "a4", "letter"] as const).map((s) => (
                     <button
                       key={s}
                       onClick={() => setPageSize(s)}
-                      className={`py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${pageSize === s ? "bg-sky-500 text-white shadow-lg" : "text-slate-500 hover:text-slate-300"}`}
+                      className={`py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${pageSize === s ? "bg-sky-500 text-black shadow-lg" : "text-slate-500 hover:text-slate-300"}`}
                     >
                       {s === "a4" ? "A4 (Standard)" : s.toUpperCase()}
                     </button>
@@ -300,17 +308,16 @@ export default function ImageToPDFPage() {
                 </div>
               </div>
 
-              {/* Orientation */}
               <div className="space-y-4">
                 <label className="text-slate-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
-                    <FilePenLine size={12} className="text-sky-500" /> Orientation
+                    Orientation
                 </label>
                 <div className="grid grid-cols-2 gap-2 bg-white/5 p-1 rounded-xl border border-white/5">
                   {(["portrait", "landscape"] as const).map((o) => (
                     <button
                       key={o}
                       onClick={() => setOrientation(o)}
-                      className={`py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${orientation === o ? "bg-sky-500 text-white" : "text-slate-500 hover:text-slate-300"}`}
+                      className={`py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${orientation === o ? "bg-sky-500 text-black" : "text-slate-500 hover:text-slate-300"}`}
                     >
                       {o.slice(0, 4)}...
                     </button>
@@ -318,51 +325,40 @@ export default function ImageToPDFPage() {
                 </div>
               </div>
 
-              {/* Borders */}
               <div className="space-y-4">
                 <label className="text-slate-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
-                    <Minus size={12} className="text-sky-500" /> Page Margins
+                    Page Margins
                 </label>
                 <div className="flex bg-white/5 p-1 rounded-xl border border-white/5">
                   {(["none", "small", "big"] as const).map((m) => (
                     <button
                       key={m}
                       onClick={() => setMargin(m)}
-                      className={`flex-1 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${margin === m ? "bg-sky-500 text-white shadow-lg" : "text-slate-500 hover:text-slate-300"}`}
+                      className={`flex-1 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${margin === m ? "bg-sky-500 text-black shadow-lg" : "text-slate-500 hover:text-slate-300"}`}
                     >
-                      {m}
+                       {m}
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Actions */}
               <div className="pt-4 space-y-4">
                 <button
                   disabled={images.length === 0 || isGenerating}
                   onClick={generatePDF}
-                  className="w-full btn-primary h-14 flex items-center justify-center gap-3 bg-gradient-to-r from-sky-600 to-sky-400 shadow-[0_4px_30px_rgba(14,165,233,0.3)] hover:shadow-[0_4px_40px_rgba(14,165,233,0.5)] disabled:opacity-50 disabled:translate-y-0 disabled:shadow-none text-white text-[11px] font-black uppercase tracking-[0.15em] rounded-2xl transition-all hover:-translate-y-1 shadow-xl"
+                  className="w-full bg-sky-500 hover:bg-sky-600 disabled:bg-white/5 disabled:text-slate-600 text-black font-black text-[11px] uppercase tracking-[0.15em] py-4 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2"
                 >
-                  {isGenerating ? "Assembling PDF..." : "Generate Elite PDF"}
+                  {isGenerating ? "SAVING..." : "Save as PDF"}
                 </button>
 
                 <button
                     disabled={images.length === 0}
                     onClick={() => setImages([])}
-                    className="w-full py-2 text-rose-500/60 text-[9px] font-black uppercase tracking-[0.2em] hover:text-rose-400 disabled:opacity-0 transition-opacity"
+                    className="w-full py-2 text-slate-500 text-[9px] font-black uppercase tracking-[0.2em] hover:text-rose-500 disabled:opacity-0 transition-opacity"
                 >
-                    Discard Changes
+                    Clear All
                 </button>
               </div>
-            </div>
-          </div>
-
-          <div className="bg-[#0a0a1a]/40 border border-white/5 rounded-3xl p-6">
-            <h4 className="text-white font-bold text-sm mb-4 flex items-center gap-2">
-              <Layers size={16} className="text-sky-500" /> Pro Feature
-            </h4>
-            <div className="text-[11px] text-slate-500 leading-relaxed font-semibold italic">
-                Drag each image card to rearrange the final page order. Everything is processed locally.
             </div>
           </div>
         </aside>
