@@ -216,29 +216,14 @@ export default function MergePDFPage() {
 
         {/* Sidebar Controls */}
         <aside className="space-y-6 sticky top-8">
-          <div className="bg-[#0a0a1a]/90 backdrop-blur-2xl border border-white/5 rounded-[2.5rem] p-8 relative overflow-hidden shadow-2xl">
-            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-rose-600 to-rose-400 shadow-[0_2px_15px_rgba(244,63,94,0.3)]" />
+          <div className="bg-white/[0.03] border border-white/10 rounded-3xl p-6 relative overflow-hidden shadow-xl">
             
-            <div className="flex items-center gap-3 mb-8">
-              <div className="p-2.5 bg-rose-500/10 rounded-2xl">
-                <Settings className="w-5 h-5 text-rose-500" />
-              </div>
-              <h3 className="text-xl font-black text-white tracking-tight">Selected Files</h3>
+            <div className="flex justify-between items-end mb-6 border-b border-white/5 pb-4">
+              <h3 className="text-lg font-bold text-white tracking-tight">Merge Settings</h3>
+              <span className="text-rose-500 font-black text-[10px] uppercase tracking-widest">{files.length} FILES</span>
             </div>
 
-            <div className="space-y-8">
-                <div className="space-y-2">
-                    <div className="flex justify-between items-center mb-1">
-                        <span className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Files Added</span>
-                        <span className="text-rose-500 font-black text-xs">{files.length} FILES</span>
-                    </div>
-                    <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                        <motion.div 
-                            animate={{ width: `${(files.length / 10) * 100}%` }}
-                            className="h-full bg-rose-500"
-                        />
-                    </div>
-                </div>
+            <div className="space-y-6">
 
                 <div className="pt-4 space-y-3">
                     {error && (
@@ -251,7 +236,7 @@ export default function MergePDFPage() {
                     <button
                         onClick={mergePDFs}
                         disabled={files.length < 2 || isMerging}
-                        className="w-full bg-rose-500 hover:bg-rose-600 disabled:bg-white/5 disabled:text-slate-600 text-black font-black text-[11px] uppercase tracking-[0.15em] py-4 rounded-2xl transition-all shadow-xl shadow-rose-500/20 active:scale-95 flex items-center justify-center gap-2 group"
+                        className="w-full bg-rose-500 hover:bg-rose-600 disabled:bg-white/5 disabled:text-slate-600 text-black font-black text-[11px] uppercase tracking-[0.15em] py-4 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2"
                     >
                         {isMerging ? (
                             <>
@@ -259,36 +244,20 @@ export default function MergePDFPage() {
                             </>
                         ) : (
                             <>
-                                <Download size={16} className="group-hover:scale-110 transition-transform" /> MERGE NOW
+                                <Download size={16} /> MERGE NOW
                             </>
                         )}
                     </button>
                     
                     <button
                         onClick={() => setFiles([])}
-                        className="w-full bg-white/5 border border-white/10 hover:border-rose-500/30 text-white font-black text-[11px] uppercase tracking-[0.15em] py-4 rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-2 group"
+                        className="w-full bg-white/5 border border-white/10 hover:bg-white/10 text-white font-black text-[11px] uppercase tracking-[0.15em] py-4 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2"
                     >
-                        <Trash2 size={16} className="text-rose-500" /> Clear All Files
+                        <Trash2 size={16} className="text-slate-500" /> Clear All Files
                     </button>
                 </div>
 
-                <div className="pt-6 border-t border-white/5">
-                    <div className="p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl flex gap-3 text-emerald-500 relative overflow-hidden group">
-                        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent translate-x-full group-hover:translate-x-0 transition-transform duration-700" />
-                        <Zap size={16} className="shrink-0 mt-0.5" />
-                        <p className="text-[9px] font-bold uppercase leading-tight tracking-wider relative z-10">
-                            Safe and Private. Your data never leaves your device and is never uploaded.
-                        </p>
-                    </div>
-                </div>
             </div>
-          </div>
-
-          <div className="bg-[#0a0a1a]/40 border border-white/5 rounded-3xl p-6 shadow-xl relative overflow-hidden group flex items-start gap-4">
-            <Sparkles size={18} className="text-rose-500 shrink-0" />
-            <p className="text-[10px] text-slate-500 font-medium italic leading-relaxed">
-                High-performance merging that preserves all links, orientation, and vector data.
-            </p>
           </div>
         </aside>
       </div>
