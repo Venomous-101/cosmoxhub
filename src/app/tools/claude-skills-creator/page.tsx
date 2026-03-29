@@ -124,12 +124,12 @@ ${instructionLines}
                 <div className="p-2.5 bg-violet-500/10 rounded-2xl"><Settings className="w-5 h-5 text-violet-500" /></div>
                 <h3 className="text-xl font-black text-white tracking-tight italic">Agent Configuration</h3>
               </div>
-              <div className="flex bg-white/5 p-1 rounded-2xl border border-white/5">
+              <div className="flex items-center gap-2 bg-white/5 p-1.5 rounded-2xl border border-white/5">
                 {(["Identity", "Training", "Behavior"] as const).map(tab => (
                   <button 
                     key={tab} 
                     onClick={() => setActiveTab(tab)}
-                    className={`px-5 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${activeTab === tab ? "bg-violet-600 text-white shadow-lg" : "text-slate-500 hover:text-slate-300"}`}
+                    className={`px-6 py-2.5 text-[11px] font-black uppercase tracking-[0.15em] rounded-xl transition-all shrink-0 ${activeTab === tab ? "bg-violet-600 text-white shadow-[0_0_20px_rgba(139,92,246,0.3)]" : "text-slate-500 hover:text-slate-300 hover:bg-white/5"}`}
                   >
                     {tab}
                   </button>
