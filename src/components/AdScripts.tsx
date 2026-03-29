@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 
 export default function AdScripts() {
   const [clickCount, setClickCount] = useState(0);
-  const THRESHOLD = 30;
+  const GLOBAL_THRESHOLD = 30;
+  const POPUNDER_THRESHOLD = 45;
 
   useEffect(() => {
     const savedCount = sessionStorage.getItem("cosmox_click_count");
@@ -26,37 +27,40 @@ export default function AdScripts() {
     return () => document.removeEventListener("click", handleGlobalClick);
   }, []);
 
-  const isActivated = clickCount >= THRESHOLD;
-
-  // Don't render aggressive scripts until threshold is met
-  if (!isActivated) {
-    return null;
-  }
+  const isGlobalActivated = clickCount >= GLOBAL_THRESHOLD;
+  const isPopunderActivated = clickCount >= POPUNDER_THRESHOLD;
 
   return (
     <>
-      {/* Adsterra: Social Bar (After Grace Period) */}
-      <Script 
-        id="adsterra-social-bar"
-        src="https://pl28997791.profitablecpmratenetwork.com/da/cf/3c/dacf3cfc20bc19fd9857f843d4937bef.js" 
-        strategy="afterInteractive" 
-      />
+      {/* 30 CLICKS THRESHOLD: Social Bar & Monetag */}
+      {isGlobalActivated && (
+        <>
+          {/* Adsterra: Social Bar */}
+          <Script 
+            id="adsterra-social-bar"
+            src="https://pl28997791.profitablecpmratenetwork.com/da/cf/3c/dacf3cfc20bc19fd9857f843d4937bef.js" 
+            strategy="afterInteractive" 
+          />
 
-      {/* Adsterra: Popunder (After Grace Period) */}
-      <Script 
-        id="adsterra-popunder"
-        src="https://pl28997788.profitablecpmratenetwork.com/8e/db/ca/8edbca55e5c02996547e78e61fd8b641.js" 
-        strategy="afterInteractive" 
-      />
+          {/* Monetag: MultiTag */}
+          <Script 
+            id="monetag-multitag"
+            src="https://quge5.com/88/tag.min.js" 
+            data-zone="224063" 
+            strategy="afterInteractive" 
+            data-cfasync="false"
+          />
+        </>
+      )}
 
-      {/* Monetag: MultiTag (After Grace Period - The one with Popunders) */}
-      <Script 
-        id="monetag-multitag"
-        src="https://quge5.com/88/tag.min.js" 
-        data-zone="224063" 
-        strategy="afterInteractive" 
-        data-cfasync="false"
-      />
+      {/* 45 CLICKS THRESHOLD: Adsterra Popunder */}
+      {isPopunderActivated && (
+        <Script 
+          id="adsterra-popunder"
+          src="https://pl28997788.profitablecpmratenetwork.com/8e/db/ca/8edbca55e5c02996547e78e61fd8b641.js" 
+          strategy="afterInteractive" 
+        />
+      )}
     </>
   );
 }
