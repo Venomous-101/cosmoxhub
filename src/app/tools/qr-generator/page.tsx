@@ -19,8 +19,8 @@ import { QRCode } from "react-qrcode-logo";
 
 export default function QRGeneratorPage() {
   const [text, setText] = useState("https://cosmoxhub.com");
-  const [fgColor, setFgColor] = useState("#ffffff");
-  const [bgColor, setBgColor] = useState("#00000000"); // Transparent default
+  const [fgColor, setFgColor] = useState("#000000"); // Solid Black Ink (Guaranteed scannable)
+  const [bgColor, setBgColor] = useState("#ffffff"); // Solid White Void
   const [logoBase64, setLogoBase64] = useState<string | null>(null);
   const [qrStyle, setQrStyle] = useState<"squares" | "dots">("squares");
   const qrRef = useRef<ElementRef<typeof QRCode>>(null);
@@ -101,7 +101,7 @@ export default function QRGeneratorPage() {
                             value={text}
                             size={280}
                             fgColor={fgColor}
-                            bgColor={bgColor === "#00000000" ? "transparent" : bgColor}
+                            bgColor={bgColor}
                             qrStyle={qrStyle}
                             eyeRadius={qrStyle === 'dots' ? 10 : 0}
                             logoImage={logoBase64 || undefined}
@@ -202,7 +202,7 @@ export default function QRGeneratorPage() {
                             <Layout size={14} className="text-slate-500" />
                             <span className="text-[10px] font-black text-slate-300 uppercase">Background Void</span>
                         </div>
-                        <input type="color" value={bgColor === "#00000000" ? "#000000" : bgColor} onChange={(e) => setBgColor(e.target.value)} className="w-8 h-8 rounded-lg bg-transparent cursor-pointer" aria-label="Background color" title="Background color" />
+                        <input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="w-8 h-8 rounded-lg bg-transparent cursor-pointer border-0 p-0" aria-label="Background color" title="Background color" />
                     </div>
                 </div>
 
