@@ -1,9 +1,13 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowLeft, Lock } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import type { LucideIcon } from "lucide-react";
 import AdBanner from "./AdBanner";
+import RelatedTools from "./RelatedTools";
 
 interface ToolLayoutProps {
   title: string;
@@ -28,6 +32,7 @@ const colorMap: Record<string, { iconBg: string, iconBorder: string }> = {
 
 export default function ToolLayout({ title, description, icon: Icon, color = "#6366f1", children }: ToolLayoutProps) {
   const styles = colorMap[color] || colorMap["default"];
+  const pathname = usePathname();
 
   return (
     <div className="min-h-screen flex flex-col bg-[#050510] text-[#f1f5f9]">
@@ -61,19 +66,49 @@ export default function ToolLayout({ title, description, icon: Icon, color = "#6
           
           <AdBanner type="native" label="Sponsored Tool" className="mb-8" />
 
-          {/* Tool content */}
-          <div className="bg-[#0f111a] border border-indigo-500/10 rounded-2xl shadow-xl">
-            {children}
-          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="lg:col-span-9">
+              {/* Tool content */}
+              <div className="bg-[#0f111a] border border-indigo-500/10 rounded-2xl shadow-xl overflow-hidden">
+                {children}
+              </div>
 
-          {/* Privacy note */}
-          <div className="mt-10 px-6 py-4 bg-indigo-500/5 rounded-xl border border-indigo-500/10 flex items-center gap-4">
-            <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
-              <Lock size={18} className="text-emerald-500" />
+              {/* Privacy note */}
+              <div className="mt-8 px-6 py-4 bg-indigo-500/5 rounded-xl border border-indigo-500/10 flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
+                  <Lock size={18} className="text-emerald-500" />
+                </div>
+                <p className="text-slate-400 text-sm leading-relaxed m-0">
+                  <strong className="text-slate-200 font-semibold">100% Private.</strong> All processing happens in your browser. No files are uploaded to any server. Your data never leaves your device.
+                </p>
+              </div>
             </div>
-            <p className="text-slate-400 text-sm leading-relaxed m-0">
-              <strong className="text-slate-200 font-semibold">100% Private.</strong> All processing happens in your browser. No files are uploaded to any server. Your data never leaves your device.
-            </p>
+
+            {/* Sidebar for Desktop */}
+            <aside className="lg:col-span-3 space-y-6">
+               {/* Sustainability Note: Emotional Engagement */}
+               <div className="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-6 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <Sparkles size={40} className="text-amber-500" />
+                  </div>
+                  <h4 className="font-space text-[11px] font-black uppercase tracking-[0.2em] text-amber-500 mb-3 flex items-center gap-2">
+                    <AlertCircle size={14} /> Support Our Mission
+                  </h4>
+                  <p className="text-xs text-slate-400 leading-relaxed font-medium">
+                    "Sorry for any annoyance caused by ads. We run minimal ads only to cover server & AI costs, keeping these elite tools <span className="text-amber-500/80">100% free</span> for you forever."
+                  </p>
+               </div>
+
+               <div className="bg-[#0f111a] border border-indigo-500/10 rounded-2xl p-6 sticky top-24">
+                  <h3 className="font-space text-sm font-black uppercase tracking-widest text-indigo-400 mb-6">
+                    Quick Access
+                  </h3>
+                  <div className="space-y-4">
+                    <RelatedTools currentPath={pathname} isSidebar={true} />
+                  </div>
+               </div>
+               <AdBanner type="native" label="Hot Utility" className="rounded-2xl" />
+            </aside>
           </div>
 
           <AdBanner type="leaderboard" label="Discover More Tools" className="mt-12" />

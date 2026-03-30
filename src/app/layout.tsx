@@ -15,13 +15,16 @@ export const metadata = {
     template: "%s | CosmoxHub",
   },
   description:
-    "CosmoxHub offers 15+ free online tools: PDF Merger, Word Counter, QR Generator, Image Converter, Password Generator, Age Calculator and more. No signup required.",
+    "CosmoxHub offers 26+ free online tools: Image Upscaler, BG Remover, PDF Merger, QR Generator, Image Converter, Age Calculator and more. No signup required, 100% private.",
   keywords: [
     "free online tools",
+    "ai image upscaler",
+    "remove background free",
     "pdf merger",
     "word counter",
     "qr code generator",
     "image converter",
+    "heic to jpg",
     "pdf to image",
     "age calculator",
     "password generator",
@@ -37,6 +40,7 @@ export const metadata = {
     "validate json online",
     "image upscaler online",
     "increase image resolution",
+    "8k image upscaler",
   ],
   authors: [{ name: "CosmoxHub" }],
   creator: "CosmoxHub",
@@ -46,14 +50,14 @@ export const metadata = {
     locale: "en_US",
     url: "https://cosmoxhub.com",
     siteName: "CosmoxHub",
-    title: "CosmoxHub — Free Online Tools for Everyone",
+    title: "CosmoxHub — 26+ Free Online Tools for Everyone",
     description:
-      "15+ free online tools in one place. No signup, no limits, lightning fast.",
+      "26+ free online tools in one place. AI Image Upscaler, PDF Merger, BG Remover, and more. No signup, no limits, lightning fast.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "CosmoxHub — Free Online Tools for Everyone",
-    description: "15+ free online tools in one place. No signup, no limits.",
+    title: "CosmoxHub — 26+ Free Online Tools for Everyone",
+    description: "26+ free online tools in one place. No signup, no limits.",
   },
   robots: {
     index: true,
@@ -62,6 +66,9 @@ export const metadata = {
       index: true,
       follow: true,
     },
+  },
+  alternates: {
+    canonical: "https://cosmoxhub.com",
   },
   verification: {
     google: "vJAvqwICv8kMeZ7CaG4I0lhehtNQrbHPprc0HjxRM0E",
@@ -89,7 +96,7 @@ export default function RootLayout({
               "name": "CosmoxHub",
               "operatingSystem": "All",
               "applicationCategory": "MultimediaApplication, UtilitiesApplication",
-              "description": "All-in-one hub for 15+ high-performance online utilities including PDF tools, image converters, and text formatters.",
+              "description": "All-in-one hub for 26+ high-performance online utilities including AI image tools, PDF processors, and high-fidelity text formatters.",
               "offers": {
                 "@type": "Offer",
                 "price": "0",

@@ -5,8 +5,8 @@ import AdBanner from "@/components/AdBanner";
 import SearchableToolGrid from "@/components/SearchableToolGrid";
 
 export const metadata: Metadata = {
-  title: "CosmoxHub — 15+ Free Online Tools | PDF, Image, Text & More",
-  description: "All the tools you need in one place. Merge PDF, convert images, count words, generate QR codes, calculate age, create passwords — all free, no signup.",
+  title: "CosmoxHub — 26+ Free Online Tools | AI, PDF, Image, Text & More",
+  description: "All the tools you need in one place. AI Image Upscaler, BG Remover, PDF Merger, QR Generator, Image Converter. All free, 100% private, no signup.",
 };
 
 export default function HomePage() {
@@ -36,14 +36,14 @@ export default function HomePage() {
             </h1>
 
             <p className="text-lg md:text-xl text-slate-400 text-center max-w-2xl mx-auto mb-10 leading-relaxed">
-              15+ powerful online utilities for PDF manipulation, text formatting, and image conversion. <span className="text-slate-200 font-medium">100% Free. No Signups. No Limits.</span>
+              26+ powerful online utilities for AI image reconstruction, PDF manipulation, and developer workflows. <span className="text-slate-200 font-medium">100% Free. No Signups. No Limits.</span>
             </p>
 
             {/* Glassmorphic Stats Bar (Server rendered) */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl bg-[#0a0a1f]/80 backdrop-blur-xl border border-indigo-500/20 rounded-[2rem] p-8 shadow-2xl relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/5 to-purple-500/5 pointer-events-none" />
                 <div className="flex flex-col items-center justify-center relative z-10 gap-1">
-                  <span className="text-4xl md:text-5xl font-space font-black text-white">15+</span>
+                  <span className="text-4xl md:text-5xl font-space font-black text-white">26+</span>
                   <span className="text-indigo-300/80 text-xs md:text-sm font-bold uppercase tracking-[0.2em]">Free Utilities</span>
                 </div>
                 <div className="flex flex-col items-center justify-center border-t md:border-t-0 md:border-l border-indigo-500/20 pt-6 md:pt-0 relative z-10 gap-1">
