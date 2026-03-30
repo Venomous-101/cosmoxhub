@@ -292,8 +292,6 @@ export default function PasswordGeneratorClient() {
                 </div>
             </div>
           </div>
-
-          </div>
         </aside>
 
         {/* SEO Enrichment Layer */}

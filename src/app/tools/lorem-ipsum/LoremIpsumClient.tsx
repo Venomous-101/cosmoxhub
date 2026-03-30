@@ -289,8 +289,6 @@ export default function LoremIpsumClient() {
                 Our algorithm uses weighted probability to ensure a natural flow of Latin-esque prose, avoiding repetitive word-loops found in basic generators.
             </div>
           </div>
-            </div>
-          </div>
         </aside>
       </div>
 

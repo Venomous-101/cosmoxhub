@@ -365,8 +365,6 @@ export default function HeicToJpgClient() {
               </div>
             </div>
           </div>
-
-          </div>
         </aside>
 
         {/* SEO Enrichment Layer */}

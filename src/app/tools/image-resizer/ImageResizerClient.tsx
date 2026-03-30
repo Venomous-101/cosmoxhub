@@ -414,8 +414,6 @@ export default function ImageResizerClient() {
               </div>
             </div>
           </div>
-
-          </div>
         </aside>
 
         {/* SEO Enrichment Layer */}

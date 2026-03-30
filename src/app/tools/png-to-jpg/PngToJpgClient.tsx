@@ -379,8 +379,6 @@ export default function PngToJpgClient() {
               </div>
             </div>
           </div>
-
-          </div>
         </aside>
 
         {/* SEO Enrichment Layer */}

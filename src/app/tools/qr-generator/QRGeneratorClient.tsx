@@ -239,8 +239,6 @@ export default function QRGeneratorClient() {
                 </div>
             </div>
           </div>
-
-          </div>
         </aside>
 
         {/* SEO Enrichment Layer */}

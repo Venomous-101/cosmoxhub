@@ -249,8 +249,6 @@ export default function WhatsAppLinkClient() {
                 </div>
             </div>
           </div>
-
-          </div>
         </aside>
 
         {/* SEO Enrichment Layer */}
