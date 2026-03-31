@@ -99,6 +99,24 @@ export default function ToolLayout({ title, description, icon: Icon, color = "#6
                   </p>
                </div>
 
+               {/* Monetized Sponsored CTA */}
+               <a 
+                 href="https://omg10.com/4/10812784"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className="block bg-gradient-to-br from-indigo-500/10 to-violet-500/10 border border-indigo-500/20 rounded-2xl p-6 group hover:border-indigo-500/40 transition-all hover:-translate-y-0.5"
+               >
+                 <h4 className="font-space text-[11px] font-black uppercase tracking-[0.2em] text-indigo-400 mb-2">
+                   🔥 Trending Resources
+                 </h4>
+                 <p className="text-xs text-slate-400 leading-relaxed font-medium group-hover:text-slate-300 transition-colors">
+                   Discover premium tools and resources curated for creators and developers.
+                 </p>
+                 <span className="mt-3 inline-block text-[10px] font-black uppercase tracking-widest text-indigo-500 group-hover:text-indigo-400">
+                   Explore Now →
+                 </span>
+               </a>
+
                <div className="bg-[#0f111a] border border-indigo-500/10 rounded-2xl p-6 sticky top-24">
                   <h3 className="font-space text-sm font-black uppercase tracking-widest text-indigo-400 mb-6">
                     Quick Access

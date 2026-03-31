@@ -3,7 +3,7 @@ import Script from "next/script";
 import { useState, useEffect } from "react";
 
 /**
- * SmartAdManager: Hybrid Revenue Engine
+ * SmartAdManager: Hybrid Revenue Engine for cosmoxhub.com
  * 1. Time-on-Site (5s/15s) - Ensures even idle users generate revenue.
  * 2. Click-Threshold (1/3) - Captures active users instantly.
  * 3. Grace Period - Protects UX by delaying heavy ads.
@@ -55,18 +55,18 @@ export default function AdScripts() {
     <>
       {showSocialBar && (
         <>
-          {/* Adsterra Social Bar: Non-intrusive notification ad */}
+          {/* Adsterra Social Bar for cosmoxhub.com (ID: 28929223) */}
           <Script 
             id="adsterra-social-bar"
-            src="https://pl28997791.profitablecpmratenetwork.com/da/cf/3c/dacf3cfc20bc19fd9857f843d4937bef.js" 
+            src="https://pl29029722.profitablecpmratenetwork.com/87/ab/13/87ab1391d5a52a4d08b31bc409aa5f95.js" 
             strategy="lazyOnload" 
           />
 
-          {/* Monetag: MultiTag */}
+          {/* Monetag: MultiTag (Pungent) for cosmoxhub.com */}
           <Script 
             id="monetag-multitag"
             src="https://quge5.com/88/tag.min.js" 
-            data-zone="224063" 
+            data-zone="224064" 
             strategy="lazyOnload" 
             data-cfasync="false"
           />
@@ -74,10 +74,10 @@ export default function AdScripts() {
       )}
 
       {showPopunder && (
-        /* Adsterra Popunder: High Revenue trigger */
+        /* Adsterra Popunder for cosmoxhub.com (ID: 28929222) */
         <Script 
           id="adsterra-popunder"
-          src="https://pl28997788.profitablecpmratenetwork.com/8e/db/ca/8edbca55e5c02996547e78e61fd8b641.js" 
+          src="https://pl29029721.profitablecpmratenetwork.com/95/74/4e/95744e8e431f6b57cffc3c6e368328a3.js" 
           strategy="lazyOnload" 
         />
       )}
