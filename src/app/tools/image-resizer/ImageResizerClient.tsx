@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useRef, AnimatePresence } from "react";
+import { useState, useRef } from "react";
 import {
   Maximize2, Upload, Download, X, Settings, LayoutGrid,
   CheckCircle2, RefreshCw, ScissorsSquare, SlidersHorizontal, ArrowRightLeft, Lock, Unlock, Crop, HelpCircle
 } from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
 import ToolGuide from "@/components/ToolGuide";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface ImageFile {
   id: string;
@@ -415,9 +415,10 @@ export default function ImageResizerClient() {
             </div>
           </div>
         </aside>
+      </div>
 
         {/* SEO Enrichment Layer */}
-        <div className="lg:col-span-2 space-y-12 py-12">
+        <div className="space-y-12 py-12">
           <ToolGuide 
             toolName="Image Resizer & Cropper" 
             sections={guideSections}
@@ -426,14 +427,13 @@ export default function ImageResizerClient() {
 
           <div className="p-8 bg-[#0a0a1f]/40 border border-white/5 rounded-[2.5rem] prose prose-invert max-w-none">
             <p className="text-slate-400 leading-relaxed italic">
-              Need the perfect dimensions for your digital content? Our **Image Resizer - Free Online Utility Tool** is your professional-grade companion for precision scaling. Whether you&apos;re optimizing photos for a blog, resizing for social media platforms like Instagram and LinkedIn, or reducing file size for faster web performance, CosmoXHub provides a flexible, high-speed solution that puts you in control.
+              Need the perfect dimensions for your digital content? Our Image Resizer - Free Online Utility Tool is your professional-grade companion for precision scaling. Whether you&apos;re optimizing photos for a blog, resizing for social media platforms like Instagram and LinkedIn, or reducing file size for faster web performance, CosmoXHub provides a flexible, high-speed solution that puts you in control.
             </p>
             <p className="text-slate-400 leading-relaxed mt-4">
-              Our **Image Resizer** stands out because of its absolute commitment to privacy. Unlike traditional online tools that require you to upload your files to their servers, our resizer handles everything locally in your browser. This means your high-resolution photographs never leave your device. With built-in presets for various social channels, custom width and height controls, and the ability to maintain aspect ratio effortlessly, CosmoXHub is the definitive free online tool for all your image resizing needs.
+              Our Image Resizer stands out because of its absolute commitment to privacy. Unlike traditional online tools that require you to upload your files to their servers, our resizer handles everything locally in your browser. This means your high-resolution photographs never leave your device. With built-in presets for various social channels, custom width and height controls, and the ability to maintain aspect ratio effortlessly, CosmoXHub is the definitive free online tool for all your image resizing needs.
             </p>
           </div>
         </div>
-      </div>
     </ToolLayout>
   );
 }

@@ -146,9 +146,22 @@ export default function PasswordGeneratorClient() {
                 </div>
 
                 <div className="text-center mb-10">
-                    <div className={`inline-flex items-center gap-2 px-4 py-1.5 bg-${strengthColor}-500/10 border border-${strengthColor}-500/20 rounded-full mb-4`}>
-                        <Zap size={14} className={`text-${strengthColor}-500`} />
-                        <span className={`text-[10px] font-black uppercase tracking-[0.2em] text-${strengthColor}-500`}>
+                    <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-4 ${
+                      strengthColor === "emerald" ? "bg-emerald-500/10 border border-emerald-500/20" :
+                      strengthColor === "blue" ? "bg-blue-500/10 border border-blue-500/20" :
+                      strengthColor === "amber" ? "bg-amber-500/10 border border-amber-500/20" :
+                      "bg-rose-500/10 border border-rose-500/20"
+                    }`}>
+                        <Zap size={14} className={
+                          strengthColor === "emerald" ? "text-emerald-500" :
+                          strengthColor === "blue" ? "text-blue-500" :
+                          strengthColor === "amber" ? "text-amber-500" : "text-rose-500"
+                        } />
+                        <span className={`text-[10px] font-black uppercase tracking-[0.2em] ${
+                          strengthColor === "emerald" ? "text-emerald-500" :
+                          strengthColor === "blue" ? "text-blue-500" :
+                          strengthColor === "amber" ? "text-amber-500" : "text-rose-500"
+                        }`}>
                             {entropy > 80 ? 'CRACK-PROOF ENTROPY' : entropy > 60 ? 'HIGH SECURITY' : 'STANDARD VAULT'}
                         </span>
                     </div>
@@ -185,16 +198,29 @@ export default function PasswordGeneratorClient() {
                 <div className="max-w-2xl mx-auto space-y-4">
                     <div className="flex items-center justify-between px-2">
                         <div className="flex items-center gap-2">
-                            <ShieldCheck size={14} className={`text-${strengthColor}-500`} />
+                            <ShieldCheck size={14} className={
+                              strengthColor === "emerald" ? "text-emerald-500" :
+                              strengthColor === "blue" ? "text-blue-500" :
+                              strengthColor === "amber" ? "text-amber-500" : "text-rose-500"
+                            } />
                             <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Defense level</span>
                         </div>
-                        <span className={`text-[11px] font-black tracking-tighter text-${strengthColor}-500`}>{entropy} BITS OF ENTROPY</span>
+                        <span className={`text-[11px] font-black tracking-tighter ${
+                          strengthColor === "emerald" ? "text-emerald-500" :
+                          strengthColor === "blue" ? "text-blue-500" :
+                          strengthColor === "amber" ? "text-amber-500" : "text-rose-500"
+                        }`}>{entropy} BITS OF ENTROPY</span>
                     </div>
                     <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden flex gap-1">
                         <motion.div 
                             initial={{ width: 0 }}
                             animate={{ width: `${Math.min(entropy, 100)}%` }}
-                            className={`h-full bg-gradient-to-r from-${strengthColor}-600 to-${strengthColor}-400 rounded-full shadow-[0_0_15px_rgba(16,185,129,0.3)]`}
+                            className={`h-full bg-gradient-to-r rounded-full ${
+                              strengthColor === "emerald" ? "from-emerald-600 to-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.3)]" :
+                              strengthColor === "blue" ? "from-blue-600 to-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.3)]" :
+                              strengthColor === "amber" ? "from-amber-600 to-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.3)]" :
+                              "from-rose-600 to-rose-400 shadow-[0_0_15px_rgba(244,63,94,0.3)]"
+                            }`}
                         />
                     </div>
                 </div>

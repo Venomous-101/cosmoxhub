@@ -69,7 +69,7 @@ export default function Footer() {
         </div>
 
         {/* Cinematic Bottom Bar */}
-        <div className="flex flex-col md:row items-center justify-between pt-8 border-t border-indigo-500/10 gap-4 opacity-60">
+        <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-indigo-500/10 gap-4 opacity-60">
           <p className="text-slate-500 text-xs font-medium">
             © {new Date().getFullYear()} CosmoxHub. Secure. Private. Fast.
           </p>

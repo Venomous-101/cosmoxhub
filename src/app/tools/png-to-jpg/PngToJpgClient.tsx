@@ -379,7 +379,8 @@ export default function PngToJpgClient() {
               </div>
             </div>
           </div>
-        </aside>
+          </aside>
+        </div>
 
         {/* SEO Enrichment Layer */}
         <div className="lg:col-span-2 space-y-12 py-12">
@@ -398,7 +399,6 @@ export default function PngToJpgClient() {
             </p>
           </div>
         </div>
-      </div>
-    </ToolLayout>
+      </ToolLayout>
   );
 }

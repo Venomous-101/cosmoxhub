@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { 
-  Upload, 
-  Download, 
-  X, 
-  Settings, 
-  CheckCircle2, 
+import {
+  Upload,
+  Download,
+  X,
+  Settings,
+  CheckCircle2,
   Sparkles,
   Zap,
   ShieldCheck,
@@ -107,7 +107,7 @@ export default function WebpToPngClient() {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
         const imageObj = new Image();
-        
+
         imageObj.onload = () => {
           canvas.width = imageObj.width;
           canvas.height = imageObj.height;
@@ -120,10 +120,10 @@ export default function WebpToPngClient() {
         imageObj.src = img.preview;
       });
 
-      setImages(prev => prev.map(i => i.id === img.id ? { 
-        ...i, 
-        status: "completed", 
-        convertedUrl: result 
+      setImages(prev => prev.map(i => i.id === img.id ? {
+        ...i,
+        status: "completed",
+        convertedUrl: result
       } : i));
     } catch (error) {
       setImages(prev => prev.map(i => i.id === img.id ? { ...i, status: "error" } : i));
@@ -168,12 +168,12 @@ export default function WebpToPngClient() {
                 exit={{ opacity: 0, scale: 0.95 }}
                 className="relative group h-[400px]"
               >
-                <div 
+                <div
                   onClick={() => fileInputRef.current?.click()}
                   className="h-full flex flex-col items-center justify-center border-2 border-dashed border-violet-500/20 rounded-[3rem] bg-violet-500/5 transition-all group-hover:bg-violet-500/10 group-hover:border-violet-500/40 cursor-pointer overflow-hidden shadow-2xl"
                 >
                   <div className="absolute inset-0 bg-gradient-to-tr from-violet-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  
+
                   <div className="relative transform group-hover:-translate-y-2 transition-transform duration-300">
                     <div className="w-20 h-20 bg-violet-500/10 rounded-[2rem] flex items-center justify-center mb-4 ring-1 ring-violet-500/20 group-hover:ring-violet-500/50 group-hover:bg-violet-500/20 transition-all shadow-lg">
                       <Zap className="w-10 h-10 text-violet-500" />
@@ -198,7 +198,7 @@ export default function WebpToPngClient() {
                 />
               </motion.div>
             ) : (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className="grid grid-cols-1 md:grid-cols-2 gap-4"
@@ -215,10 +215,10 @@ export default function WebpToPngClient() {
                     >
                       <div className="relative w-24 h-24 rounded-2xl overflow-hidden bg-slate-900 ring-1 ring-white/10 shrink-0">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img 
-                          src={img.preview} 
-                          alt={img.name} 
-                          className="w-full h-full object-cover" 
+                        <img
+                          src={img.preview}
+                          alt={img.name}
+                          className="w-full h-full object-cover"
                         />
                         {img.status === "completed" && (
                           <div className="absolute inset-0 bg-violet-500/20 flex items-center justify-center backdrop-blur-[2px]">
@@ -230,9 +230,9 @@ export default function WebpToPngClient() {
                       <div className="flex-1 min-w-0 pr-8">
                         <h4 className="text-slate-200 text-sm font-bold truncate mb-1">{img.name}</h4>
                         <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest font-black text-slate-500 mb-3">
-                            {(img.size / 1024).toFixed(0)} KB • {img.status.toUpperCase()}
+                          {(img.size / 1024).toFixed(0)} KB • {img.status.toUpperCase()}
                         </div>
-                        
+
                         {img.status === "completed" ? (
                           <button
                             onClick={() => {
@@ -247,7 +247,7 @@ export default function WebpToPngClient() {
                           </button>
                         ) : (
                           <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                            <motion.div 
+                            <motion.div
                               className={`h-full ${img.status === "error" ? "bg-rose-500" : "bg-violet-500"}`}
                               initial={{ width: "0%" }}
                               animate={{ width: img.status === "converting" ? "100%" : "0%" }}
@@ -266,7 +266,7 @@ export default function WebpToPngClient() {
                     </motion.div>
                   ))}
                 </AnimatePresence>
-                
+
                 <motion.button
                   layout
                   onClick={() => fileInputRef.current?.click()}
@@ -284,7 +284,7 @@ export default function WebpToPngClient() {
         <aside className="space-y-6 sticky top-8">
           <div className="bg-[#0a0a1a]/80 backdrop-blur-2xl border border-white/5 rounded-[2.5rem] p-8 relative overflow-hidden shadow-2xl">
             <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-violet-600 to-violet-400" />
-            
+
             <div className="flex items-center gap-3 mb-8">
               <div className="p-2.5 bg-violet-500/10 rounded-2xl">
                 <Settings className="w-5 h-5 text-violet-500" />
@@ -295,26 +295,26 @@ export default function WebpToPngClient() {
             <div className="space-y-8">
               <div className="space-y-4">
                 <label className="text-slate-400 text-[10px] font-black uppercase tracking-widest flex items-center justify-between">
-                    Preserve Alpha
-                    <div 
-                        onClick={() => setPreserveAlpha(!preserveAlpha)}
-                        className={`w-10 h-5 rounded-full relative cursor-pointer transition-colors ${preserveAlpha ? "bg-violet-500" : "bg-slate-700"}`}
-                    >
-                        <motion.div 
-                            animate={{ x: preserveAlpha ? 20 : 2 }}
-                            className="absolute top-1 w-3 h-3 bg-white rounded-full"
-                        />
-                    </div>
+                  Preserve Alpha
+                  <div
+                    onClick={() => setPreserveAlpha(!preserveAlpha)}
+                    className={`w-10 h-5 rounded-full relative cursor-pointer transition-colors ${preserveAlpha ? "bg-violet-500" : "bg-slate-700"}`}
+                  >
+                    <motion.div
+                      animate={{ x: preserveAlpha ? 20 : 2 }}
+                      className="absolute top-1 w-3 h-3 bg-white rounded-full"
+                    />
+                  </div>
                 </label>
                 <p className="text-[9px] text-slate-500 font-medium leading-relaxed italic">
-                    Ensures transparent backgrounds remain perfectly clear in the final PNG asset.
+                  Ensures transparent backgrounds remain perfectly clear in the final PNG asset.
                 </p>
               </div>
 
               <div className="p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl flex gap-3 items-start">
                 <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
                 <div className="text-[10px] text-emerald-500/80 font-bold leading-tight uppercase">
-                    Client-Side Security Active
+                  Client-Side Security Active
                 </div>
               </div>
 
@@ -328,43 +328,44 @@ export default function WebpToPngClient() {
                 </button>
 
                 {images.some(img => img.status === "completed") && (
-                    <button
-                        onClick={downloadAll}
-                        className="w-full h-12 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-slate-200 text-[10px] font-black uppercase tracking-widest rounded-2xl border border-white/5 transition-all shadow-lg"
-                    >
-                        <Download size={16} /> Export All Results
-                    </button>
+                  <button
+                    onClick={downloadAll}
+                    className="w-full h-12 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-slate-200 text-[10px] font-black uppercase tracking-widest rounded-2xl border border-white/5 transition-all shadow-lg"
+                  >
+                    <Download size={16} /> Export All Results
+                  </button>
                 )}
 
                 <button
-                    disabled={images.length === 0}
-                    onClick={() => setImages([])}
-                    className="w-full py-2 text-rose-500/60 text-[9px] font-black uppercase tracking-[0.2em] hover:text-rose-400 disabled:opacity-0 transition-opacity"
+                  disabled={images.length === 0}
+                  onClick={() => setImages([])}
+                  className="w-full py-2 text-rose-500/60 text-[9px] font-black uppercase tracking-[0.2em] hover:text-rose-400 disabled:opacity-0 transition-opacity"
                 >
-                    Clear Workspace
+                  Clear Workspace
                 </button>
               </div>
             </div>
           </div>
         </aside>
+      </div>
 
         {/* SEO Enrichment Layer */}
-        <div className="lg:col-span-2 space-y-12 py-12">
-          <ToolGuide 
-            toolName="WebP to PNG Converter" 
+        <div className="space-y-12 py-12">
+          <ToolGuide
+            toolName="WebP to PNG Converter"
             sections={guideSections}
             faqs={faqs}
           />
 
           <div className="p-8 bg-[#0a0a1f]/40 border border-white/5 rounded-[2.5rem] prose prose-invert max-w-none">
             <p className="text-slate-400 leading-relaxed italic">
-              Need a reliable way to convert WebP to PNG without losing quality? CosmoxHub presents the definitive **WebP to PNG - Free Online Utility Tool** designed for speed, privacy, and full transparency support. WebP is great for the web, but many legacy applications and designers still require the high-fidelity of PNG. Our converter allows you to switch formats in bulk, handling up to 20 images at once, all while keeping your data strictly on your device.
+              Need a reliable way to convert WebP to PNG without losing quality? CosmoxHub presents the definitive WebP to PNG - Free Online Utility Tool designed for speed, privacy, and full transparency support. WebP is great for the web, but many legacy applications and designers still require the high-fidelity of PNG. Our converter allows you to switch formats in bulk, handling up to 20 images at once, all while keeping your data strictly on your device.
             </p>
             <p className="text-slate-400 leading-relaxed mt-4">
-              Our **WebP to PNG** converter is built for perfectionists. It preserves the full Alpha channel of your images, ensuring that transparent backgrounds remain perfectly clear in the final PNG asset. Because it runs 100% client-side, there are no upload wait times and zero server-side logs of your files. Whether you&apos;re a developer optimizing assets or a designer preparing a portfolio, CosmoXHub offers the most secure and efficient way to manage your image library. Experience the ultimate free online tool for lossless image conversion today.
+              Our WebP to PNG converter is built for perfectionists. It preserves the full Alpha channel of your images, ensuring that transparent backgrounds remain perfectly clear in the final PNG asset. Because it runs 100% client-side, there are no upload wait times and zero server-side logs of your files. Whether you&apos;re a developer optimizing assets or a designer preparing a portfolio, CosmoXHub offers the most secure and efficient way to manage your image library. Experience the ultimate free online tool for lossless image conversion today.
+            </p>
           </div>
         </div>
-      </div>
     </ToolLayout>
   );
 }

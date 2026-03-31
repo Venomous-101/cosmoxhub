@@ -11,7 +11,8 @@ import {
   ChevronRight,
   RefreshCcw,
   HelpCircle,
-  Maximize
+  Maximize,
+  AlignLeft
 } from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
 import ToolGuide from "@/components/ToolGuide";

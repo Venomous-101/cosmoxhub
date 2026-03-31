@@ -7,7 +7,6 @@ import {
   X, 
   Settings, 
   CheckCircle2, 
-  Sparkles,
   Smartphone,
   Box,
   Share2,
@@ -34,7 +33,7 @@ export default function HeicToJpgClient() {
   const [targetFormat, setTargetFormat] = useState<"image/jpeg" | "image/png" | "image/webp">("image/jpeg");
   const [quality, setQuality] = useState(0.8);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [heic2any, setHeic2any] = useState<((options: { blob: Blob; toType?: string; quality?: number; }) => Promise<Blob | Blob[]>) | null>(null);
+  const [heic2any, setHeic2any] = useState<any>(null);
 
   const guideSections = [
     {
@@ -74,7 +73,6 @@ export default function HeicToJpgClient() {
     }
   ];
 
-  // Dynamically load heic2any only on client side
   useEffect(() => {
     import("heic2any").then((module) => {
       setHeic2any(module.default || module);
@@ -113,7 +111,6 @@ export default function HeicToJpgClient() {
 
   const convertOne = async (img: ImageFile) => {
     if (img.status === "completed" || !heic2any) return;
-
     setImages(prev => prev.map(i => i.id === img.id ? { ...i, status: "converting" } : i));
 
     try {
@@ -171,9 +168,9 @@ export default function HeicToJpgClient() {
         <div className="space-y-6">
           <AnimatePresence mode="wait">
             {!heic2any ? (
-                <div className="h-[400px] flex items-center justify-center bg-white/5 rounded-[3rem] border border-white/10 animate-pulse">
-                    <p className="text-slate-500 font-bold uppercase tracking-widest text-xs">Readying HEIC Engine...</p>
-                </div>
+              <div className="h-[400px] flex items-center justify-center bg-white/5 rounded-[3rem] border border-white/10 animate-pulse">
+                <p className="text-slate-500 font-bold uppercase tracking-widest text-xs">Readying HEIC Engine...</p>
+              </div>
             ) : images.length === 0 ? (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -238,7 +235,7 @@ export default function HeicToJpgClient() {
                       <div className="flex-1 min-w-0 pr-8">
                         <h4 className="text-slate-200 text-sm font-bold truncate mb-1">{img.name}</h4>
                         <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest font-black text-slate-500 mb-3">
-                            {(img.size / (1024*1024)).toFixed(2)} MB • {img.status.toUpperCase()}
+                          {(img.size / (1024*1024)).toFixed(2)} MB • {img.status.toUpperCase()}
                         </div>
                         
                         {img.status === "completed" ? (
@@ -301,28 +298,26 @@ export default function HeicToJpgClient() {
             </div>
 
             <div className="space-y-8">
-              {/* Output Format */}
               <div className="space-y-4">
                 <label className="text-slate-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
-                    <Share2 size={12} className="text-rose-500" /> Export format
+                  <Share2 size={12} className="text-rose-500" /> Export format
                 </label>
                 <select 
-                    value={targetFormat}
-                    title="Select Output Format"
-                    onChange={(e) => setTargetFormat(e.target.value as "image/jpeg" | "image/png" | "image/webp")}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white font-bold outline-none focus:border-rose-500/30 transition-all appearance-none cursor-pointer"
+                  value={targetFormat}
+                  title="Select Output Format"
+                  onChange={(e) => setTargetFormat(e.target.value as any)}
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white font-bold outline-none focus:border-rose-500/30 transition-all appearance-none cursor-pointer"
                 >
-                    <option value="image/jpeg">JPEG (Universal)</option>
-                    <option value="image/png">PNG (Lossless)</option>
-                    <option value="image/webp">WebP (Modern)</option>
+                  <option value="image/jpeg">JPEG (Universal)</option>
+                  <option value="image/png">PNG (Lossless)</option>
+                  <option value="image/webp">WebP (Modern)</option>
                 </select>
               </div>
 
-              {/* Quality Range */}
               <div className="space-y-4">
                 <label className="text-slate-400 text-[10px] font-black uppercase tracking-widest flex items-center justify-between">
-                    Compression
-                    <span className="text-rose-500">{(quality * 100).toFixed(0)}%</span>
+                  Compression
+                  <span className="text-rose-500">{(quality * 100).toFixed(0)}%</span>
                 </label>
                 <input 
                   type="range"
@@ -336,7 +331,6 @@ export default function HeicToJpgClient() {
                 />
               </div>
 
-              {/* Actions */}
               <div className="pt-4 space-y-4">
                 <button
                   disabled={images.length === 0 || isProcessing || !heic2any || images.every(i => i.status === "completed")}
@@ -347,27 +341,25 @@ export default function HeicToJpgClient() {
                 </button>
 
                 {images.some(img => img.status === "completed") && (
-                    <button
-                        onClick={downloadAll}
-                        className="w-full h-12 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-slate-200 text-[10px] font-black uppercase tracking-widest rounded-2xl border border-white/5 transition-all shadow-lg"
-                    >
-                        <Download size={16} /> Bulk Download
-                    </button>
+                  <button
+                    onClick={downloadAll}
+                    className="w-full h-12 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-slate-200 text-[10px] font-black uppercase tracking-widest rounded-2xl border border-white/5 transition-all shadow-lg"
+                  >
+                    <Download size={16} /> Bulk Download
+                  </button>
                 )}
 
                 <button
-                    disabled={images.length === 0}
-                    onClick={() => setImages([])}
-                    className="w-full py-2 text-rose-500/60 text-[9px] font-black uppercase tracking-[0.2em] hover:text-rose-400 disabled:opacity-0 transition-opacity"
+                  disabled={images.length === 0}
+                  onClick={() => setImages([])}
+                  className="w-full py-2 text-rose-500/60 text-[9px] font-black uppercase tracking-[0.2em] hover:text-rose-400 disabled:opacity-0 transition-opacity"
                 >
-                    Clear session
+                  Clear session
                 </button>
               </div>
             </div>
           </div>
         </aside>
-
-        {/* SEO Enrichment Layer */}
         <div className="lg:col-span-2 space-y-12 py-12">
           <ToolGuide 
             toolName="HEIC to JPG Converter" 
