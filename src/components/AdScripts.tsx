@@ -1,5 +1,4 @@
 "use client";
-import Script from "next/script";
 import { useState, useEffect } from "react";
 
 /**
@@ -51,36 +50,44 @@ export default function AdScripts() {
   // Popunder: Show after 3 clicks OR 15 seconds OR Tool Completion
   const showPopunder = clickCount >= 3 || sessionTime >= 15 || hasTriggeredSuccess;
 
-  return (
-    <>
-      {showSocialBar && (
-        <>
-          {/* Adsterra Social Bar for cosmoxhub.com (ID: 28929223) */}
-          <Script 
-            id="adsterra-social-bar"
-            src="https://pl29029722.profitablecpmratenetwork.com/87/ab/13/87ab1391d5a52a4d08b31bc409aa5f95.js" 
-            strategy="lazyOnload" 
-          />
+  // Next.js <Script> component often fails when conditionally rendered late (due to the grace period).
+  // Vanilla DOM injection guarantees execution for these global scripts.
+  useEffect(() => {
+    const injectGlobalScript = (id: string, src: string, dataZone?: string) => {
+      if (document.getElementById(id)) return;
+      const script = document.createElement("script");
+      script.id = id;
+      script.src = src;
+      script.async = true;
+      if (dataZone) {
+        script.setAttribute("data-zone", dataZone);
+        script.setAttribute("data-cfasync", "false");
+      }
+      document.head.appendChild(script);
+    };
 
-          {/* Monetag: MultiTag (Pungent) for cosmoxhub.com */}
-          <Script 
-            id="monetag-multitag"
-            src="https://quge5.com/88/tag.min.js" 
-            data-zone="224064" 
-            strategy="lazyOnload" 
-            data-cfasync="false"
-          />
-        </>
-      )}
+    if (showSocialBar) {
+      // Adsterra Social Bar
+      injectGlobalScript(
+        "adsterra-social-bar",
+        "https://pl29029722.profitablecpmratenetwork.com/87/ab/13/87ab1391d5a52a4d08b31bc409aa5f95.js"
+      );
+      // Monetag MultiTag
+      injectGlobalScript(
+        "monetag-multitag",
+        "https://quge5.com/88/tag.min.js",
+        "224064"
+      );
+    }
 
-      {showPopunder && (
-        /* Adsterra Popunder for cosmoxhub.com (ID: 28929222) */
-        <Script 
-          id="adsterra-popunder"
-          src="https://pl29029721.profitablecpmratenetwork.com/95/74/4e/95744e8e431f6b57cffc3c6e368328a3.js" 
-          strategy="lazyOnload" 
-        />
-      )}
-    </>
-  );
+    if (showPopunder) {
+      // Adsterra Popunder
+      injectGlobalScript(
+        "adsterra-popunder",
+        "https://pl29029721.profitablecpmratenetwork.com/95/74/4e/95744e8e431f6b57cffc3c6e368328a3.js"
+      );
+    }
+  }, [showSocialBar, showPopunder]);
+
+  return null;
 }
