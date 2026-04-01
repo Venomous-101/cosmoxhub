@@ -81,7 +81,7 @@ export default function HeicToJpgClient() {
 
   useEffect(() => {
     import("heic2any").then((module) => {
-      setHeic2any(module.default || module);
+      setHeic2any(() => module.default || module);
     }).catch(err => console.error("Failed to load heic2any", err));
   }, []);
 
