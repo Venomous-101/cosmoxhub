@@ -36,7 +36,7 @@ export interface Category {
 export const categories: Category[] = [
   {
     id: "pdf-tools",
-    label: "📄 Elite PDF Tools",
+    label: "Elite PDF Tools",
     description: "Process PDFs instantly in your browser. No upload required.",
     color: "#ef4444",
     tools: [
@@ -49,7 +49,7 @@ export const categories: Category[] = [
   },
   {
     id: "text-tools",
-    label: "✍️ Text Intelligence",
+    label: "Text Intelligence",
     description: "Powerful text utilities for writers, students, and developers.",
     color: "#6366f1",
     tools: [
@@ -62,7 +62,7 @@ export const categories: Category[] = [
   },
   {
     id: "ai-dev-tools",
-    label: "🚀 AI & Developer Focus",
+    label: "AI & Developer Focus",
     description: "Next-gen tools for the modern workforce. 100% Secure.",
     color: "#8b5cf6",
     tools: [
@@ -74,7 +74,7 @@ export const categories: Category[] = [
   },
   {
     id: "image-tools",
-    label: "🖼️ Image Magic",
+    label: "Image Magic",
     description: "Convert, resize and edit images without any quality loss.",
     color: "#10b981",
     tools: [
@@ -89,7 +89,7 @@ export const categories: Category[] = [
   },
   {
     id: "utilities",
-    label: "🛠️ Everyday Utilities",
+    label: "Everyday Utilities",
     description: "Quick-access tools for daily tasks and productivity.",
     color: "#f59e0b",
     tools: [

@@ -21,11 +21,7 @@ export default function HomePage() {
           <div className="absolute top-[20%] right-[-10%] w-[500px] h-[500px] pointer-events-none bg-[radial-gradient(ellipse,rgba(239,68,68,0.05)_0%,transparent_60%)]" />
 
           <div className="container mx-auto px-4 relative z-10 flex flex-col items-center max-w-5xl">
-            {/* Minimalist Badge */}
-            <div className="inline-flex items-center justify-center gap-2 mb-8 bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 px-5 py-2.5 rounded-full text-sm font-semibold shadow-[0_0_15px_rgba(99,102,241,0.1)]">
-              <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
-              CosmoxHub V1.0 is Live
-            </div>
+
 
             {/* Typography focused Header */}
             <h1 className="font-space font-extrabold text-[3.5rem] md:text-[5.5rem] text-slate-100 text-center leading-[1.05] mb-6 tracking-tight">
@@ -78,7 +74,7 @@ export default function HomePage() {
             
             <div className="relative z-10 flex flex-col items-center">
               <div className="w-20 h-20 bg-gradient-to-tr from-indigo-500 to-pink-500 rounded-3xl flex items-center justify-center text-4xl mb-8 shadow-[0_0_40px_rgba(99,102,241,0.5)] transform -rotate-12">
-                🚀
+                ⚡
               </div>
               <h3 className="font-space text-4xl md:text-5xl font-black text-white mb-6 tracking-tight">
                 More tools coming <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-yellow-400">every week.</span>
@@ -95,7 +91,7 @@ export default function HomePage() {
                 rel="noopener noreferrer"
                 className="group relative inline-flex items-center justify-center px-10 py-4 font-bold text-white bg-gradient-to-r from-indigo-500/20 to-violet-500/20 backdrop-blur-md border border-indigo-500/30 rounded-2xl hover:from-indigo-500/30 hover:to-violet-500/30 transition-all duration-300 overflow-hidden shadow-xl hover:shadow-2xl hover:-translate-y-1 mt-4 md:mt-0 md:ml-4"
               >
-                <span className="relative z-10">🔥 Explore Resources</span>
+                <span className="relative z-10">Explore Resources</span>
               </a>
             </div>
           </div>

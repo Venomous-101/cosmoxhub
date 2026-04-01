@@ -107,7 +107,7 @@ export default function ToolLayout({ title, description, icon: Icon, color = "#6
                  className="block bg-gradient-to-br from-indigo-500/10 to-violet-500/10 border border-indigo-500/20 rounded-2xl p-6 group hover:border-indigo-500/40 transition-all hover:-translate-y-0.5"
                >
                  <h4 className="font-space text-[11px] font-black uppercase tracking-[0.2em] text-indigo-400 mb-2">
-                   🔥 Trending Resources
+                   Trending Resources
                  </h4>
                  <p className="text-xs text-slate-400 leading-relaxed font-medium group-hover:text-slate-300 transition-colors">
                    Discover premium tools and resources curated for creators and developers.
