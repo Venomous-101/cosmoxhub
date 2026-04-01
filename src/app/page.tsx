@@ -54,11 +54,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Ad Placement: Top Leaderboard */}
-        <div className="container mx-auto px-4 mt-8">
-          <AdBanner type="leaderboard" label="Top Trending Tools" />
-        </div>
-
         {/* Searchable Grid Integration (Data moved inside) */}
         <SearchableToolGrid />
 
@@ -66,6 +61,11 @@ export default function HomePage() {
           {/* Ad Placement: Middle Native Banner */}
           <div className="mt-20">
             <AdBanner type="native" label="Recommended for you" />
+          </div>
+
+          {/* Ad Placement: Leaderboard */}
+          <div className="mt-16 flex justify-center">
+            <AdBanner type="leaderboard" label="Sponsored" />
           </div>
 
           {/* Bottom Clean CTA */}
