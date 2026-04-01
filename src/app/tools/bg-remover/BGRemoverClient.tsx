@@ -20,7 +20,6 @@ import DownloadAdModal from "@/components/DownloadAdModal";
 
 // Client-side only import type
 type RemoveBgFn = (source: Blob | string | File, options?: Record<string, unknown>) => Promise<Blob>;
-let removeBackground: RemoveBgFn;
 
 export default function BGRemoverClient() {
   const guideSections = [
@@ -68,8 +67,7 @@ export default function BGRemoverClient() {
   const [progress, setProgress] = useState<number>(0);
   const [aiLoaded, setAiLoaded] = useState(false);
   const [bgMode, setBgMode] = useState<"transparent" | "white" | "blue">("transparent");
-  const [useSmallModel, setUseSmallModel] = useState(true); // Default to small for speed
-  const [retryCount, setRetryCount] = useState(0);
+  const [useSmallModel, setUseSmallModel] = useState(false); // Start with medium, fall back to small
   
   // Ad Intercept State
   const [isAdModalOpen, setIsAdModalOpen] = useState(false);
@@ -77,11 +75,12 @@ export default function BGRemoverClient() {
   const [adModalFileName, setAdModalFileName] = useState("");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const removeBgRef = useRef<RemoveBgFn | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       import("@imgly/background-removal").then((module) => {
-        removeBackground = module.removeBackground as unknown as RemoveBgFn;
+        removeBgRef.current = module.removeBackground as unknown as RemoveBgFn;
         setAiLoaded(true);
       }).catch(err => {
         console.error("Failed to load AI Engine:", err);
@@ -111,58 +110,68 @@ export default function BGRemoverClient() {
     setProgress(0);
   };
 
+  const runRemoval = async (fileToProcess: File, modelSize: "small" | "medium"): Promise<Blob> => {
+    const removeFn = removeBgRef.current;
+    if (!removeFn) throw new Error("AI engine not loaded");
+
+    return removeFn(fileToProcess, {
+      progress: (key: string, current: number, total: number) => {
+        try {
+          if (total) {
+            const p = Math.round((current / total) * 100);
+            setProgress(p);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      },
+      model: modelSize,
+      debug: false,
+      proxyToWorker: false, // MUST be false: COEP headers are disabled for ad scripts
+      output: {
+        format: "image/png",
+        quality: 0.8
+      }
+    });
+  };
+
   const processImage = async () => {
-    if (!file || !removeBackground || status === "processing") return;
+    if (!file || !removeBgRef.current || status === "processing") return;
 
     setStatus("processing");
     setProgress(0);
 
     try {
-      const timeoutFallback = setTimeout(() => {
-        setStatus(prev => {
-          if (prev === "processing") {
-             setUseSmallModel(true);
-             return "error";
-          }
-          return prev;
-        });
-      }, 120000); // 2 minutes, model download takes time
-
-      const blob = await removeBackground(file, {
-        progress: (key: string, current: number, total: number) => {
-          try {
-            if (total) {
-              const p = Math.round((current / total) * 100);
-              setProgress(p);
-            }
-          } catch (e) {
-            console.error(e);
-          }
-        },
-        model: useSmallModel ? "small" : "medium",
-        debug: true,
-        proxyToWorker: true, // Enable worker for speed without freezing the UI
-        output: {
-          format: "image/png",
-          quality: 0.8
-        }
-      });
+      // Try with selected model first
+      const modelToUse = useSmallModel ? "small" : "medium";
+      const blob = await runRemoval(file, modelToUse);
       
-      clearTimeout(timeoutFallback);
       const url = URL.createObjectURL(blob);
       setResult(url);
       setStatus("completed");
       
       // Revenue Trigger: Success Moment
       window.dispatchEvent(new Event("cosmox_tool_complete"));
-    } catch (error) {
-      console.error("AI Error:", error);
-      if (!useSmallModel && retryCount < 1) {
-        setUseSmallModel(true);
-        setRetryCount(prev => prev + 1);
-        processImage(); 
-        return;
+    } catch (firstError) {
+      console.error("AI Error (first attempt):", firstError);
+      
+      // If medium failed, automatically retry with small
+      if (!useSmallModel) {
+        try {
+          setUseSmallModel(true);
+          setProgress(0);
+          const blob = await runRemoval(file, "small");
+          
+          const url = URL.createObjectURL(blob);
+          setResult(url);
+          setStatus("completed");
+          window.dispatchEvent(new Event("cosmox_tool_complete"));
+          return;
+        } catch (retryError) {
+          console.error("AI Error (safe mode retry):", retryError);
+        }
       }
+      
       setStatus("error");
     }
   };
