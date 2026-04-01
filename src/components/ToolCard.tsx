@@ -27,40 +27,41 @@ export default function ToolCard({ title, description, href, icon: Icon, color =
   const styles = colorMap[color] || colorMap["default"];
 
   return (
-    <Link href={href} className="no-underline h-full flex flex-col">
-      <div className="card p-6 flex flex-col gap-3 relative overflow-hidden flex-1 cursor-pointer group">
-        {/* Glow effect */}
-        <div 
-          className={`absolute -top-5 -right-5 w-20 h-20 rounded-full pointer-events-none opacity-50 group-hover:scale-150 transition-transform duration-500 bg-[radial-gradient(circle,var(--tw-gradient-from)_0%,transparent_70%)] ${styles.radial}`} 
-        />
+    <Link 
+      href={href} 
+      className="card p-6 flex flex-col gap-4 relative overflow-hidden h-full group no-underline transition-transform hover:-translate-y-1"
+    >
+      {/* Glow effect */}
+      <div 
+        className={`absolute -top-5 -right-5 w-24 h-24 rounded-full pointer-events-none opacity-50 group-hover:scale-[2] transition-transform duration-700 ease-out bg-[radial-gradient(circle,var(--tw-gradient-from)_0%,transparent_70%)] ${styles.radial}`} 
+      />
 
-        {/* Icon */}
-        <div 
-          className={`w-11 h-11 rounded-lg flex items-center justify-center shrink-0 border ${styles.iconBg} ${styles.iconBorder}`}
-        >
-          <Icon size={20} color={color} strokeWidth={1.8} />
-        </div>
+      {/* Icon */}
+      <div 
+        className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border ${styles.iconBg} ${styles.iconBorder}`}
+      >
+        <Icon size={22} color={color} strokeWidth={2} />
+      </div>
 
-        <div>
-          <div className="flex items-center gap-2 mb-1.5">
-            <h3 className="text-[0.95rem] font-semibold text-slate-100">{title}</h3>
-            {badge && (
-              <span 
-                className={`text-[0.65rem] font-bold px-2 py-0.5 rounded-[4px] tracking-wider uppercase ${styles.badgeBg} ${styles.badgeText}`}
-              >
-                {badge}
-              </span>
-            )}
-          </div>
-          <p className="text-[0.8rem] text-slate-400 leading-relaxed">{description}</p>
+      <div className="flex-1">
+        <div className="flex items-center gap-2 mb-2">
+          <h3 className="text-base font-semibold text-slate-100">{title}</h3>
+          {badge && (
+            <span 
+              className={`text-[0.65rem] font-bold px-2.5 py-0.5 rounded-md tracking-wider uppercase ${styles.badgeBg} ${styles.badgeText}`}
+            >
+              {badge}
+            </span>
+          )}
         </div>
+        <p className="text-sm text-slate-400 leading-relaxed">{description}</p>
+      </div>
 
-        {/* Arrow hint */}
-        <div 
-          className={`mt-auto text-xs font-medium opacity-70 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 ${styles.arrow}`}
-        >
-          Use Tool →
-        </div>
+      {/* Arrow hint */}
+      <div 
+        className={`pt-3 mt-auto text-sm font-bold opacity-70 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-300 ${styles.arrow} flex items-center gap-1`}
+      >
+        Use Tool <span>&rarr;</span>
       </div>
     </Link>
   );

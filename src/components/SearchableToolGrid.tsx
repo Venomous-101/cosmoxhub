@@ -19,28 +19,38 @@ export default function SearchableToolGrid() {
   return (
     <div className="w-full">
       {/* Search Bar Section */}
-      <div className="flex flex-col items-center mb-16 px-4">
-        <div className="w-full max-w-2xl relative group">
-          <div className="absolute inset-0 bg-indigo-500/20 blur-2xl group-hover:bg-indigo-500/30 transition-all duration-500 rounded-full"></div>
-          <div className="relative flex items-center bg-[#0a0a1f]/80 backdrop-blur-xl border border-indigo-500/30 rounded-2xl p-2 pl-6 shadow-2xl overflow-hidden group-focus-within:border-indigo-400 transition-all">
-            <Search className="text-slate-500 group-focus-within:text-indigo-400 transition-colors" size={22} aria-hidden="true" />
+      <div className="flex flex-col items-center mb-24 px-4 relative z-20">
+        <div className="w-full max-w-3xl relative group mt-4">
+          {/* Animated premium glowing border/background */}
+          <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full blur-xl opacity-30 group-hover:opacity-60 transition duration-500 group-focus-within:opacity-100 group-focus-within:duration-200"></div>
+          
+          <div className="relative flex items-center bg-[#070714]/90 backdrop-blur-3xl border-2 border-indigo-500/40 rounded-full p-2 pl-8 shadow-[0_0_50px_-12px_rgba(99,102,241,0.4)] group-focus-within:border-indigo-400 focus-within:ring-4 focus-within:ring-indigo-500/20 transition-all">
+            <div className="bg-gradient-to-br from-indigo-500/20 to-purple-500/20 p-2.5 rounded-full border border-indigo-500/30 hidden sm:flex">
+               <Search className="text-indigo-400" size={24} strokeWidth={2.5} aria-hidden="true" />
+            </div>
+            
             <input 
               type="text"
-              placeholder="Search for a tool (e.g. PDF, AI, Code)..."
-              className="w-full bg-transparent border-none outline-none px-4 py-3 text-slate-100 placeholder:text-slate-600 font-medium"
+              placeholder="🔍 Search for any tool (e.g. PDF, Background, Code)..."
+              className="w-full bg-transparent border-none outline-none px-2 sm:px-6 py-4 text-white placeholder:text-slate-400 font-semibold text-lg md:text-xl"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               aria-label="Search for tools"
             />
-            {searchQuery && (
+            
+            {searchQuery ? (
               <button 
                 onClick={() => setSearchQuery("")}
-                className="p-2 hover:bg-white/5 rounded-lg text-slate-500 hover:text-white transition-all mr-2"
+                className="p-3 bg-slate-800 hover:bg-slate-700 rounded-full text-slate-300 hover:text-white transition-all mr-2 flex-shrink-0 border border-white/5"
                 title="Clear search"
                 aria-label="Clear search"
               >
-                <X size={18} />
+                <X size={20} strokeWidth={2.5} />
               </button>
+            ) : (
+                <div className="hidden md:flex items-center gap-2 mr-6 text-indigo-400/50 pointer-events-none">
+                    <Search size={22} strokeWidth={2.5} />
+                </div>
             )}
           </div>
         </div>
