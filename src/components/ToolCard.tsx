@@ -27,8 +27,8 @@ export default function ToolCard({ title, description, href, icon: Icon, color =
   const styles = colorMap[color] || colorMap["default"];
 
   return (
-    <Link href={href} className="no-underline block h-full">
-      <div className="card p-6 flex flex-col gap-3 relative overflow-hidden h-full cursor-pointer group">
+    <Link href={href} className="no-underline h-full flex flex-col">
+      <div className="card p-6 flex flex-col gap-3 relative overflow-hidden flex-1 cursor-pointer group">
         {/* Glow effect */}
         <div 
           className={`absolute -top-5 -right-5 w-20 h-20 rounded-full pointer-events-none opacity-50 group-hover:scale-150 transition-transform duration-500 bg-[radial-gradient(circle,var(--tw-gradient-from)_0%,transparent_70%)] ${styles.radial}`} 
