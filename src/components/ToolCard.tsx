@@ -29,7 +29,7 @@ export default function ToolCard({ title, description, href, icon: Icon, color =
   return (
     <Link 
       href={href} 
-      className="card p-6 flex flex-col gap-4 relative overflow-hidden h-full group no-underline transition-transform hover:-translate-y-1"
+      className="card px-6 pt-6 flex flex-col gap-4 relative overflow-hidden h-full group no-underline transition-transform hover:-translate-y-1"
     >
       {/* Glow effect */}
       <div 
@@ -54,12 +54,12 @@ export default function ToolCard({ title, description, href, icon: Icon, color =
             </span>
           )}
         </div>
-        <p className="text-sm text-slate-400 leading-relaxed">{description}</p>
+        <p className="text-sm text-slate-400 leading-relaxed mb-4">{description}</p>
       </div>
 
       {/* Arrow hint */}
       <div 
-        className={`pt-3 mt-auto text-sm font-bold opacity-70 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-300 ${styles.arrow} flex items-center gap-1`}
+        className={`pt-3 mt-auto mb-6 text-sm font-bold opacity-70 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-300 ${styles.arrow} flex items-center gap-1`}
       >
         Use Tool <span>&rarr;</span>
       </div>

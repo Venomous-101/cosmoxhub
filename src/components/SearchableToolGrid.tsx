@@ -19,41 +19,38 @@ export default function SearchableToolGrid() {
   return (
     <div className="w-full">
       {/* Search Bar Section */}
-      <div className="flex flex-col items-center mb-24 px-4 relative z-20">
-        <div className="w-full max-w-3xl relative group mt-4">
-          {/* Animated premium glowing border/background */}
-          <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full blur-xl opacity-30 group-hover:opacity-60 transition duration-500 group-focus-within:opacity-100 group-focus-within:duration-200"></div>
-          
-          <div className="relative flex items-center bg-[#070714]/90 backdrop-blur-3xl border-2 border-indigo-500/40 rounded-full p-2 pl-8 shadow-[0_0_50px_-12px_rgba(99,102,241,0.4)] group-focus-within:border-indigo-400 focus-within:ring-4 focus-within:ring-indigo-500/20 transition-all">
-            <div className="bg-gradient-to-br from-indigo-500/20 to-purple-500/20 p-2.5 rounded-full border border-indigo-500/30 hidden sm:flex">
-               <Search className="text-indigo-400" size={24} strokeWidth={2.5} aria-hidden="true" />
-            </div>
-            
-            <input 
-              type="text"
-              placeholder="🔍 Search for any tool (e.g. PDF, Background, Code)..."
-              className="w-full bg-transparent border-none outline-none px-2 sm:px-6 py-4 text-white placeholder:text-slate-400 font-semibold text-lg md:text-xl"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              aria-label="Search for tools"
-            />
-            
-            {searchQuery ? (
-              <button 
-                onClick={() => setSearchQuery("")}
-                className="p-3 bg-slate-800 hover:bg-slate-700 rounded-full text-slate-300 hover:text-white transition-all mr-2 flex-shrink-0 border border-white/5"
-                title="Clear search"
-                aria-label="Clear search"
-              >
-                <X size={20} strokeWidth={2.5} />
-              </button>
-            ) : (
-                <div className="hidden md:flex items-center gap-2 mr-6 text-indigo-400/50 pointer-events-none">
-                    <Search size={22} strokeWidth={2.5} />
-                </div>
-            )}
-          </div>
-        </div>
+      <div className="flex flex-col items-center mt-12 mb-24 px-4 relative z-20 w-full">
+         <div className="w-full max-w-4xl relative group">
+           {/* Huge glow behind the input */}
+           <div className="absolute -inset-[2px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full blur-[20px] opacity-40 group-hover:opacity-75 transition-all duration-700 pointer-events-none"></div>
+
+           <div className="relative flex items-center bg-[#0a0a20]/60 hover:bg-[#0a0a20]/80 backdrop-blur-3xl border-2 border-indigo-500/40 group-focus-within:border-indigo-400 group-hover:border-indigo-400/60 group-focus-within:bg-[#0a0a20]/90 rounded-full pl-6 pr-3 py-3 shadow-[0_8px_40px_-12px_rgba(99,102,241,0.5)] transition-all overflow-hidden focus-within:ring-4 focus-within:ring-indigo-500/20">
+             {/* Large clean icon */}
+             <Search className="text-indigo-400 shrink-0 ml-2" size={28} strokeWidth={2.5} aria-hidden="true" />
+             
+             {/* Huge input field */}
+             <input 
+               type="text"
+               placeholder="Search for any tool (e.g. PDF, Editor, Code)..."
+               className="w-full bg-transparent border-none outline-none px-6 text-white placeholder:text-slate-400/80 font-bold text-lg md:text-2xl min-h-[50px] focus:ring-0 appearance-none"
+               value={searchQuery}
+               onChange={(e) => setSearchQuery(e.target.value)}
+               aria-label="Search for tools"
+             />
+
+             {/* Clear button */}
+             {searchQuery && (
+               <button 
+                 onClick={() => setSearchQuery("")}
+                 className="p-3 bg-red-500/20 hover:bg-red-500/40 rounded-full text-red-300 hover:text-white transition-all cursor-pointer border border-red-500/30 shrink-0 shadow-lg"
+                 title="Clear search"
+                 aria-label="Clear search"
+               >
+                 <X size={24} strokeWidth={3} />
+               </button>
+             )}
+           </div>
+         </div>
       </div>
 
       {/* Grid Section */}
