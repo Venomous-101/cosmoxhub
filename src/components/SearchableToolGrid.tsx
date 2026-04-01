@@ -18,11 +18,11 @@ export default function SearchableToolGrid() {
 
   return (
     <div className="w-full">
-      {/* Search Bar Section */}
-      <div className="flex flex-col items-center mt-12 mb-24 px-4 relative z-20 w-full">
-         <div className="w-full max-w-4xl relative group">
+      {/* Search Bar Section - Isolated completely from Hero */}
+      <div className="flex flex-col items-center mt-24 pt-16 mb-16 px-4 relative z-20 w-full border-t border-indigo-500/10">
+         <div className="w-full max-w-3xl relative group">
            {/* Huge glow behind the input */}
-           <div className="absolute -inset-[2px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full blur-[20px] opacity-40 group-hover:opacity-75 transition-all duration-700 pointer-events-none"></div>
+           <div className="absolute -inset-[2px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full blur-[25px] opacity-30 group-hover:opacity-75 transition-all duration-700 pointer-events-none"></div>
 
            <div className="relative flex items-center bg-[#0a0a20]/60 hover:bg-[#0a0a20]/80 backdrop-blur-3xl border-2 border-indigo-500/40 group-focus-within:border-indigo-400 group-hover:border-indigo-400/60 group-focus-within:bg-[#0a0a20]/90 rounded-full pl-6 pr-3 py-3 shadow-[0_8px_40px_-12px_rgba(99,102,241,0.5)] transition-all overflow-hidden focus-within:ring-4 focus-within:ring-indigo-500/20">
              {/* Large clean icon */}
@@ -32,7 +32,7 @@ export default function SearchableToolGrid() {
              <input 
                type="text"
                placeholder="Search for any tool (e.g. PDF, Editor, Code)..."
-               className="w-full bg-transparent border-none outline-none px-6 text-white placeholder:text-slate-400/80 font-bold text-lg md:text-2xl min-h-[50px] focus:ring-0 appearance-none"
+               className="w-full bg-transparent border-none outline-none px-6 text-white placeholder:text-slate-400/80 font-bold text-lg md:text-xl min-h-[50px] focus:ring-0 appearance-none"
                value={searchQuery}
                onChange={(e) => setSearchQuery(e.target.value)}
                aria-label="Search for tools"
