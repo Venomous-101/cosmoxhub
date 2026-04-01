@@ -82,17 +82,19 @@ export default function HomePage() {
               <p className="text-lg md:text-xl text-indigo-200/80 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
                 Everything you need to grow your productivity. High-performance tools that don&apos;t compromise on privacy or speed.
               </p>
-              <a href="mailto:eclipsonai@gmail.com" className="group relative inline-flex items-center justify-center px-10 py-4 font-bold text-white bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl hover:bg-white/20 transition-all duration-300 overflow-hidden shadow-xl hover:shadow-2xl hover:-translate-y-1">
-                <span className="relative z-10">Suggest a Tool Feature</span>
-              </a>
-              <a 
-                href="https://omg10.com/4/10812796" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="group relative inline-flex items-center justify-center px-10 py-4 font-bold text-white bg-gradient-to-r from-indigo-500/20 to-violet-500/20 backdrop-blur-md border border-indigo-500/30 rounded-2xl hover:from-indigo-500/30 hover:to-violet-500/30 transition-all duration-300 overflow-hidden shadow-xl hover:shadow-2xl hover:-translate-y-1 mt-4 md:mt-0 md:ml-4"
-              >
-                <span className="relative z-10">Explore Resources</span>
-              </a>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full mt-4">
+                <a href="mailto:eclipsonai@gmail.com" className="w-full sm:w-auto group relative inline-flex items-center justify-center px-10 py-4 font-bold text-white bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl hover:bg-white/20 transition-all duration-300 overflow-hidden shadow-xl hover:shadow-2xl hover:-translate-y-1">
+                  <span className="relative z-10">Suggest a Tool Feature</span>
+                </a>
+                <a 
+                  href="https://omg10.com/4/10812796" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto group relative inline-flex items-center justify-center px-10 py-4 font-bold text-white bg-gradient-to-r from-indigo-500/20 to-violet-500/20 backdrop-blur-md border border-indigo-500/30 rounded-2xl hover:from-indigo-500/30 hover:to-violet-500/30 transition-all duration-300 overflow-hidden shadow-xl hover:shadow-2xl hover:-translate-y-1"
+                >
+                  <span className="relative z-10">Explore Resources</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>
