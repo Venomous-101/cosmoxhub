@@ -8,14 +8,15 @@ import { useState, useEffect } from "react";
  * 3. Grace Period - Protects UX by delaying heavy ads.
  */
 export default function AdScripts() {
-  const [clickCount, setClickCount] = useState(0);
+  const [clickCount, setClickCount] = useState<number>(0);
   const [sessionTime, setSessionTime] = useState(0);
-  const [hasTriggeredSuccess, setHasTriggeredSuccess] = useState(false);
 
   useEffect(() => {
-    // 1. Session Storage Persistence
+    // 1. Session Storage Initialization
     const savedCount = sessionStorage.getItem("cosmox_clicks");
-    if (savedCount) setClickCount(parseInt(savedCount, 10));
+    if (savedCount && parseInt(savedCount, 10) > clickCount) {
+      setClickCount(parseInt(savedCount, 10));
+    }
 
     // 2. Global Click Tracker
     const handleGlobalClick = () => {
@@ -31,24 +32,19 @@ export default function AdScripts() {
       setSessionTime(prev => prev + 1);
     }, 1000);
 
-    // 4. Listen for 'tool_complete' custom event (Success Moment)
-    const handleSuccess = () => setHasTriggeredSuccess(true);
-    window.addEventListener("cosmox_tool_complete", handleSuccess);
-
     document.addEventListener("click", handleGlobalClick);
     return () => {
       document.removeEventListener("click", handleGlobalClick);
       clearInterval(timer);
-      window.removeEventListener("cosmox_tool_complete", handleSuccess);
     };
   }, []);
 
   // HYBRID LOGIC
-  // Social Bar: Show after 1 click OR 5 seconds
-  const showSocialBar = clickCount >= 1 || sessionTime >= 5;
+  // Social Bar: Show almost immediately, it's non-intrusive.
+  const showSocialBar = clickCount >= 1 || sessionTime >= 2;
   
-  // Popunder: Show after 3 clicks OR 15 seconds OR Tool Completion
-  const showPopunder = clickCount >= 3 || sessionTime >= 15 || hasTriggeredSuccess;
+  // Popunder: Extremely aggressive redirect. Push deep into the session.
+  const showPopunder = clickCount >= 15 || sessionTime >= 300;
 
   // Next.js <Script> component often fails when conditionally rendered late (due to the grace period).
   // Vanilla DOM injection guarantees execution for these global scripts.

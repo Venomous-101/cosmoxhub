@@ -16,6 +16,7 @@ import {
   HelpCircle
 } from "lucide-react";
 import { motion } from "framer-motion";
+import DownloadAdModal from "@/components/DownloadAdModal";
 
 // Client-side only import type
 type RemoveBgFn = (source: Blob | string | File, options?: Record<string, unknown>) => Promise<Blob>;
@@ -70,6 +71,11 @@ export default function BGRemoverClient() {
   const [useSmallModel, setUseSmallModel] = useState(true); // Default to small for speed
   const [retryCount, setRetryCount] = useState(0);
   
+  // Ad Intercept State
+  const [isAdModalOpen, setIsAdModalOpen] = useState(false);
+  const [pendingDownloadAction, setPendingDownloadAction] = useState<(() => void) | null>(null);
+  const [adModalFileName, setAdModalFileName] = useState("");
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -161,44 +167,55 @@ export default function BGRemoverClient() {
     }
   };
 
-  const downloadImage = async () => {
+  const triggerDownload = async () => {
     if (!result || !file) return;
 
-    if (bgMode === "transparent") {
-      const link = document.createElement("a");
-      link.href = result;
-      link.download = `nobg-${file.name.replace(/\.[^/.]+$/, "")}.png`;
-      link.click();
-      return;
+    let extension = "png";
+    let calculatedFileName = `nobg-${file.name.replace(/\.[^/.]+$/, "")}.png`;
+    if (bgMode !== "transparent") {
+      calculatedFileName = `${bgMode}-bg-${file.name.replace(/\.[^/.]+$/, "")}.jpg`;
+      extension = "jpg";
     }
 
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    const img = new Image();
-    
-    img.onload = () => {
-      canvas.width = img.width;
-      canvas.height = img.height;
-      
-      if (ctx) {
-        if (bgMode === "white") {
-          ctx.fillStyle = "#ffffff";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-        } else if (bgMode === "blue") {
-          ctx.fillStyle = "#0055ff";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-        } else {
-          // Transparent - already handled by canvas being clear
-        }
-        ctx.drawImage(img, 0, 0);
-        
+    setAdModalFileName(calculatedFileName);
+
+    setPendingDownloadAction(() => () => {
+      if (bgMode === "transparent") {
         const link = document.createElement("a");
-        link.href = canvas.toDataURL("image/jpeg", 0.95);
-        link.download = `${bgMode}-bg-${file.name.replace(/\.[^/.]+$/, "")}.jpg`;
+        link.href = result;
+        link.download = calculatedFileName;
         link.click();
+        return;
       }
-    };
-    img.src = result;
+
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const img = new Image();
+      
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        
+        if (ctx) {
+          if (bgMode === "white") {
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+          } else if (bgMode === "blue") {
+            ctx.fillStyle = "#0055ff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+          }
+          ctx.drawImage(img, 0, 0);
+          
+          const link = document.createElement("a");
+          link.href = canvas.toDataURL("image/jpeg", 0.95);
+          link.download = calculatedFileName;
+          link.click();
+        }
+      };
+      img.src = result;
+    });
+
+    setIsAdModalOpen(true);
   };
 
   const resetAll = () => {
@@ -378,7 +395,7 @@ export default function BGRemoverClient() {
 
               {status === "completed" && (
                  <button
-                    onClick={downloadImage}
+                    onClick={triggerDownload}
                     className="flex items-center gap-3 px-10 py-4 rounded-2xl bg-violet-600 hover:bg-violet-500 text-white transition-all font-black text-xs shadow-2xl shadow-violet-500/20 uppercase tracking-[0.2em]"
                  >
                     <Download className="w-5 h-5" />
@@ -412,6 +429,18 @@ export default function BGRemoverClient() {
           accept="image/*"
           className="hidden"
           onChange={handleUpload}
+        />
+
+        <DownloadAdModal 
+          isOpen={isAdModalOpen}
+          onClose={() => setIsAdModalOpen(false)}
+          onComplete={() => {
+            if (pendingDownloadAction) {
+              pendingDownloadAction();
+              setPendingDownloadAction(null);
+            }
+          }}
+          fileName={adModalFileName}
         />
       </div>
     </ToolLayout>

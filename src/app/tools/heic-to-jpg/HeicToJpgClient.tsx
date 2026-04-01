@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
 import ToolGuide from "@/components/ToolGuide";
+import DownloadAdModal from "@/components/DownloadAdModal";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ImageFile {
@@ -34,6 +35,11 @@ export default function HeicToJpgClient() {
   const [quality, setQuality] = useState(0.8);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [heic2any, setHeic2any] = useState<any>(null);
+
+  // Ad Intercept State
+  const [isAdModalOpen, setIsAdModalOpen] = useState(false);
+  const [pendingDownloadAction, setPendingDownloadAction] = useState<(() => void) | null>(null);
+  const [adModalFileName, setAdModalFileName] = useState("");
 
   const guideSections = [
     {
@@ -146,15 +152,30 @@ export default function HeicToJpgClient() {
     setIsProcessing(false);
   };
 
-  const downloadAll = () => {
-    images.forEach((img) => {
-      if (img.convertedUrl) {
-        const link = document.createElement("a");
-        link.href = img.convertedUrl;
-        link.download = `${img.name}.${img.convertedFormat}`;
-        link.click();
-      }
+  const triggerDownloadAll = () => {
+    setAdModalFileName(`${images.filter(i => i.status === "completed").length} converted files`);
+    setPendingDownloadAction(() => () => {
+      images.forEach((img) => {
+        if (img.convertedUrl) {
+          const link = document.createElement("a");
+          link.href = img.convertedUrl;
+          link.download = `${img.name}.${img.convertedFormat}`;
+          link.click();
+        }
+      });
     });
+    setIsAdModalOpen(true);
+  };
+
+  const triggerDownloadSingle = (img: ImageFile) => {
+    setAdModalFileName(`${img.name}.${img.convertedFormat}`);
+    setPendingDownloadAction(() => () => {
+      const link = document.createElement("a");
+      link.href = img.convertedUrl!;
+      link.download = `${img.name}.${img.convertedFormat}`;
+      link.click();
+    });
+    setIsAdModalOpen(true);
   };
 
   return (
@@ -240,12 +261,7 @@ export default function HeicToJpgClient() {
                         
                         {img.status === "completed" ? (
                           <button
-                            onClick={() => {
-                              const link = document.createElement("a");
-                              link.href = img.convertedUrl!;
-                              link.download = `${img.name}.${img.convertedFormat}`;
-                              link.click();
-                            }}
+                            onClick={() => triggerDownloadSingle(img)}
                             className="text-[10px] font-black flex items-center gap-2 text-rose-400 hover:text-rose-300 uppercase tracking-widest bg-rose-400/5 px-4 py-2 rounded-xl border border-rose-400/20 transition-all shadow-lg"
                           >
                             <Download className="w-3 h-3" /> Get Result
@@ -342,7 +358,7 @@ export default function HeicToJpgClient() {
 
                 {images.some(img => img.status === "completed") && (
                   <button
-                    onClick={downloadAll}
+                    onClick={triggerDownloadAll}
                     className="w-full h-12 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-slate-200 text-[10px] font-black uppercase tracking-widest rounded-2xl border border-white/5 transition-all shadow-lg"
                   >
                     <Download size={16} /> Bulk Download
@@ -377,6 +393,18 @@ export default function HeicToJpgClient() {
           </div>
         </div>
       </div>
+
+      <DownloadAdModal 
+        isOpen={isAdModalOpen}
+        onClose={() => setIsAdModalOpen(false)}
+        onComplete={() => {
+          if (pendingDownloadAction) {
+            pendingDownloadAction();
+            setPendingDownloadAction(null);
+          }
+        }}
+        fileName={adModalFileName}
+      />
     </ToolLayout>
   );
 }
