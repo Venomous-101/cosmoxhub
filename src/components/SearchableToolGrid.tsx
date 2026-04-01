@@ -50,7 +50,7 @@ export default function SearchableToolGrid() {
       <div className="container mx-auto px-4 pb-24 min-h-[40vh]">
         {filteredCategories.length > 0 ? (
           <div className="max-w-7xl mx-auto flex flex-col gap-24">
-            {filteredCategories.map((cat) => (
+            {filteredCategories.map((cat, index) => (
               <section key={cat.id} id={cat.id} className="scroll-mt-24">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 pb-4 border-b border-white/5">
                   <div>
@@ -66,6 +66,22 @@ export default function SearchableToolGrid() {
                     <ToolCard key={tool.title} {...tool} />
                   ))}
                 </div>
+
+                {/* Smartlink CTA — appears after 2nd category */}
+                {index === 1 && (
+                  <a
+                    href="https://www.profitablecpmratenetwork.com/ijdcjcbjbu?key=95dadbf472e8f7896aec68822c9bfeca"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-12 flex items-center justify-between bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 border border-indigo-500/20 rounded-2xl px-8 py-5 group hover:border-indigo-500/40 transition-all hover:-translate-y-0.5"
+                  >
+                    <div>
+                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-500 block mb-1">Sponsored Picks</span>
+                      <span className="text-sm text-slate-300 font-medium group-hover:text-white transition-colors">Discover premium tools and resources curated for creators</span>
+                    </div>
+                    <span className="text-xs font-black uppercase tracking-widest text-indigo-400 group-hover:text-indigo-300 whitespace-nowrap ml-4">Explore →</span>
+                  </a>
+                )}
               </section>
             ))}
           </div>
