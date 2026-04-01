@@ -126,7 +126,7 @@ export default function BGRemoverClient() {
           }
           return prev;
         });
-      }, 15000);
+      }, 120000); // 2 minutes, model download takes time
 
       const blob = await removeBackground(file, {
         progress: (key: string, current: number, total: number) => {
@@ -140,8 +140,8 @@ export default function BGRemoverClient() {
           }
         },
         model: useSmallModel ? "small" : "medium",
-        debug: false,
-        proxyToWorker: true, // Enable worker for speed
+        debug: true,
+        proxyToWorker: true, // Enable worker for speed without freezing the UI
         output: {
           format: "image/png",
           quality: 0.8
