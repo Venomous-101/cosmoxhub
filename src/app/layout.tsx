@@ -110,6 +110,8 @@ export default function RootLayout({
             })
           }}
         />
+        {/* CPAGrip Content Locker */}
+        <script type="text/javascript" src="https://installyourfiles.com/script_include.php?id=1887499"></script>
       </head>
       <body>
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || "G-HSL8QJ8VHK"} />

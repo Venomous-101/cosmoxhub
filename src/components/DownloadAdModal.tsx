@@ -25,6 +25,15 @@ export default function DownloadAdModal({ isOpen, onClose, onComplete, fileName 
     setHasStarted(true);
     let currentCount = 3;
     
+    // Call CPAGrip Content Locker if available
+    try {
+      if (typeof window !== 'undefined' && typeof (window as any).call_locker === 'function') {
+        (window as any).call_locker();
+      }
+    } catch (e) {
+      console.error("CPA Locker error:", e);
+    }
+    
     const interval = setInterval(() => {
       currentCount -= 1;
       setCountdown(currentCount);
