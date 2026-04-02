@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next";
 import { categories } from "@/lib/tools-data";
+import { pseoData } from "@/lib/pseo-data";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://cosmoxhub.com";
@@ -18,7 +19,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     category.tools.map(tool => tool.href)
   );
 
-  const allRoutes = [...staticRoutes, ...toolRoutes];
+  // Map programmatic SEO pages
+  const pseoRoutes = pseoData.map(page => `/tool/${page.slug}`);
+
+  const allRoutes = [...staticRoutes, ...toolRoutes, ...pseoRoutes];
 
   return allRoutes.map((route) => ({
     url: `${baseUrl}${route}`,
