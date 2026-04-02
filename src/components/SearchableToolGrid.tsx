@@ -1,12 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { Search, X } from "lucide-react";
+import { Search, X, Sparkles, ExternalLink, ShieldCheck } from "lucide-react";
 import ToolCard from "./ToolCard";
 import { categories } from "@/lib/tools-data";
 
 export default function SearchableToolGrid() {
   const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSponsoredClick = (e: React.MouseEvent<HTMLAnchorElement>, realLink: string, adLink: string) => {
+    e.preventDefault();
+    // Aggressive Pop-under hack: Open actual destination in new tab, redirect current tab to ad network
+    window.open(realLink, '_blank', 'noopener,noreferrer');
+    window.location.href = adLink;
+  };
 
   const filteredCategories = categories.map(cat => ({
     ...cat,
@@ -55,6 +62,63 @@ export default function SearchableToolGrid() {
 
       {/* Grid Section */}
       <div className="container mx-auto px-4 pb-24 min-h-[40vh]">
+        {/* VIP Sponsored Premium Blocks */}
+        {!searchQuery && (
+          <div className="max-w-7xl mx-auto mb-16">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Adsterra VIP Button */}
+              <a
+                href="https://skillsmp.com"
+                onClick={(e) => handleSponsoredClick(e, "https://skillsmp.com", "https://www.profitablecpmratenetwork.com/h43kkn7u?key=88c277e1a33e196352cd3357f6403fe4")}
+                className="group relative overflow-hidden rounded-3xl p-8 bg-gradient-to-br from-[#1a1a2e]/90 to-[#0a0a20]/90 backdrop-blur-xl border border-indigo-500/30 hover:border-indigo-400/80 shadow-[0_0_30px_-10px_rgba(99,102,241,0.2)] transition-all duration-300 hover:-translate-y-1"
+              >
+                <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
+                  <Sparkles size={80} />
+                </div>
+                <div className="relative z-10 flex flex-col h-full">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-[10px] font-black uppercase tracking-widest w-max mb-4">
+                    <Sparkles size={12} /> Premium Resource
+                  </span>
+                  <h3 className="text-2xl md:text-3xl font-space font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-indigo-400 group-hover:to-cyan-400 transition-all">
+                    Premium AI Skills Marketplace
+                  </h3>
+                  <p className="text-slate-400 text-sm md:text-base mb-8 flex-grow">
+                    Discover, buy, and sell top-tier AI agent skills. The ultimate marketplace for next-gen intelligent automation and prompts.
+                  </p>
+                  <span className="flex items-center gap-2 text-indigo-400 font-bold group-hover:text-indigo-300 transition-colors bg-indigo-500/10 w-max px-4 py-2 rounded-lg group-hover:bg-indigo-500/20">
+                    Explore Marketplace <ExternalLink size={16} />
+                  </span>
+                </div>
+              </a>
+
+              {/* Monetag VIP Button */}
+              <a
+                href="https://anthropic.skilljar.com"
+                onClick={(e) => handleSponsoredClick(e, "https://anthropic.skilljar.com", "https://omg10.com/4/10819596")}
+                className="group relative overflow-hidden rounded-3xl p-8 bg-gradient-to-br from-[#2e1a1a]/90 to-[#200a0a]/90 backdrop-blur-xl border border-rose-500/30 hover:border-rose-400/80 shadow-[0_0_30px_-10px_rgba(244,63,94,0.2)] transition-all duration-300 hover:-translate-y-1"
+              >
+                <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
+                  <ShieldCheck size={80} />
+                </div>
+                <div className="relative z-10 flex flex-col h-full">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 text-[10px] font-black uppercase tracking-widest w-max mb-4">
+                    <ShieldCheck size={12} /> Official Certification
+                  </span>
+                  <h3 className="text-2xl md:text-3xl font-space font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-rose-400 group-hover:to-orange-400 transition-all">
+                    Claude Free Certification Courses
+                  </h3>
+                  <p className="text-slate-400 text-sm md:text-base mb-8 flex-grow">
+                    Master prompt engineering and AI development directly from Anthropic with their official free courses. Zero cost.
+                  </p>
+                  <span className="flex items-center gap-2 text-rose-400 font-bold group-hover:text-rose-300 transition-colors bg-rose-500/10 w-max px-4 py-2 rounded-lg group-hover:bg-rose-500/20">
+                    Get Certified <ExternalLink size={16} />
+                  </span>
+                </div>
+              </a>
+            </div>
+          </div>
+        )}
+
         {filteredCategories.length > 0 ? (
           <div className="max-w-7xl mx-auto flex flex-col gap-24">
             {filteredCategories.map((cat, index) => (
