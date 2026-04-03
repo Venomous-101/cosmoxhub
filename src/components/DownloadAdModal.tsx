@@ -44,7 +44,6 @@ export default function DownloadAdModal({
 
   useEffect(() => {
     if (!isOpen) {
-      setCountdown(3);
       completedRef.current = false;
       return;
     }
@@ -56,7 +55,16 @@ export default function DownloadAdModal({
 
     // EXPOSE GLOBAL FUNCTION FOR CPAGRIP SUCCESS
     // The user MUST add `window.unlockCosmoxhub();` in CPAGrip's "Javascript on Completion" setting.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (window as any).unlockCosmoxhub = () => {
+      // Force clean any stuck CPAGrip overlays
+      document.querySelectorAll('body > div').forEach((el) => {
+        const z = window.getComputedStyle(el).zIndex;
+        if (z !== "auto" && parseInt(z, 10) > 90000) {
+           el.remove();
+        }
+      });
+
       if (!completedRef.current) {
         completedRef.current = true;
         setCountdown(0);
@@ -65,13 +73,34 @@ export default function DownloadAdModal({
       }
     };
 
-    // Auto-detect CPAGrip bypass if no offers exist by observing DOM or waiting for user unlock.
-    // We removed the blind 3-second timer. The download is now STRICTLY tied to CPAGrip completion.
+    // Failsafe: CPAGrip sometimes fails to bypass natively for empty regions (e.g. Pakistan)
+    // If it's been 5 seconds and no clickable tasks are detected, auto-bypass it so traffic isn't lost.
+    let checkAttempts = 0;
+    const failsafeInterval = setInterval(() => {
+      checkAttempts++;
+      // CPAGrip usually renders offers as <a> tags or .offer elements
+      const activeOffers = document.querySelectorAll('.offer_list a, #cpabuild_offers a, .link_a, .offer_title, a[href*="cpagrip"]');
+      
+      if (activeOffers.length > 0) {
+        // Tasks found! Stop the failsafe and force the user to complete them.
+        clearInterval(failsafeInterval);
+      } else if (checkAttempts >= 5) {
+        // 5 seconds passed, no tasks generated. Auto-bypass!
+        clearInterval(failsafeInterval);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if (typeof (window as any).unlockCosmoxhub === "function") {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (window as any).unlockCosmoxhub();
+        }
+      }
+    }, 1000);
+
+    return () => clearInterval(failsafeInterval);
 
   }, [isOpen, triggerLocker]);
 
   return (
-    <AnimatePresence>
+    <AnimatePresence onExitComplete={() => setCountdown(3)}>
       {isOpen && (
         <>
           {/* Backdrop */}
