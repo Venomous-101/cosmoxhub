@@ -44,36 +44,30 @@ export default function DownloadAdModal({
 
   useEffect(() => {
     if (!isOpen) {
-      // Reset state when modal closes
       setCountdown(3);
       completedRef.current = false;
       return;
     }
 
     completedRef.current = false;
-    setCountdown(3);
 
-    // Trigger CPAGrip content locker immediately on open
+    // Trigger CPAGrip content locker on open
     triggerLocker();
 
-    let currentCount = 3;
-    const interval = setInterval(() => {
-      currentCount -= 1;
-      setCountdown(currentCount);
-
-      if (currentCount <= 0) {
-        clearInterval(interval);
-        if (!completedRef.current) {
-          completedRef.current = true;
-          onCompleteRef.current();
-          // Give the download a moment to fire, then close
-          setTimeout(() => onCloseRef.current(), 1500);
-        }
+    // EXPOSE GLOBAL FUNCTION FOR CPAGRIP SUCCESS
+    // The user MUST add `window.unlockCosmoxhub();` in CPAGrip's "Javascript on Completion" setting.
+    (window as any).unlockCosmoxhub = () => {
+      if (!completedRef.current) {
+        completedRef.current = true;
+        setCountdown(0);
+        onCompleteRef.current();
+        setTimeout(() => onCloseRef.current(), 1500);
       }
-    }, 1000);
+    };
 
-    return () => clearInterval(interval);
-    // Only re-run when isOpen changes — callbacks are stable via refs
+    // Auto-detect CPAGrip bypass if no offers exist by observing DOM or waiting for user unlock.
+    // We removed the blind 3-second timer. The download is now STRICTLY tied to CPAGrip completion.
+
   }, [isOpen, triggerLocker]);
 
   return (
@@ -123,19 +117,17 @@ export default function DownloadAdModal({
                   </div>
 
                   <h3 className="text-2xl font-black text-white mb-2">
-                    Preparing Download
+                    {countdown === 0 ? "Download Unlocked!" : "Action Required"}
                   </h3>
 
-                  {countdown > 0 ? (
-                    <p className="text-slate-400 text-sm max-w-[280px] mx-auto">
-                      Securely processing{" "}
-                      <span className="text-indigo-300 font-bold">{fileName}</span>.
-                      Download starts in{" "}
-                      <span className="text-indigo-400 font-black text-lg">{countdown}s</span>
+                  {countdown === 0 ? (
+                    <p className="text-emerald-400 text-sm font-bold flex items-center justify-center gap-2">
+                      <Download size={16} /> File Downloading...
                     </p>
                   ) : (
-                    <p className="text-emerald-400 text-sm font-bold flex items-center justify-center gap-2">
-                      <Download size={16} /> Download Started!
+                    <p className="text-slate-400 text-sm max-w-[280px] mx-auto">
+                      Please complete an offer to securely download{" "}
+                      <span className="text-indigo-300 font-bold">{fileName}</span>.
                     </p>
                   )}
                 </div>
@@ -150,17 +142,17 @@ export default function DownloadAdModal({
                 </div>
               </div>
 
-              {/* Progress Bar */}
-              <div className="h-1.5 w-full bg-white/5 overflow-hidden">
-                <motion.div
-                  className="h-full bg-gradient-to-r from-indigo-500 to-purple-500"
-                  initial={{ width: "0%" }}
-                  animate={{
-                    width: countdown <= 0 ? "100%" : `${((3 - countdown) / 3) * 100}%`,
-                  }}
-                  transition={{ duration: 1, ease: "linear" }}
-                />
-              </div>
+              {/* Progress Bar Component Removed to Reflect Task-Based Unlock */}
+              {countdown === 0 && (
+                <div className="h-1.5 w-full bg-white/5 overflow-hidden">
+                   <motion.div
+                     className="h-full bg-gradient-to-r from-emerald-400 to-teal-500"
+                     initial={{ width: "0%" }}
+                     animate={{ width: "100%" }}
+                     transition={{ duration: 1, ease: "linear" }}
+                   />
+                </div>
+              )}
             </div>
           </motion.div>
         </>
