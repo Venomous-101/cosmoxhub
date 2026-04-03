@@ -110,12 +110,9 @@ export default function RootLayout({
             })
           }}
         />
-        {/* CPAGrip Content Locker — loaded before page interactive so call_locker() is always available */}
-        <Script
-          src="https://installyourfiles.com/script_include.php?id=1887499"
-          strategy="beforeInteractive"
-          id="cpagrip-locker"
-        />
+        {/* CPAGrip Content Locker — native script tag required because it uses document.write() */}
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script type="text/javascript" src="https://installyourfiles.com/script_include.php?id=1887499"></script>
       </head>
       <body>
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || "G-HSL8QJ8VHK"} />
