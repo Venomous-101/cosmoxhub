@@ -77,6 +77,9 @@ export default function MergePdfClient() {
       const mergedPdfBytes = await mergedPdf.save();
       const blob = new Blob([mergedPdfBytes as unknown as BlobPart], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
+      if (typeof window !== 'undefined' && typeof (window as any).call_locker === 'function') {
+        try { (window as any).call_locker(); } catch(e) {}
+      }
       const link = document.createElement("a");
       link.href = url;
       link.download = `cosmoxhub-merged-${Date.now()}.pdf`;

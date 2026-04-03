@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
 import ToolGuide from "@/components/ToolGuide";
+import DownloadAdModal from "@/components/DownloadAdModal";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ImageFile {
@@ -32,6 +33,11 @@ export default function JpgToPngClient() {
   const [images, setImages] = useState<ImageFile[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Ad Intercept State
+  const [isAdModalOpen, setIsAdModalOpen] = useState(false);
+  const [pendingDownloadAction, setPendingDownloadAction] = useState<(() => void) | null>(null);
+  const [adModalFileName, setAdModalFileName] = useState("");
 
   const guideSections = [
     {
@@ -127,14 +133,29 @@ export default function JpgToPngClient() {
   };
 
   const downloadAll = () => {
-    images.forEach((img) => {
-      if (img.convertedUrl) {
-        const link = document.createElement("a");
-        link.href = img.convertedUrl;
-        link.download = `${img.name}-cosmoxhub.png`;
-        link.click();
-      }
+    setAdModalFileName(`${images.filter(i => i.status === "completed").length} converted files`);
+    setPendingDownloadAction(() => () => {
+      images.forEach((img) => {
+        if (img.convertedUrl) {
+          const link = document.createElement("a");
+          link.href = img.convertedUrl;
+          link.download = `${img.name}-cosmoxhub.png`;
+          link.click();
+        }
+      });
     });
+    setIsAdModalOpen(true);
+  };
+
+  const triggerDownloadSingle = (img: ImageFile) => {
+    setAdModalFileName(`${img.name}-cosmoxhub.png`);
+    setPendingDownloadAction(() => () => {
+      const link = document.createElement("a");
+      link.href = img.convertedUrl!;
+      link.download = `${img.name}-cosmoxhub.png`;
+      link.click();
+    });
+    setIsAdModalOpen(true);
   };
 
   return (
@@ -191,7 +212,7 @@ export default function JpgToPngClient() {
                           </span>
                         </div>
                         {img.status === "completed" ? (
-                          <button onClick={() => { const l = document.createElement("a"); l.href = img.convertedUrl!; l.download = `${img.name}-cosmoxhub.png`; l.click(); }}
+                          <button onClick={() => triggerDownloadSingle(img)}
                             className="text-[10px] font-black flex items-center gap-2 text-emerald-400 hover:text-emerald-300 uppercase tracking-widest bg-emerald-400/5 px-4 py-2 rounded-xl border border-emerald-400/20 transition-all">
                             <Download className="w-3 h-3" /> Download PNG
                           </button>
@@ -256,26 +277,38 @@ export default function JpgToPngClient() {
               </div>
             </div>
           </div>
-          </aside>
-        </div>
+        </aside>
+      </div>
 
-        {/* SEO Enrichment Layer */}
-        <div className="lg:col-span-2 space-y-12 py-12">
-          <ToolGuide 
-            toolName="JPG to PNG Converter" 
-            sections={guideSections}
-            faqs={faqs}
-          />
+      {/* SEO Enrichment Layer */}
+      <div className="lg:col-span-2 space-y-12 py-12">
+        <ToolGuide
+          toolName="JPG to PNG Converter"
+          sections={guideSections}
+          faqs={faqs}
+        />
 
-          <div className="p-8 bg-[#0a0a1f]/40 border border-white/5 rounded-[2.5rem] prose prose-invert max-w-none">
-            <p className="text-slate-400 leading-relaxed italic">
-              Convert your JPEGs to the versatile PNG format with our **JPG to PNG - Free Online Utility Tool**. CosmoXHub offers a seamless, high-performance solution for users who need to preserve image quality or prepare assets for layers-based design work. While JPG is excellent for photography, PNG is the gold standard for web graphics that require crisp edges and potential transparency. Our tool bridges that gap with a single click.
-            </p>
-            <p className="text-slate-400 leading-relaxed mt-4">
-              Our **JPG to PNG** converter is engineered for speed and absolute privacy. By running the entire conversion process locally in your browser, we ensure that your sensitive images are never uploaded to our servers. This client-side approach not only protects your personal data but also eliminates the latency of traditional cloud-based tools. With the ability to process up to 20 images at once and download them instantly, CosmoXHub is the definitive free online tool for professional image conversion.
-            </p>
-          </div>
+        <div className="p-8 bg-[#0a0a1f]/40 border border-white/5 rounded-[2.5rem] prose prose-invert max-w-none">
+          <p className="text-slate-400 leading-relaxed italic">
+            Convert your JPEGs to the versatile PNG format with our **JPG to PNG - Free Online Utility Tool**. CosmoXHub offers a seamless, high-performance solution for users who need to preserve image quality or prepare assets for layers-based design work. While JPG is excellent for photography, PNG is the gold standard for web graphics that require crisp edges and potential transparency. Our tool bridges that gap with a single click.
+          </p>
+          <p className="text-slate-400 leading-relaxed mt-4">
+            Our **JPG to PNG** converter is engineered for speed and absolute privacy. By running the entire conversion process locally in your browser, we ensure that your sensitive images are never uploaded to our servers. This client-side approach not only protects your personal data but also eliminates the latency of traditional cloud-based tools. With the ability to process up to 20 images at once and download them instantly, CosmoXHub is the definitive free online tool for professional image conversion.
+          </p>
         </div>
-      </ToolLayout>
+      </div>
+
+      <DownloadAdModal
+        isOpen={isAdModalOpen}
+        onClose={() => setIsAdModalOpen(false)}
+        onComplete={() => {
+          if (pendingDownloadAction) {
+            pendingDownloadAction();
+            setPendingDownloadAction(null);
+          }
+        }}
+        fileName={adModalFileName}
+      />
+    </ToolLayout>
   );
 }

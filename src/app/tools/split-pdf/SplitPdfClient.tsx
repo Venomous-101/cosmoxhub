@@ -84,6 +84,9 @@ export default function SplitPdfClient() {
       const newPdfBytes = await newPdf.save();
       const blob = new Blob([newPdfBytes as unknown as BlobPart], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
+      if (typeof window !== 'undefined' && typeof (window as any).call_locker === 'function') {
+        try { (window as any).call_locker(); } catch(e) {}
+      }
       const link = document.createElement("a");
       link.href = url;
       link.download = `cosmoxhub-split-${Date.now()}.pdf`;

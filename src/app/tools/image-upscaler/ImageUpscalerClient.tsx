@@ -19,6 +19,7 @@ import {
   HelpCircle
 } from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
+import DownloadAdModal from "@/components/DownloadAdModal";
 import ToolGuide from "@/components/ToolGuide";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -208,6 +209,11 @@ export default function ImageUpscalerClient() {
   const [stabilityMode, setStabilityMode] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Ad Intercept State
+  const [isAdModalOpen, setIsAdModalOpen] = useState(false);
+  const [pendingDownloadAction, setPendingDownloadAction] = useState<(() => void) | null>(null);
+  const [adModalFileName, setAdModalFileName] = useState("");
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const upscalerRef = useRef<any>(null);
 
@@ -264,6 +270,8 @@ export default function ImageUpscalerClient() {
     }
   }, [scale, quality]);
 
+  // Init engine once on mount. Scale/quality re-init happens inside processAll
+  // before processing each batch, so we don't hammer resources on every slider change.
   useEffect(() => {
     if (useAI) {
       initEngine();
@@ -273,7 +281,8 @@ export default function ImageUpscalerClient() {
         try { upscalerRef.current.dispose(); } catch { /* ok */ }
       }
     };
-  }, [scale, useAI, quality, initEngine]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only on mount
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = Array.from(e.target.files || []);
@@ -344,6 +353,11 @@ export default function ImageUpscalerClient() {
   const processAll = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
+
+    // Re-init engine if settings changed or engine failed
+    if (engineStatus !== "ready" && useAI) {
+      await initEngine();
+    }
 
     const pending = files.filter(
       (f) => f.status === "idle" || f.status === "error",
@@ -472,10 +486,15 @@ export default function ImageUpscalerClient() {
 
   const downloadOne = (f: UpscaleFile) => {
     if (!f.result) return;
-    const a = document.createElement("a");
-    a.href = f.result;
-    a.download = `cosmox-${scale}x-${f.file.name.replace(/\.[^/.]+$/, "")}.${format}`;
-    a.click();
+    const downloadName = `cosmox-${scale}x-${f.file.name.replace(/\.[^/.]+$/, "")}.${format}`;
+    setAdModalFileName(downloadName);
+    setPendingDownloadAction(() => () => {
+      const a = document.createElement("a");
+      a.href = f.result!;
+      a.download = downloadName;
+      a.click();
+    });
+    setIsAdModalOpen(true);
   };
 
   const downloadAllZip = async () => {
@@ -500,8 +519,12 @@ export default function ImageUpscalerClient() {
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = `cosmox-upscaled-${scale}x-bulk.zip`;
-    a.click();
-    URL.revokeObjectURL(a.href);
+    setAdModalFileName(`${completed.length} upscaled files (ZIP)`);
+    setPendingDownloadAction(() => () => {
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+    setIsAdModalOpen(true);
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -972,6 +995,18 @@ export default function ImageUpscalerClient() {
           aria-label="Upload images"
         />
       </div>
+
+      <DownloadAdModal
+        isOpen={isAdModalOpen}
+        onClose={() => setIsAdModalOpen(false)}
+        onComplete={() => {
+          if (pendingDownloadAction) {
+            pendingDownloadAction();
+            setPendingDownloadAction(null);
+          }
+        }}
+        fileName={adModalFileName}
+      />
     </ToolLayout>
   );
 }

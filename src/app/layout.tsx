@@ -1,9 +1,9 @@
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import Script from "next/script";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import AdScripts from "@/components/AdScripts";
 import AdBanner from "@/components/AdBanner";
-
 import React from "react";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -110,8 +110,12 @@ export default function RootLayout({
             })
           }}
         />
-        {/* CPAGrip Content Locker */}
-        <script type="text/javascript" src="https://installyourfiles.com/script_include.php?id=1887499"></script>
+        {/* CPAGrip Content Locker — loaded before page interactive so call_locker() is always available */}
+        <Script
+          src="https://installyourfiles.com/script_include.php?id=1887499"
+          strategy="beforeInteractive"
+          id="cpagrip-locker"
+        />
       </head>
       <body>
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || "G-HSL8QJ8VHK"} />

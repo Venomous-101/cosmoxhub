@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { X, ShieldCheck, Download, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import AdBanner from "./AdBanner";
@@ -11,42 +11,70 @@ interface DownloadAdModalProps {
   fileName?: string;
 }
 
-export default function DownloadAdModal({ isOpen, onClose, onComplete, fileName = "your file" }: DownloadAdModalProps) {
+export default function DownloadAdModal({
+  isOpen,
+  onClose,
+  onComplete,
+  fileName = "your file",
+}: DownloadAdModalProps) {
   const [countdown, setCountdown] = useState(3);
-  const [hasStarted, setHasStarted] = useState(false);
+  // We use refs for callbacks to avoid stale closures & avoid re-triggering the effect
+  const onCompleteRef = useRef(onComplete);
+  const onCloseRef = useRef(onClose);
+  const completedRef = useRef(false); // prevent double-fire
 
-  useEffect(() => {
-    if (!isOpen) {
-      setCountdown(3);
-      setHasStarted(false);
-      return;
-    }
+  // Keep refs in sync without retriggering effect
+  useEffect(() => { onCompleteRef.current = onComplete; }, [onComplete]);
+  useEffect(() => { onCloseRef.current = onClose; }, [onClose]);
 
-    setHasStarted(true);
-    let currentCount = 3;
-    
-    // Call CPAGrip Content Locker if available
+  const triggerLocker = useCallback(() => {
     try {
-      if (typeof window !== 'undefined' && typeof (window as any).call_locker === 'function') {
+      if (
+        typeof window !== "undefined" &&
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        typeof (window as any).call_locker === "function"
+      ) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (window as any).call_locker();
       }
     } catch (e) {
       console.error("CPA Locker error:", e);
     }
-    
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen) {
+      // Reset state when modal closes
+      setCountdown(3);
+      completedRef.current = false;
+      return;
+    }
+
+    completedRef.current = false;
+    setCountdown(3);
+
+    // Trigger CPAGrip content locker immediately on open
+    triggerLocker();
+
+    let currentCount = 3;
     const interval = setInterval(() => {
       currentCount -= 1;
       setCountdown(currentCount);
 
       if (currentCount <= 0) {
         clearInterval(interval);
-        onComplete();
-        setTimeout(() => onClose(), 1500); // Close shortly after download triggers
+        if (!completedRef.current) {
+          completedRef.current = true;
+          onCompleteRef.current();
+          // Give the download a moment to fire, then close
+          setTimeout(() => onCloseRef.current(), 1500);
+        }
       }
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isOpen, onComplete, onClose]);
+    // Only re-run when isOpen changes — callbacks are stable via refs
+  }, [isOpen, triggerLocker]);
 
   return (
     <AnimatePresence>
@@ -58,9 +86,12 @@ export default function DownloadAdModal({ isOpen, onClose, onComplete, fileName 
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 bg-[#050510]/80 backdrop-blur-md"
-            onClick={onClose}
+            onClick={() => {
+              // Closing early cancels the pending download — user must wait
+              onCloseRef.current();
+            }}
           />
-          
+
           {/* Modal Content */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -74,8 +105,8 @@ export default function DownloadAdModal({ isOpen, onClose, onComplete, fileName 
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[100px] bg-indigo-500/20 blur-[50px] pointer-events-none" />
 
               <div className="p-8">
-                <button 
-                  onClick={onClose}
+                <button
+                  onClick={() => onCloseRef.current()}
                   aria-label="Close Modal"
                   className="absolute top-6 right-6 p-2 bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white rounded-full transition-all"
                 >
@@ -90,14 +121,16 @@ export default function DownloadAdModal({ isOpen, onClose, onComplete, fileName 
                       <ShieldCheck className="w-8 h-8 text-emerald-400" />
                     )}
                   </div>
-                  
-                  <h3 className="text-2xl font-black text-white font-space mb-2">
+
+                  <h3 className="text-2xl font-black text-white mb-2">
                     Preparing Download
                   </h3>
-                  
+
                   {countdown > 0 ? (
                     <p className="text-slate-400 text-sm max-w-[280px] mx-auto">
-                      Please wait while we securely process <span className="text-indigo-300 font-bold">{fileName}</span>. Download starts in{" "}
+                      Securely processing{" "}
+                      <span className="text-indigo-300 font-bold">{fileName}</span>.
+                      Download starts in{" "}
                       <span className="text-indigo-400 font-black text-lg">{countdown}s</span>
                     </p>
                   ) : (
@@ -109,16 +142,22 @@ export default function DownloadAdModal({ isOpen, onClose, onComplete, fileName 
 
                 {/* Ad Injection Zone */}
                 <div className="w-full bg-[#050510] border border-white/5 rounded-2xl overflow-hidden relative">
-                  <AdBanner type="native" label="Support CosmoxHub" className="!my-0 !min-h-[250px]" />
+                  <AdBanner
+                    type="native"
+                    label="Support CosmoxHub"
+                    className="!my-0 !min-h-[250px]"
+                  />
                 </div>
               </div>
 
               {/* Progress Bar */}
               <div className="h-1.5 w-full bg-white/5 overflow-hidden">
-                <motion.div 
+                <motion.div
                   className="h-full bg-gradient-to-r from-indigo-500 to-purple-500"
                   initial={{ width: "0%" }}
-                  animate={{ width: countdown === 0 ? "100%" : `${((3 - countdown) / 3) * 100}%` }}
+                  animate={{
+                    width: countdown <= 0 ? "100%" : `${((3 - countdown) / 3) * 100}%`,
+                  }}
                   transition={{ duration: 1, ease: "linear" }}
                 />
               </div>

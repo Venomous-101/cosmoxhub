@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
 import ToolGuide from "@/components/ToolGuide";
+import DownloadAdModal from "@/components/DownloadAdModal";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ImageFile {
@@ -33,6 +34,11 @@ export default function PngToJpgClient() {
   const [quality, setQuality] = useState(90);
   const [bgColor, setBgColor] = useState("#ffffff");
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Ad Intercept State
+  const [isAdModalOpen, setIsAdModalOpen] = useState(false);
+  const [pendingDownloadAction, setPendingDownloadAction] = useState<(() => void) | null>(null);
+  const [adModalFileName, setAdModalFileName] = useState("");
 
   const guideSections = [
     {
@@ -146,14 +152,29 @@ export default function PngToJpgClient() {
   };
 
   const downloadAll = () => {
-    images.forEach((img) => {
-      if (img.convertedUrl) {
-        const link = document.createElement("a");
-        link.href = img.convertedUrl;
-        link.download = `${img.name}.jpg`;
-        link.click();
-      }
+    setAdModalFileName(`${images.filter(i => i.status === "completed").length} converted files`);
+    setPendingDownloadAction(() => () => {
+      images.forEach((img) => {
+        if (img.convertedUrl) {
+          const link = document.createElement("a");
+          link.href = img.convertedUrl;
+          link.download = `${img.name}-cosmoxhub.jpg`;
+          link.click();
+        }
+      });
     });
+    setIsAdModalOpen(true);
+  };
+
+  const triggerDownloadSingle = (img: ImageFile) => {
+    setAdModalFileName(`${img.name}-cosmoxhub.jpg`);
+    setPendingDownloadAction(() => () => {
+      const link = document.createElement("a");
+      link.href = img.convertedUrl!;
+      link.download = `${img.name}-cosmoxhub.jpg`;
+      link.click();
+    });
+    setIsAdModalOpen(true);
   };
 
   return (
@@ -219,6 +240,7 @@ export default function PngToJpgClient() {
                       className="group relative bg-[#0a0a1a]/80 backdrop-blur-xl border border-white/5 rounded-3xl p-4 flex gap-4 items-center hover:border-emerald-500/30 transition-all shadow-xl"
                     >
                       <div className="relative w-24 h-24 rounded-2xl overflow-hidden bg-slate-900 ring-1 ring-white/10 shrink-0">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img 
                           src={img.preview} 
                           alt={img.name} 
@@ -239,12 +261,7 @@ export default function PngToJpgClient() {
                         
                         {img.status === "completed" ? (
                           <button
-                            onClick={() => {
-                              const link = document.createElement("a");
-                              link.href = img.convertedUrl!;
-                              link.download = `${img.name}.jpg`;
-                              link.click();
-                            }}
+                            onClick={() => triggerDownloadSingle(img)}
                             className="text-[10px] font-black flex items-center gap-2 text-emerald-400 hover:text-emerald-300 uppercase tracking-widest bg-emerald-400/5 px-4 py-2 rounded-xl border border-emerald-400/20 transition-all shadow-lg"
                           >
                             <Download className="w-3 h-3" /> Get JPG
@@ -379,26 +396,38 @@ export default function PngToJpgClient() {
               </div>
             </div>
           </div>
-          </aside>
-        </div>
+        </aside>
+      </div>
 
-        {/* SEO Enrichment Layer */}
-        <div className="lg:col-span-2 space-y-12 py-12">
-          <ToolGuide 
-            toolName="PNG to JPG Converter" 
-            sections={guideSections}
-            faqs={faqs}
-          />
+      {/* SEO Enrichment Layer */}
+      <div className="lg:col-span-2 space-y-12 py-12">
+        <ToolGuide 
+          toolName="PNG to JPG Converter" 
+          sections={guideSections}
+          faqs={faqs}
+        />
 
-          <div className="p-8 bg-[#0a0a1f]/40 border border-white/5 rounded-[2.5rem] prose prose-invert max-w-none">
-            <p className="text-slate-400 leading-relaxed italic">
-              Why settle for large PNG files when you can optimize your storage with our **PNG to JPG - Free Online Utility Tool**? CosmoXHub provides a professional-grade converter that transforms your high-resolution PNGs into space-efficient JPEGs in milliseconds. Whether you&apos;re preparing images for a website, an email attachment, or a digital portfolio, our tool ensures your files are web-ready without compromising on visual integrity.
-            </p>
-            <p className="text-slate-400 leading-relaxed mt-4">
-              Our **PNG to JPG** converter is unique because it operates entirely within your browser&apos;s secure environment. This means your private photos never touch our servers, offering you total peace of mind. With support for bulk processing of up to 20 images, a customizable quality slider for perfect compression, and instant download options, CosmoXHub is the ultimate destination for efficient image management. Experience the power of client-side technology and make your workflow faster today.
-            </p>
-          </div>
+        <div className="p-8 bg-[#0a0a1f]/40 border border-white/5 rounded-[2.5rem] prose prose-invert max-w-none">
+          <p className="text-slate-400 leading-relaxed italic">
+            Why settle for large PNG files when you can optimize your storage with our **PNG to JPG - Free Online Utility Tool**? CosmoXHub provides a professional-grade converter that transforms your high-resolution PNGs into space-efficient JPEGs in milliseconds. Whether you&apos;re preparing images for a website, an email attachment, or a digital portfolio, our tool ensures your files are web-ready without compromising on visual integrity.
+          </p>
+          <p className="text-slate-400 leading-relaxed mt-4">
+            Our **PNG to JPG** converter is unique because it operates entirely within your browser&apos;s secure environment. This means your private photos never touch our servers, offering you total peace of mind. With support for bulk processing of up to 20 images, a customizable quality slider for perfect compression, and instant download options, CosmoXHub is the ultimate destination for efficient image management. Experience the power of client-side technology and make your workflow faster today.
+          </p>
         </div>
-      </ToolLayout>
+      </div>
+
+      <DownloadAdModal
+        isOpen={isAdModalOpen}
+        onClose={() => setIsAdModalOpen(false)}
+        onComplete={() => {
+          if (pendingDownloadAction) {
+            pendingDownloadAction();
+            setPendingDownloadAction(null);
+          }
+        }}
+        fileName={adModalFileName}
+      />
+    </ToolLayout>
   );
 }

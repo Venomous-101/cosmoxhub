@@ -141,6 +141,9 @@ export default function WebpToPngClient() {
   };
 
   const downloadAll = () => {
+    if (typeof window !== 'undefined' && typeof (window as any).call_locker === 'function') {
+      try { (window as any).call_locker(); } catch(e) {}
+    }
     images.forEach((img) => {
       if (img.convertedUrl) {
         const link = document.createElement("a");
@@ -236,6 +239,9 @@ export default function WebpToPngClient() {
                         {img.status === "completed" ? (
                           <button
                             onClick={() => {
+                              if (typeof window !== 'undefined' && typeof (window as any).call_locker === 'function') {
+                                try { (window as any).call_locker(); } catch(e) {}
+                              }
                               const link = document.createElement("a");
                               link.href = img.convertedUrl!;
                               link.download = `${img.name}.png`;
