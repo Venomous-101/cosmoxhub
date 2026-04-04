@@ -112,15 +112,6 @@ export default function HomePageContent() {
       <div className="w-full h-24 md:h-32 pointer-events-none" aria-hidden="true" />
 
       <div className="container mx-auto px-4">
-        {/* Native Ad Container - Isolated and Clipped */}
-        <div className="w-full max-w-5xl mx-auto bg-[#04040a]/80 backdrop-blur-md border border-indigo-500/10 rounded-[2rem] p-6 flex flex-col justify-center items-center shadow-xl relative overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse,rgba(99,102,241,0.03)_0%,transparent_80%)] pointer-events-none" />
-          <AdBanner type="native" label="Recommended for you" />
-        </div>
-        
-        {/* Rigid Spacer */}
-        <div className="w-full h-20 md:h-24 pointer-events-none" aria-hidden="true" />
-
         {/* Leaderboard Ad Container - Isolated and Clipped */}
         <div className="w-full max-w-4xl mx-auto bg-[#04040a]/80 backdrop-blur-md border border-indigo-500/10 rounded-[2rem] p-6 flex flex-col justify-center items-center shadow-xl relative overflow-hidden min-h-[140px]">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse,rgba(236,72,153,0.03)_0%,transparent_80%)] pointer-events-none" />
