@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { Search, X, Sparkles, ExternalLink, ShieldCheck } from "lucide-react";
+import { Sparkles, ExternalLink, ShieldCheck } from "lucide-react";
 import ToolCard from "./ToolCard";
 import { categories } from "@/lib/tools-data";
 
@@ -32,7 +31,7 @@ export default function SearchableToolGrid({ searchQuery, setSearchQuery }: Sear
 
         {/* Compact Sponsored Pills */}
         {!searchQuery && (
-          <div className="max-w-7xl mx-auto mb-16 flex flex-col sm:flex-row gap-4">
+          <div className="max-w-7xl mx-auto mb-24 flex flex-col md:flex-row gap-8">
             <a
               href="https://skillsmp.com"
               onClick={(e) => handleSponsoredClick(e, "https://skillsmp.com", "https://www.profitablecpmratenetwork.com/h43kkn7u?key=88c277e1a33e196352cd3357f6403fe4")}
@@ -67,10 +66,10 @@ export default function SearchableToolGrid({ searchQuery, setSearchQuery }: Sear
 
         {/* Tool Categories */}
         {filteredCategories.length > 0 ? (
-          <div className="max-w-7xl mx-auto flex flex-col gap-24">
+          <div className="max-w-7xl mx-auto flex flex-col gap-32">
             {filteredCategories.map((cat, index) => (
-              <section key={cat.id} id={cat.id} className="scroll-mt-24">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10 pb-4 border-b border-white/5">
+              <section key={cat.id} id={cat.id} className="scroll-mt-32">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 pb-6 border-b border-white/5">
                   <div>
                     <h2 className="font-space text-3xl font-bold text-slate-100 flex items-center gap-3">
                       {cat.label}
@@ -79,7 +78,7 @@ export default function SearchableToolGrid({ searchQuery, setSearchQuery }: Sear
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
                   {cat.tools.map((tool) => (
                     <ToolCard key={tool.title} {...tool} />
                   ))}
