@@ -40,12 +40,14 @@ export default function AdScripts() {
   }, []);
 
   // HYBRID LOGIC
-  // Social Bar: Show almost immediately, it's non-intrusive (Push/Banner style).
+  // 1. Social Bar: Show almost immediately, it's non-intrusive (Push/Banner style).
   const showSocialBar = clickCount >= 1 || sessionTime >= 2;
   
-  // Aggressive Ads (Popunder/MultiTag): Push deep into the session.
-  // Monetag MultiTag causes aggressive redirects on the first click, so we delay it severely.
-  const showAggressiveAds = clickCount >= 9 || sessionTime >= 60;
+  // 2. Monetag MultiTag (Redirects): Extreme delay down to 30 clicks to preserve pure UX.
+  const showMonetag = clickCount >= 30;
+
+  // 3. Adsterra Popunder (Redirect): Staggered to prevent ads firing simultaneously. Triggers at 40 clicks.
+  const showAdsterraPopunder = clickCount >= 40;
 
   // Next.js <Script> component often fails when conditionally rendered late (due to the grace period).
   // Vanilla DOM injection guarantees execution for these global scripts.
@@ -71,20 +73,23 @@ export default function AdScripts() {
       );
     }
 
-    if (showAggressiveAds) {
+    if (showMonetag) {
       // Monetag MultiTag (Can cause redirects)
       injectGlobalScript(
         "monetag-multitag",
         "https://quge5.com/88/tag.min.js",
         "224064"
       );
+    }
+
+    if (showAdsterraPopunder) {
       // Adsterra Popunder (Redirect)
       injectGlobalScript(
         "adsterra-popunder",
         "https://pl29029721.profitablecpmratenetwork.com/95/74/4e/95744e8e431f6b57cffc3c6e368328a3.js"
       );
     }
-  }, [showSocialBar, showAggressiveAds]);
+  }, [showSocialBar, showMonetag, showAdsterraPopunder]);
 
   return null;
 }
