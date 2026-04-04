@@ -5,8 +5,12 @@ import { Search, X, Sparkles, ExternalLink, ShieldCheck } from "lucide-react";
 import ToolCard from "./ToolCard";
 import { categories } from "@/lib/tools-data";
 
-export default function SearchableToolGrid() {
-  const [searchQuery, setSearchQuery] = useState("");
+interface SearchableToolGridProps {
+  searchQuery: string;
+  setSearchQuery: (q: string) => void;
+}
+
+export default function SearchableToolGrid({ searchQuery, setSearchQuery }: SearchableToolGridProps) {
 
   const handleSponsoredClick = (e: React.MouseEvent<HTMLAnchorElement>, realLink: string, adLink: string) => {
     e.preventDefault();
@@ -24,47 +28,11 @@ export default function SearchableToolGrid() {
 
   return (
     <div className="w-full">
-
-      {/* ── Floating Search Bar ─────────────────────────────────────────────── */}
-      <div className="w-full flex justify-center px-4 mt-[-28px] mb-16 relative z-30">
-        <div className="w-full max-w-2xl relative group">
-          {/* Ambient glow */}
-          <div className="absolute -inset-[1px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl blur-[18px] opacity-20 group-hover:opacity-50 group-focus-within:opacity-60 transition-all duration-700 pointer-events-none" />
-
-          <div className="relative flex items-center bg-[#0d0d24] border border-indigo-500/35 group-focus-within:border-indigo-400/70 rounded-2xl pl-5 pr-3 py-[14px] shadow-[0_4px_32px_-8px_rgba(99,102,241,0.35)] transition-all duration-300">
-            <Search className="text-indigo-400/70 shrink-0" size={22} strokeWidth={2.5} aria-hidden="true" />
-
-            <input
-              type="text"
-              placeholder="Search any tool — PDF, Image, AI, Code…"
-              className="w-full bg-transparent border-none outline-none px-4 text-slate-100 placeholder:text-slate-500 font-medium text-base focus:ring-0 appearance-none"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              aria-label="Search for tools"
-            />
-
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className="p-2 bg-slate-700/60 hover:bg-red-500/30 rounded-xl text-slate-400 hover:text-red-300 transition-all cursor-pointer shrink-0"
-                title="Clear search"
-                aria-label="Clear search"
-              >
-                <X size={18} strokeWidth={2.5} />
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* ── Tool Grid ──────────────────────────────────────────────────────── */}
       <div className="container mx-auto px-4 pb-32 min-h-[40vh]">
 
-        {/* Compact Sponsored Pills — only shown when not searching */}
+        {/* Compact Sponsored Pills */}
         {!searchQuery && (
           <div className="max-w-7xl mx-auto mb-16 flex flex-col sm:flex-row gap-4">
-
-            {/* AI Skills Marketplace pill */}
             <a
               href="https://skillsmp.com"
               onClick={(e) => handleSponsoredClick(e, "https://skillsmp.com", "https://www.profitablecpmratenetwork.com/h43kkn7u?key=88c277e1a33e196352cd3357f6403fe4")}
@@ -80,7 +48,6 @@ export default function SearchableToolGrid() {
               <ExternalLink size={14} className="text-indigo-500/50 group-hover:text-indigo-400 ml-auto shrink-0 transition-colors" />
             </a>
 
-            {/* Claude Certification pill */}
             <a
               href="https://anthropic.skilljar.com"
               onClick={(e) => handleSponsoredClick(e, "https://anthropic.skilljar.com", "https://omg10.com/4/10819596")}
@@ -95,7 +62,6 @@ export default function SearchableToolGrid() {
               </div>
               <ExternalLink size={14} className="text-rose-500/50 group-hover:text-rose-400 ml-auto shrink-0 transition-colors" />
             </a>
-
           </div>
         )}
 
@@ -119,7 +85,6 @@ export default function SearchableToolGrid() {
                   ))}
                 </div>
 
-                {/* Smartlink CTA — appears after 2nd category */}
                 {index === 1 && (
                   <a
                     href="https://www.profitablecpmratenetwork.com/ijdcjcbjbu?key=95dadbf472e8f7896aec68822c9bfeca"
