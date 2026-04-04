@@ -257,7 +257,182 @@ export const pseoData: PseoPage[] = [
     targetToolLink: "/tools/qr-generator",
     targetToolName: "Generate WiFi QR Code",
     iconName: "qrcode"
+  },
+
+  // JSON Formatter
+  {
+    slug: "format-json-string-online-free",
+    title: "Format JSON String Online Free | Clean Code",
+    h1: "Validate and Format JSON Files Instantly",
+    metaDescription: "Easily format, beautify, and validate your JSON strings. Error detection, syntax highlighting, and 100% private browser processing.",
+    content: [
+      "Working with massive JSON strings is a developer's nightmare without proper indentation. Our JSON Formatter transforms minified or messy JSON data into highly readable, tree-structured formats.",
+      "Beyond basic beautification, the tool includes instantaneous syntax validation. It pinpoints exactly which line and character is breaking your code—saving you hours of debugging.",
+      "Since all processing is strictly executed using client-side JavaScript, your sensitive API payloads or configuration files are never sent to external servers."
+    ],
+    targetToolLink: "/tools/json-formatter",
+    targetToolName: "Format JSON Now",
+    iconName: "fileText"
+  },
+  {
+    slug: "online-json-validator-tool",
+    title: "Online JSON Validator Tool | Free Syntax Checker",
+    h1: "Verify and Debug JSON Data with Precision",
+    metaDescription: "Quickly validate your JSON payloads online. Find syntax errors, missing commas, and brace mismatches instantly. 100% safe and secure.",
+    content: [
+      "A single misplaced comma in a JSON file can crash your entire application. Our Online JSON Validator acts as an automated QA engineer, parsing your data against strict ECMA specification standards.",
+      "Built for developers to solve problems fast, it immediately highlights the problematic row preventing compilation.",
+      "Forget downloading heavy IDEs just to check a payload. Paste your text, validate it locally, and get back to building your architecture."
+    ],
+    targetToolLink: "/tools/json-formatter",
+    targetToolName: "Validate JSON Data",
+    iconName: "zap"
+  },
+
+  // Code Beautifier
+  {
+    slug: "beautify-javascript-code-online",
+    title: "Beautify JavaScript Code Online | Code Formatter",
+    h1: "Clean and Format JavaScript Code Free",
+    metaDescription: "Make your messy JS, HTML, and CSS code beautifully indented and readable. Free developer tool for instant code formatting.",
+    content: [
+      "Inheriting legacy code or dealing with minified files often means staring at a wall of unreadable text. Our Code Beautifier takes your compressed strings and unpacks them into pristine, PEP/Standard compliant structures.",
+      "Supporting Javascript, CSS, and HTML out-of-the-box, it intelligently handles nested callbacks, complex DOM hierarchies, and dense stylesheet rules.",
+      "Experience local, zero-latency code transformation that respects your source privacy fully."
+    ],
+    targetToolLink: "/tools/code-beautifier",
+    targetToolName: "Beautify Code",
+    iconName: "sparkles"
+  },
+
+  // PNG to JPG
+  {
+    slug: "convert-png-to-jpg-online-free",
+    title: "Convert PNG to JPG Online Free | Image Converter",
+    h1: "Change PNG Images to High Quality JPGs",
+    metaDescription: "Reduce file sizes by converting heavy PNG files into web-friendly JPG images. Fast, local, and utterly secure conversion.",
+    content: [
+      "While PNGs are excellent for transparent graphics, they often carry massive file sizes unsuitable for web performance. Our PNG to JPG converter solves this instantly.",
+      "By stripping the alpha channel and properly applying standard compression, you can reduce server load and boost your site speed.",
+      "Operating locally within your browser, your proprietary images are transformed safely without ever hitting cloud API bottlenecks."
+    ],
+    targetToolLink: "/tools/png-to-jpg",
+    targetToolName: "Convert Image Now",
+    iconName: "image"
+  },
+
+  // JPG to PNG
+  {
+    slug: "convert-jpg-to-png-transparent-background",
+    title: "Convert JPG to PNG Transparent Support | Free Optimizer",
+    h1: "Convert JPG Pictures to PNG Format Offline",
+    metaDescription: "Upgrade your JPG files into the lossless PNG format. Perfect for graphic design and web integration. 100% free tool.",
+    content: [
+      "Sometimes a project demands a strict PNG format requirement for compatibility with vector software or specific printing interfaces. Our JPG to PNG converter handles this with 1:1 pixel fidelity.",
+      "With high-speed local processing, you don't have to wait in queues like other freemium services force you to.",
+      "Transform your photographs into the absolute highest standard format securely today."
+    ],
+    targetToolLink: "/tools/jpg-to-png",
+    targetToolName: "Convert to PNG",
+    iconName: "image"
+  },
+
+  // Split PDF
+  {
+    slug: "extract-pages-from-pdf-online",
+    title: "Extract Pages From PDF Online | Split PDF Tool",
+    h1: "Split and Extract Specific PDF Pages",
+    metaDescription: "Easily extract one page or a range of pages from a large PDF document. Fast, safe, and works entirely in your browser.",
+    content: [
+      "When dealing with massive 300-page manuals or financial disclosures, you often only need a crucial single page or a small chapter. Our Split PDF tool is the absolute perfect utility for this.",
+      "Simply upload the document into the local browser engine, type the page range you require (e.g., 5-12), and hit extract.",
+      "Your new document is instantly provided to you in perfect visual fidelity without any upload risk."
+    ],
+    targetToolLink: "/tools/split-pdf",
+    targetToolName: "Split PDF Files",
+    iconName: "fileStack"
+  },
+
+  // Image to PDF
+  {
+    slug: "convert-multiple-images-to-pdf",
+    title: "Convert Multiple Images to PDF Free | Online Binder",
+    h1: "Turn Your Photos Into a Single PDF Document",
+    metaDescription: "Select multiple JPG or PNG images and instantly merge them into a single, scrollable PDF file. Perfect for email attachments and archiving.",
+    content: [
+      "Sending 15 different photographs via email is a terrible experience for both the sender and the receiver. Convert them into a single, professional PDF document instantly.",
+      "Our Image to PDF utility allows you to drag-and-drop your gallery, re-order the visual sequence, and bind them all together natively in your browser.",
+      "No file limits, no hidden premium fees—just raw utility."
+    ],
+    targetToolLink: "/tools/image-to-pdf",
+    targetToolName: "Create PDF from Images",
+    iconName: "fileStack"
+  },
+
+  // Lorem Ipsum
+  {
+    slug: "generate-lorem-ipsum-dummy-text",
+    title: "Generate Lorem Ipsum Dummy Text | Designer Free Tool",
+    h1: "Instant Lorem Ipsum Text Generator",
+    metaDescription: "Quickly generate paragraphs of professional placeholder text for mockups, UI design, and typography tests.",
+    content: [
+      "No design is complete without content, but waiting for copywriters halts production. Use our classic Lorem Ipsum generator to instantly populate your Figma or Adobe XD mockups.",
+      "Choose exactly how many paragraphs, words, or bytes you need, and generate randomized, non-distracting Latin placeholder text.",
+      "Ensure your UI formatting and typography scales perfectly without the distraction of real content."
+    ],
+    targetToolLink: "/tools/lorem-ipsum",
+    targetToolName: "Generate Placeholder Text",
+    iconName: "fileText"
+  },
+
+  // Case Converter
+  {
+    slug: "convert-text-to-title-case-online",
+    title: "Convert Text to Title Case Online | Free Formatting",
+    h1: "Instantly Fix Text Formatting and Capitalization",
+    metaDescription: "Easily convert any text string into Title Case, lowercase, UPPERCASE, or sentence case. Fast processing for writers and coders.",
+    content: [
+      "Inconsistent capitalization ruins the professionalism of blog posts, academic papers, and website headers. Our Case Converter fixes everything with a single click.",
+      "Need to transform an entire heavily-capitalized legal document into readable sentence case? Done. Want to properly format a headline into Title Case? Handled.",
+      "It operates instantly on your device, handling thousands of words without lag."
+    ],
+    targetToolLink: "/tools/case-converter",
+    targetToolName: "Convert Text Case",
+    iconName: "fileText"
+  },
+
+  // Image Resizer
+  {
+    slug: "resize-image-to-exact-pixels",
+    title: "Resize Image to Exact Pixels Online | Photo Resizer",
+    h1: "Scale Images to Exact Dimensions Instantly",
+    metaDescription: "Need an image to be exactly 1920x1080 or 800x800? Use our free resizing tool to stretch or crop images to your strict constraints.",
+    content: [
+      "Social media platforms and government application portals have incredibly strict dimensional and size limits. Our image resizer puts precise control in your hands.",
+      "Just upload your file, enter your target width and height, and choose whether to maintain aspect ratio or execute a hard-stretch.",
+      "Achieve pixel-perfect compliance locally on your machine."
+    ],
+    targetToolLink: "/tools/image-resizer",
+    targetToolName: "Resize Image Now",
+    iconName: "image"
+  },
+
+  // AI Agent Skills Creator
+  {
+    slug: "generate-claude-ai-skills-md-file",
+    title: "Generate Claude AI Skills.md File | Pro AI Agent Tool",
+    h1: "Create Custom Skills for Claude, Custom GPTs, or Deepmind",
+    metaDescription: "Generate professional SKILL.md and SYSTEM.md instructions for autonomous AI agents. The ultimate free prompt architect tool.",
+    content: [
+      "Building cutting-edge AI pipelines like Raptor Axiom or generic AutoGPTs requires strict, markdown-based system instructions. Our AI Agent Skills Creator automates this engineering.",
+      "By answering a few simple questions, the tool dynamically generates robust guidelines detailing formatting, rules, and behavioral constraints that AI models understand perfectly.",
+      "Elevate your AI development workflow from amateur tinkering to elite, predictable automation."
+    ],
+    targetToolLink: "/tools/ai-agent-creator",
+    targetToolName: "Build AI Skill Setup",
+    iconName: "zap"
   }
+
 ];
 
 export const getIcon = (name: PseoPage["iconName"]): LucideIcon => {
