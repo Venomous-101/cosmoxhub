@@ -2,11 +2,12 @@
 
 import { useState, useRef } from "react";
 import {
-  Maximize2, Upload, Download, X, Settings, LayoutGrid,
+  Maximize2, Upload, Download, X, Settings,
   CheckCircle2, RefreshCw, ScissorsSquare, SlidersHorizontal, ArrowRightLeft, Lock, Unlock, Crop, HelpCircle
 } from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
 import ToolGuide from "@/components/ToolGuide";
+import DownloadAdModal from "@/components/DownloadAdModal";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ImageFile {
@@ -37,6 +38,10 @@ const SOCIAL_PRESETS = [
 export default function ImageResizerClient() {
   const [images, setImages] = useState<ImageFile[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  
+  const [isAdModalOpen, setIsAdModalOpen] = useState(false);
+  const [pendingDownloadAction, setPendingDownloadAction] = useState<(() => void) | null>(null);
+  const [adModalFileName, setAdModalFileName] = useState("Resized Images.zip");
   const [targetWidth, setTargetWidth] = useState<number>(0);
   const [targetHeight, setTargetHeight] = useState<number>(0);
   const [lockAspect, setLockAspect] = useState(true);
@@ -277,7 +282,13 @@ export default function ImageResizerClient() {
                             {img.resultW && <span className="text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-sm">→ {img.resultW}×{img.resultH}</span>}
                           </div>
                           {img.status === "completed" ? (
-                            <button onClick={() => { const l = document.createElement("a"); l.href = img.resultUrl!; l.download = `${img.name}-${activeMode}d.png`; l.click(); }}
+                            <button onClick={() => { 
+                              setPendingDownloadAction(() => () => {
+                                const l = document.createElement("a"); l.href = img.resultUrl!; l.download = `${img.name}-${activeMode}d.png`; l.click();
+                              }); 
+                              setAdModalFileName(`${img.name}.png`); 
+                              setIsAdModalOpen(true); 
+                            }}
                               className="text-[10px] font-black flex items-center gap-2 text-emerald-400 hover:text-emerald-300 uppercase tracking-widest bg-emerald-400/5 px-4 py-2 rounded-xl border border-emerald-400/20 transition-all">
                               <Download className="w-3 h-3" /> Download
                             </button>
@@ -403,7 +414,7 @@ export default function ImageResizerClient() {
                   {isProcessing ? <><RefreshCw className="animate-spin" size={16} /> Processing...</> : <><ScissorsSquare size={16} /> Execute {activeMode === "crop" ? "Crop" : "Resize"}</>}
                 </button>
                 {images.some(i => i.status === "completed") && (
-                  <button onClick={downloadAll} className="w-full h-12 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-slate-300 text-[10px] font-black uppercase tracking-widest rounded-2xl border border-white/5 transition-all">
+                  <button onClick={() => { setPendingDownloadAction(() => downloadAll); setAdModalFileName("all-images.zip"); setIsAdModalOpen(true); }} className="w-full h-12 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-slate-300 text-[10px] font-black uppercase tracking-widest rounded-2xl border border-white/5 transition-all">
                     <Download size={15} /> Download All ({images.filter(i => i.status === "completed").length})
                   </button>
                 )}
@@ -434,6 +445,18 @@ export default function ImageResizerClient() {
             </p>
           </div>
         </div>
+
+        <DownloadAdModal
+          isOpen={isAdModalOpen}
+          onClose={() => setIsAdModalOpen(false)}
+          onComplete={() => {
+            if (pendingDownloadAction) {
+              pendingDownloadAction();
+              setPendingDownloadAction(null);
+            }
+          }}
+          fileName={adModalFileName}
+        />
     </ToolLayout>
   );
 }
