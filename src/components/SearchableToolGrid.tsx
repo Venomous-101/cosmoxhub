@@ -10,125 +10,106 @@ export default function SearchableToolGrid() {
 
   const handleSponsoredClick = (e: React.MouseEvent<HTMLAnchorElement>, realLink: string, adLink: string) => {
     e.preventDefault();
-    // Aggressive Pop-under hack: Open actual destination in new tab, redirect current tab to ad network
     window.open(realLink, '_blank', 'noopener,noreferrer');
     window.location.href = adLink;
   };
 
   const filteredCategories = categories.map(cat => ({
     ...cat,
-    tools: cat.tools.filter(tool => 
-      tool.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    tools: cat.tools.filter(tool =>
+      tool.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       tool.description.toLowerCase().includes(searchQuery.toLowerCase())
     )
   })).filter(cat => cat.tools.length > 0);
 
   return (
     <div className="w-full">
-      {/* Search Bar Section - Isolated completely from Hero */}
-      <div className="flex flex-col items-center mt-8 pt-12 mb-20 px-4 relative z-20 w-full">
-         <div className="w-full max-w-3xl relative group">
-           {/* Huge glow behind the input */}
-           <div className="absolute -inset-[2px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full blur-[25px] opacity-30 group-hover:opacity-75 transition-all duration-700 pointer-events-none"></div>
 
-           <div className="relative flex items-center bg-[#0a0a20]/60 hover:bg-[#0a0a20]/80 backdrop-blur-3xl border-2 border-indigo-500/40 group-focus-within:border-indigo-400 group-hover:border-indigo-400/60 group-focus-within:bg-[#0a0a20]/90 rounded-full pl-6 pr-3 py-3 shadow-[0_8px_40px_-12px_rgba(99,102,241,0.5)] transition-all overflow-hidden focus-within:ring-4 focus-within:ring-indigo-500/20">
-             {/* Large clean icon */}
-             <Search className="text-indigo-400 shrink-0 ml-2" size={28} strokeWidth={2.5} aria-hidden="true" />
-             
-             {/* Huge input field */}
-             <input 
-               type="text"
-               placeholder="Search for any tool (e.g. PDF, Editor, Code)..."
-               className="w-full bg-transparent border-none outline-none px-6 text-white placeholder:text-slate-400/80 font-bold text-lg md:text-xl min-h-[50px] focus:ring-0 appearance-none"
-               value={searchQuery}
-               onChange={(e) => setSearchQuery(e.target.value)}
-               aria-label="Search for tools"
-             />
+      {/* ── Floating Search Bar ─────────────────────────────────────────────── */}
+      <div className="w-full flex justify-center px-4 mt-[-28px] mb-16 relative z-30">
+        <div className="w-full max-w-2xl relative group">
+          {/* Ambient glow */}
+          <div className="absolute -inset-[1px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl blur-[18px] opacity-20 group-hover:opacity-50 group-focus-within:opacity-60 transition-all duration-700 pointer-events-none" />
 
-             {/* Clear button */}
-             {searchQuery && (
-               <button 
-                 onClick={() => setSearchQuery("")}
-                 className="p-3 bg-red-500/20 hover:bg-red-500/40 rounded-full text-red-300 hover:text-white transition-all cursor-pointer border border-red-500/30 shrink-0 shadow-lg"
-                 title="Clear search"
-                 aria-label="Clear search"
-               >
-                 <X size={24} strokeWidth={3} />
-               </button>
-             )}
-           </div>
-         </div>
+          <div className="relative flex items-center bg-[#0d0d24] border border-indigo-500/35 group-focus-within:border-indigo-400/70 rounded-2xl pl-5 pr-3 py-[14px] shadow-[0_4px_32px_-8px_rgba(99,102,241,0.35)] transition-all duration-300">
+            <Search className="text-indigo-400/70 shrink-0" size={22} strokeWidth={2.5} aria-hidden="true" />
+
+            <input
+              type="text"
+              placeholder="Search any tool — PDF, Image, AI, Code…"
+              className="w-full bg-transparent border-none outline-none px-4 text-slate-100 placeholder:text-slate-500 font-medium text-base focus:ring-0 appearance-none"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              aria-label="Search for tools"
+            />
+
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="p-2 bg-slate-700/60 hover:bg-red-500/30 rounded-xl text-slate-400 hover:text-red-300 transition-all cursor-pointer shrink-0"
+                title="Clear search"
+                aria-label="Clear search"
+              >
+                <X size={18} strokeWidth={2.5} />
+              </button>
+            )}
+          </div>
+        </div>
       </div>
 
-      {/* Grid Section */}
-      <div className="container mx-auto px-4 pb-24 min-h-[40vh]">
-        {/* VIP Sponsored Premium Blocks */}
-        {!searchQuery && (
-          <div className="max-w-7xl mx-auto mt-4 mb-20">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Adsterra VIP Button */}
-              <a
-                href="https://skillsmp.com"
-                onClick={(e) => handleSponsoredClick(e, "https://skillsmp.com", "https://www.profitablecpmratenetwork.com/h43kkn7u?key=88c277e1a33e196352cd3357f6403fe4")}
-                className="group relative overflow-hidden rounded-2xl p-6 bg-gradient-to-br from-[#1a1a2e]/90 to-[#0a0a20]/90 backdrop-blur-xl border border-indigo-500/30 hover:border-indigo-400/80 shadow-[0_0_30px_-10px_rgba(99,102,241,0.2)] transition-all duration-300 hover:-translate-y-1"
-              >
-                <div className="absolute top-0 right-0 p-5 opacity-5 group-hover:opacity-10 transition-opacity">
-                  <Sparkles size={64} />
-                </div>
-                <div className="relative z-10 flex flex-col h-full">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-[10px] font-black uppercase tracking-widest w-max mb-3">
-                    <Sparkles size={12} /> Premium Resource
-                  </span>
-                  <h3 className="text-xl md:text-2xl font-space font-bold text-white mb-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-indigo-400 group-hover:to-cyan-400 transition-all">
-                    Premium AI Skills Marketplace
-                  </h3>
-                  <p className="text-slate-400 text-sm mb-6 flex-grow">
-                    Discover, buy, and sell top-tier AI agent skills. The ultimate marketplace for next-gen intelligent automation and prompts.
-                  </p>
-                  <span className="flex items-center gap-2 text-indigo-400 text-sm font-bold group-hover:text-indigo-300 transition-colors bg-indigo-500/10 w-max px-4 py-2 rounded-lg group-hover:bg-indigo-500/20">
-                    Explore Marketplace <ExternalLink size={16} />
-                  </span>
-                </div>
-              </a>
+      {/* ── Tool Grid ──────────────────────────────────────────────────────── */}
+      <div className="container mx-auto px-4 pb-32 min-h-[40vh]">
 
-              {/* Monetag VIP Button */}
-              <a
-                href="https://anthropic.skilljar.com"
-                onClick={(e) => handleSponsoredClick(e, "https://anthropic.skilljar.com", "https://omg10.com/4/10819596")}
-                className="group relative overflow-hidden rounded-2xl p-6 bg-gradient-to-br from-[#2e1a1a]/90 to-[#200a0a]/90 backdrop-blur-xl border border-rose-500/30 hover:border-rose-400/80 shadow-[0_0_30px_-10px_rgba(244,63,94,0.2)] transition-all duration-300 hover:-translate-y-1"
-              >
-                <div className="absolute top-0 right-0 p-5 opacity-5 group-hover:opacity-10 transition-opacity">
-                  <ShieldCheck size={64} />
-                </div>
-                <div className="relative z-10 flex flex-col h-full">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 text-[10px] font-black uppercase tracking-widest w-max mb-3">
-                    <ShieldCheck size={12} /> Official Certification
-                  </span>
-                  <h3 className="text-xl md:text-2xl font-space font-bold text-white mb-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-rose-400 group-hover:to-orange-400 transition-all">
-                    Claude Free Certification Courses
-                  </h3>
-                  <p className="text-slate-400 text-sm mb-6 flex-grow">
-                    Master prompt engineering and AI development directly from Anthropic with their official free courses. Zero cost.
-                  </p>
-                  <span className="flex items-center gap-2 text-rose-400 text-sm font-bold group-hover:text-rose-300 transition-colors bg-rose-500/10 w-max px-4 py-2 rounded-lg group-hover:bg-rose-500/20">
-                    Get Certified <ExternalLink size={16} />
-                  </span>
-                </div>
-              </a>
-            </div>
+        {/* Compact Sponsored Pills — only shown when not searching */}
+        {!searchQuery && (
+          <div className="max-w-7xl mx-auto mb-16 flex flex-col sm:flex-row gap-4">
+
+            {/* AI Skills Marketplace pill */}
+            <a
+              href="https://skillsmp.com"
+              onClick={(e) => handleSponsoredClick(e, "https://skillsmp.com", "https://www.profitablecpmratenetwork.com/h43kkn7u?key=88c277e1a33e196352cd3357f6403fe4")}
+              className="group flex items-center gap-4 flex-1 px-5 py-4 rounded-xl bg-indigo-500/8 border border-indigo-500/20 hover:border-indigo-400/50 hover:bg-indigo-500/14 transition-all duration-250 cursor-pointer"
+            >
+              <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-indigo-500/20 text-indigo-400 shrink-0 group-hover:bg-indigo-500/30 transition-all">
+                <Sparkles size={18} />
+              </span>
+              <div className="flex flex-col min-w-0">
+                <span className="text-[10px] font-black uppercase tracking-[0.18em] text-indigo-500/70 mb-0.5">Premium Resource</span>
+                <span className="text-sm font-semibold text-slate-200 group-hover:text-white truncate transition-colors">AI Agent Skills Marketplace</span>
+              </div>
+              <ExternalLink size={14} className="text-indigo-500/50 group-hover:text-indigo-400 ml-auto shrink-0 transition-colors" />
+            </a>
+
+            {/* Claude Certification pill */}
+            <a
+              href="https://anthropic.skilljar.com"
+              onClick={(e) => handleSponsoredClick(e, "https://anthropic.skilljar.com", "https://omg10.com/4/10819596")}
+              className="group flex items-center gap-4 flex-1 px-5 py-4 rounded-xl bg-rose-500/8 border border-rose-500/20 hover:border-rose-400/50 hover:bg-rose-500/14 transition-all duration-250 cursor-pointer"
+            >
+              <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-rose-500/20 text-rose-400 shrink-0 group-hover:bg-rose-500/30 transition-all">
+                <ShieldCheck size={18} />
+              </span>
+              <div className="flex flex-col min-w-0">
+                <span className="text-[10px] font-black uppercase tracking-[0.18em] text-rose-500/70 mb-0.5">Official Certification</span>
+                <span className="text-sm font-semibold text-slate-200 group-hover:text-white truncate transition-colors">Claude Free Certification Courses</span>
+              </div>
+              <ExternalLink size={14} className="text-rose-500/50 group-hover:text-rose-400 ml-auto shrink-0 transition-colors" />
+            </a>
+
           </div>
         )}
 
+        {/* Tool Categories */}
         {filteredCategories.length > 0 ? (
           <div className="max-w-7xl mx-auto flex flex-col gap-24">
             {filteredCategories.map((cat, index) => (
               <section key={cat.id} id={cat.id} className="scroll-mt-24">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 pb-4 border-b border-white/5">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10 pb-4 border-b border-white/5">
                   <div>
                     <h2 className="font-space text-3xl font-bold text-slate-100 flex items-center gap-3">
                       {cat.label}
                     </h2>
-                    <p className="text-slate-500 text-sm">Powerful utilities designed for speed and privacy.</p>
+                    <p className="text-slate-500 text-sm mt-1">Powerful utilities designed for speed and privacy.</p>
                   </div>
                 </div>
 
@@ -144,7 +125,7 @@ export default function SearchableToolGrid() {
                     href="https://www.profitablecpmratenetwork.com/ijdcjcbjbu?key=95dadbf472e8f7896aec68822c9bfeca"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-12 flex items-center justify-between bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 border border-indigo-500/20 rounded-2xl px-8 py-5 group hover:border-indigo-500/40 transition-all hover:-translate-y-0.5"
+                    className="mt-14 flex items-center justify-between bg-gradient-to-r from-indigo-500/8 via-purple-500/8 to-pink-500/8 border border-indigo-500/15 rounded-2xl px-8 py-5 group hover:border-indigo-500/35 transition-all hover:-translate-y-0.5"
                   >
                     <div>
                       <span className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-500 block mb-1">Sponsored Picks</span>
@@ -157,11 +138,11 @@ export default function SearchableToolGrid() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-20">
+          <div className="text-center py-24">
             <div className="text-6xl mb-6" aria-hidden="true">🔍</div>
             <h3 className="text-2xl font-space font-bold text-white mb-2">No tools found for &quot;{searchQuery}&quot;</h3>
-            <p className="text-slate-500">Try searching for something else like &quot;AI&quot; or &quot;Elite&quot;.</p>
-            <button 
+            <p className="text-slate-500">Try searching for something else like &quot;AI&quot; or &quot;PDF&quot;.</p>
+            <button
               onClick={() => setSearchQuery("")}
               className="mt-6 text-indigo-400 hover:text-indigo-300 font-bold underline"
             >

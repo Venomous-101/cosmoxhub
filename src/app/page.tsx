@@ -15,7 +15,7 @@ export default function HomePage() {
       <Navbar />
       <main className="min-h-screen">
         {/* Sleek Premium Hero */}
-        <section className="pt-24 pb-20 md:pt-32 md:pb-28 text-center relative overflow-hidden flex flex-col items-center justify-center">
+        <section className="pt-24 pb-16 md:pt-32 md:pb-20 text-center relative overflow-hidden flex flex-col items-center justify-center">
           {/* Subtle Glows */}
           <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[800px] h-[400px] pointer-events-none bg-[radial-gradient(ellipse,rgba(99,102,241,0.15)_0%,transparent_60%)]" />
           <div className="absolute top-[20%] right-[-10%] w-[500px] h-[500px] pointer-events-none bg-[radial-gradient(ellipse,rgba(239,68,68,0.05)_0%,transparent_60%)]" />
