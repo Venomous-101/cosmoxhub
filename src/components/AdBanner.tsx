@@ -37,8 +37,10 @@ export default function AdBanner({ type, label = "Advertisement", className = ""
 
   if (type === "native") {
     return (
-      <div className={`flex flex-col items-center justify-center my-8 bg-transparent w-full min-h-[200px] rounded-2xl ${className}`}>
-        <span className="text-[10px] text-slate-500 uppercase tracking-widest mb-2 font-medium">{label}</span>
+      <div className={`flex flex-col items-center justify-center w-full min-h-[200px] rounded-2xl ${className}`}>
+        <div className="flex items-center gap-2 mb-4 px-3 py-1 bg-white/5 border border-white/10 rounded-full">
+          <span className="text-[9px] text-slate-400 uppercase tracking-tighter font-bold">{label}</span>
+        </div>
         <div ref={nativeContainerRef} className="w-full flex justify-center" />
       </div>
     );
@@ -67,16 +69,18 @@ export default function AdBanner({ type, label = "Advertisement", className = ""
   if (!adConfig) return null;
 
   return (
-    <div className={`flex flex-col items-center justify-center my-8 bg-transparent w-full ${className}`}>
-      <span className="text-[10px] text-slate-500 uppercase tracking-widest mb-4 font-semibold opacity-60">{label}</span>
+    <div className={`flex flex-col items-center justify-center bg-transparent w-full ${className}`}>
+      <div className="flex items-center gap-2 mb-4 px-3 py-1 bg-white/5 border border-white/10 rounded-full">
+        <span className="text-[9px] text-slate-400 uppercase tracking-widest font-bold opacity-70">{label}</span>
+      </div>
       <iframe
         srcDoc={generateAdHtml(adConfig.w, adConfig.h, adConfig.key)}
         width={adConfig.w}
         height={adConfig.h}
         title={`${label || type} Ad`}
-        className="border-0 m-0 p-0 block bg-transparent rounded-lg mx-auto"
+        className="border-0 m-0 p-0 block bg-transparent rounded-lg"
         scrolling="no"
-        style={{ width: `${adConfig.w}px`, height: `${adConfig.h}px` }}
+        style={{ width: `${adConfig.w}px`, height: `${adConfig.h}px`, maxWidth: '100%' }}
       />
     </div>
   );
