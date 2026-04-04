@@ -106,17 +106,17 @@ export default function HomePageContent() {
       {/* ── Tool Grid (search state passed as props) ────────────────────────── */}
       <SearchableToolGrid searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
-      {/* ── Ads + Footer CTA ────────────────────────────────────────────────── */}
-      <div className="container mx-auto px-4 pb-24">
-        <div className="mt-20">
+      {/* ── Ads + Footer CTA (MASSIVE SPACING) ──────────────────────────────── */}
+      <div className="container mx-auto px-4 pb-48">
+        <div className="mt-32 mb-16">
           <AdBanner type="native" label="Recommended for you" />
         </div>
-        <div className="mt-16 flex justify-center">
+        <div className="mt-24 mb-16 flex justify-center">
           <AdBanner type="leaderboard" label="Sponsored" />
         </div>
 
         {/* Bottom CTA */}
-        <div className="mt-32 w-full relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-indigo-900/40 via-purple-900/20 to-[#050510] border border-indigo-500/20 p-12 md:p-20 text-center shadow-2xl">
+        <div className="mt-40 mb-24 w-full relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-indigo-900/40 via-purple-900/20 to-[#050510] border border-indigo-500/20 p-16 md:p-24 text-center shadow-[0_20px_100px_rgba(99,102,241,0.15)] flex flex-col items-center justify-center">
           <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 pointer-events-none mix-blend-overlay"></div>
 
           <div className="relative z-10 flex flex-col items-center">
