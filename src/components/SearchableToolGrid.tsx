@@ -31,7 +31,7 @@ export default function SearchableToolGrid({ searchQuery, setSearchQuery }: Sear
 
         {/* Compact Sponsored Pills */}
         {!searchQuery && (
-          <div className="max-w-7xl mx-auto mb-24 flex flex-col md:flex-row gap-8">
+          <div className="max-w-7xl mx-auto mb-32 flex flex-col md:flex-row gap-8">
             <a
               href="https://skillsmp.com"
               onClick={(e) => handleSponsoredClick(e, "https://skillsmp.com", "https://www.profitablecpmratenetwork.com/h43kkn7u?key=88c277e1a33e196352cd3357f6403fe4")}
