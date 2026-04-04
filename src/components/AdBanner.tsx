@@ -67,14 +67,14 @@ export default function AdBanner({ type, label = "Advertisement", className = ""
   if (!adConfig) return null;
 
   return (
-    <div className={`flex flex-col items-center justify-center my-8 bg-transparent ${adConfig.cl} ${className}`}>
-      <span className="text-[10px] text-slate-500 uppercase tracking-widest mb-2 font-medium">{label}</span>
+    <div className={`flex flex-col items-center justify-center my-8 bg-transparent w-full ${className}`}>
+      <span className="text-[10px] text-slate-500 uppercase tracking-widest mb-4 font-semibold opacity-60">{label}</span>
       <iframe
         srcDoc={generateAdHtml(adConfig.w, adConfig.h, adConfig.key)}
         width={adConfig.w}
         height={adConfig.h}
         title={`${label || type} Ad`}
-        className="border-0 m-0 p-0 block bg-transparent rounded-md"
+        className="border-0 m-0 p-0 block bg-transparent rounded-lg mx-auto"
         scrolling="no"
         style={{ width: `${adConfig.w}px`, height: `${adConfig.h}px` }}
       />

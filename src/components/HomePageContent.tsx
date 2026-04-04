@@ -113,9 +113,11 @@ export default function HomePageContent() {
 
       <div className="container mx-auto px-4">
         {/* Leaderboard Ad Container - Isolated and Clipped */}
-        <div className="w-full max-w-4xl mx-auto bg-[#04040a]/80 backdrop-blur-md border border-indigo-500/10 rounded-[2rem] p-6 flex flex-col justify-center items-center shadow-xl relative overflow-hidden min-h-[140px]">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse,rgba(236,72,153,0.03)_0%,transparent_80%)] pointer-events-none" />
-          <AdBanner type="leaderboard" label="Sponsored" />
+        <div className="w-full max-w-5xl mx-auto bg-[#04040a]/80 backdrop-blur-xl border border-indigo-500/10 rounded-[2.5rem] p-4 md:p-8 flex items-center justify-center shadow-[0_30px_100px_-20px_rgba(0,0,0,0.8)] relative overflow-hidden min-h-[160px]">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse,rgba(236,72,153,0.05)_0%,transparent_80%)] pointer-events-none" />
+          <div className="relative z-10 w-full flex justify-center items-center">
+            <AdBanner type="leaderboard" label="Discover Sponsored Resources" className="my-0" />
+          </div>
         </div>
 
         {/* Rigid Spacer */}
@@ -136,17 +138,29 @@ export default function HomePageContent() {
             <p className="text-lg md:text-xl text-indigo-200/80 max-w-2xl mx-auto mb-12 leading-relaxed font-light">
               Everything you need to grow your productivity. High-performance tools that don&apos;t compromise on privacy or speed.
             </p>
-            <div className="flex flex-col w-full sm:flex-row items-center justify-center gap-6 mt-4">
-              <a href="mailto:eclipsonai@gmail.com" className="w-full sm:w-auto relative inline-flex items-center justify-center px-10 py-5 font-bold text-white bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl hover:bg-white/20 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1">
-                <span>Suggest a Tool Feature</span>
+            <div className="flex flex-col w-full sm:flex-row items-center justify-center gap-6 mt-8">
+              {/* Suggest Feature Button - High Contrast Glass */}
+              <a 
+                href="mailto:eclipsonai@gmail.com" 
+                className="w-full sm:w-auto relative inline-flex items-center justify-center px-12 py-6 font-bold text-slate-100 bg-white/5 backdrop-blur-xl border border-white/20 rounded-2xl hover:bg-white/10 hover:border-indigo-400/50 hover:text-indigo-200 transition-all duration-300 shadow-[0_0_50px_-10px_rgba(255,255,255,0.1)] hover:shadow-[0_0_50px_rgba(99,102,241,0.2)] group hover:-translate-y-1"
+              >
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <span className="relative z-10 flex items-center gap-3">
+                  Suggest a Tool Feature
+                </span>
               </a>
+
+              {/* Research Button - High Contrast Glass */}
               <a
                 href="https://omg10.com/4/10812796"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto relative inline-flex items-center justify-center px-10 py-5 font-bold text-white bg-gradient-to-r from-indigo-500/20 to-violet-500/20 backdrop-blur-md border border-indigo-500/30 rounded-2xl hover:from-indigo-500/30 hover:to-violet-500/30 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1"
+                className="w-full sm:w-auto relative inline-flex items-center justify-center px-12 py-6 font-bold text-indigo-100 bg-indigo-500/10 backdrop-blur-xl border border-indigo-500/30 rounded-2xl hover:bg-indigo-500/20 hover:border-indigo-400/60 transition-all duration-300 shadow-[0_0_50px_-10px_rgba(99,102,241,0.1)] hover:shadow-[0_0_50px_rgba(99,102,241,0.3)] group hover:-translate-y-1"
               >
-                <span>Explore Resources</span>
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <span className="relative z-10 flex items-center gap-3 text-indigo-200">
+                  Explore More Resources
+                </span>
               </a>
             </div>
           </div>

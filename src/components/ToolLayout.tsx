@@ -54,34 +54,51 @@ export default function ToolLayout({ title, description, icon: Icon, color = "#6
             >
               <Icon size={28} color={color} strokeWidth={1.8} />
             </div>
-            <div>
-              <h1 className="font-space text-3xl font-bold text-slate-100 mb-1.5 tracking-tight">
+            <div className="flex-grow pt-2">
+              <h1 className="font-space text-4xl md:text-5xl font-black text-white mb-4 tracking-tighter">
                 {title}
               </h1>
-              <p className="text-slate-400 text-base leading-relaxed max-w-2xl">
+              <p className="text-slate-400 text-lg leading-relaxed max-w-3xl font-medium">
                 {description}
               </p>
             </div>
           </div>
           
-          <AdBanner type="native" label="Sponsored Tool" className="mb-8" />
+          {/* Section Divider */}
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent my-12" />
+
+          {/* Top Ad Section */}
+          <div className="mb-16">
+            <AdBanner type="native" label="Sponsored Utility" className="rounded-3xl" />
+          </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div className="lg:col-span-9">
-              {/* Tool content */}
-              <div className="bg-[#0f111a] border border-indigo-500/10 rounded-2xl shadow-xl overflow-hidden">
-                {children}
+              {/* Tool content - Premium Container with internal padding */}
+              <div className="bg-[#0f111a]/80 backdrop-blur-sm border border-indigo-500/20 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden p-1 md:p-2">
+                <div className="bg-[#050510]/50 rounded-[2.2rem] p-6 md:p-10 border border-white/5">
+                  {children}
+                </div>
               </div>
 
-              {/* Privacy note */}
-              <div className="mt-8 px-6 py-4 bg-indigo-500/5 rounded-xl border border-indigo-500/10 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
-                  <Lock size={18} className="text-emerald-500" />
+              {/* Spacer */}
+              <div className="h-12" />
+
+              {/* Privacy note - Separated and Boxed */}
+              <div className="px-8 py-6 bg-emerald-500/5 rounded-3xl border border-emerald-500/10 flex flex-col md:flex-row items-center gap-6 shadow-lg">
+                <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center shrink-0 border border-emerald-500/20">
+                  <Lock size={24} className="text-emerald-500" />
                 </div>
-                <p className="text-slate-400 text-sm leading-relaxed m-0">
-                  <strong className="text-slate-200 font-semibold">100% Private.</strong> All processing happens in your browser. No files are uploaded to any server. Your data never leaves your device.
-                </p>
+                <div>
+                  <h4 className="text-emerald-400 font-bold text-lg mb-1">Your Privacy is Guaranteed</h4>
+                  <p className="text-slate-400 text-sm leading-relaxed m-0">
+                    <strong className="text-slate-200 font-semibold underline decoration-emerald-500/30">100% Local Browser Based.</strong> All processing happens purely in your browser memory. No files ever touch our servers. Use with total confidence.
+                  </p>
+                </div>
               </div>
+
+              {/* Huge Spacer before Related Meta */}
+              <div className="h-24" />
             </div>
 
             {/* Sidebar for Desktop */}
