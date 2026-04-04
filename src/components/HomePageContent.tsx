@@ -106,20 +106,35 @@ export default function HomePageContent() {
       {/* ── Tool Grid (search state passed as props) ────────────────────────── */}
       <SearchableToolGrid searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
-      {/* ── Ads + Footer CTA (MASSIVE SPACING) ──────────────────────────────── */}
-      <div className="container mx-auto px-4 pb-48">
-        <div className="mt-32 mb-16">
+      {/* ── Ads + Footer CTA (STRICT UNCOLLAPSABLE SPACING) ──────────────── */}
+      
+      {/* Rigid Spacer */}
+      <div className="w-full h-24 md:h-32 pointer-events-none" aria-hidden="true" />
+
+      <div className="container mx-auto px-4">
+        {/* Native Ad Container - Isolated and Clipped */}
+        <div className="w-full max-w-5xl mx-auto bg-[#04040a]/80 backdrop-blur-md border border-indigo-500/10 rounded-[2rem] p-6 flex flex-col justify-center items-center shadow-xl relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse,rgba(99,102,241,0.03)_0%,transparent_80%)] pointer-events-none" />
           <AdBanner type="native" label="Recommended for you" />
         </div>
-        <div className="mt-24 mb-16 flex justify-center">
+        
+        {/* Rigid Spacer */}
+        <div className="w-full h-20 md:h-24 pointer-events-none" aria-hidden="true" />
+
+        {/* Leaderboard Ad Container - Isolated and Clipped */}
+        <div className="w-full max-w-4xl mx-auto bg-[#04040a]/80 backdrop-blur-md border border-indigo-500/10 rounded-[2rem] p-6 flex flex-col justify-center items-center shadow-xl relative overflow-hidden min-h-[140px]">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse,rgba(236,72,153,0.03)_0%,transparent_80%)] pointer-events-none" />
           <AdBanner type="leaderboard" label="Sponsored" />
         </div>
 
+        {/* Rigid Spacer */}
+        <div className="w-full h-32 md:h-40 pointer-events-none" aria-hidden="true" />
+
         {/* Bottom CTA */}
-        <div className="mt-40 mb-24 w-full relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-indigo-900/40 via-purple-900/20 to-[#050510] border border-indigo-500/20 p-16 md:p-24 text-center shadow-[0_20px_100px_rgba(99,102,241,0.15)] flex flex-col items-center justify-center">
+        <div className="w-full relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-indigo-900/40 via-purple-900/20 to-[#050510] border border-indigo-500/20 p-16 md:p-24 text-center shadow-[0_20px_100px_rgba(99,102,241,0.15)] flex flex-col items-center justify-center z-10">
           <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 pointer-events-none mix-blend-overlay"></div>
 
-          <div className="relative z-10 flex flex-col items-center">
+          <div className="relative z-10 flex flex-col items-center w-full">
             <div className="w-20 h-20 bg-gradient-to-tr from-indigo-500 to-pink-500 rounded-3xl flex items-center justify-center text-4xl mb-8 shadow-[0_0_40px_rgba(99,102,241,0.5)] transform -rotate-12">
               ⚡
             </div>
@@ -127,25 +142,28 @@ export default function HomePageContent() {
               More tools coming{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-yellow-400">every week.</span>
             </h3>
-            <p className="text-lg md:text-xl text-indigo-200/80 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
+            <p className="text-lg md:text-xl text-indigo-200/80 max-w-2xl mx-auto mb-12 leading-relaxed font-light">
               Everything you need to grow your productivity. High-performance tools that don&apos;t compromise on privacy or speed.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full mt-4">
-              <a href="mailto:eclipsonai@gmail.com" className="w-full sm:w-auto group relative inline-flex items-center justify-center px-10 py-4 font-bold text-white bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl hover:bg-white/20 transition-all duration-300 overflow-hidden shadow-xl hover:shadow-2xl hover:-translate-y-1">
-                <span className="relative z-10">Suggest a Tool Feature</span>
+            <div className="flex flex-col w-full sm:flex-row items-center justify-center gap-6 mt-4">
+              <a href="mailto:eclipsonai@gmail.com" className="w-full sm:w-auto relative inline-flex items-center justify-center px-10 py-5 font-bold text-white bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl hover:bg-white/20 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1">
+                <span>Suggest a Tool Feature</span>
               </a>
               <a
                 href="https://omg10.com/4/10812796"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto group relative inline-flex items-center justify-center px-10 py-4 font-bold text-white bg-gradient-to-r from-indigo-500/20 to-violet-500/20 backdrop-blur-md border border-indigo-500/30 rounded-2xl hover:from-indigo-500/30 hover:to-violet-500/30 transition-all duration-300 overflow-hidden shadow-xl hover:shadow-2xl hover:-translate-y-1"
+                className="w-full sm:w-auto relative inline-flex items-center justify-center px-10 py-5 font-bold text-white bg-gradient-to-r from-indigo-500/20 to-violet-500/20 backdrop-blur-md border border-indigo-500/30 rounded-2xl hover:from-indigo-500/30 hover:to-violet-500/30 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1"
               >
-                <span className="relative z-10">Explore Resources</span>
+                <span>Explore Resources</span>
               </a>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Massive Rigid Spacer Before Footer */}
+      <div className="w-full h-32 md:h-48 pointer-events-none" aria-hidden="true" />
 
     </main>
   );
