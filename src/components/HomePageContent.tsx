@@ -138,29 +138,26 @@ export default function HomePageContent() {
             <p className="text-lg md:text-xl text-indigo-200/80 max-w-2xl mx-auto mb-12 leading-relaxed font-light">
               Everything you need to grow your productivity. High-performance tools that don&apos;t compromise on privacy or speed.
             </p>
-            <div className="flex flex-col w-full sm:flex-row items-center justify-center gap-6 mt-8">
-              {/* Suggest Feature Button - High Contrast Glass */}
+
+            <div className="flex flex-col w-full sm:flex-row items-center justify-center gap-8 mt-4">
+              {/* Suggest Feature Button - EXTREME GLASS */}
               <a 
                 href="mailto:eclipsonai@gmail.com" 
-                className="w-full sm:w-auto relative inline-flex items-center justify-center px-12 py-6 font-bold text-slate-100 bg-white/5 backdrop-blur-xl border border-white/20 rounded-2xl hover:bg-white/10 hover:border-indigo-400/50 hover:text-indigo-200 transition-all duration-300 shadow-[0_0_50px_-10px_rgba(255,255,255,0.1)] hover:shadow-[0_0_50px_rgba(99,102,241,0.2)] group hover:-translate-y-1"
+                className="group w-full sm:w-[340px] relative inline-flex items-center justify-center px-10 py-7 font-black uppercase tracking-[0.15em] text-white bg-white/10 backdrop-blur-3xl border-2 border-white/40 rounded-full hover:bg-white/20 hover:border-white/60 hover:scale-[1.05] transition-all duration-300 shadow-[0_0_50px_-10px_rgba(255,255,255,0.2)]"
               >
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <span className="relative z-10 flex items-center gap-3">
-                  Suggest a Tool Feature
-                </span>
+                <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <span className="relative z-10">Suggest a Feature</span>
               </a>
 
-              {/* Research Button - High Contrast Glass */}
+              {/* Research Button - EXTREME GLASS INDIGO */}
               <a
                 href="https://omg10.com/4/10812796"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto relative inline-flex items-center justify-center px-12 py-6 font-bold text-indigo-100 bg-indigo-500/10 backdrop-blur-xl border border-indigo-500/30 rounded-2xl hover:bg-indigo-500/20 hover:border-indigo-400/60 transition-all duration-300 shadow-[0_0_50px_-10px_rgba(99,102,241,0.1)] hover:shadow-[0_0_50px_rgba(99,102,241,0.3)] group hover:-translate-y-1"
+                className="group w-full sm:w-[340px] relative inline-flex items-center justify-center px-10 py-7 font-black uppercase tracking-[0.15em] text-indigo-100 bg-indigo-500/20 backdrop-blur-3xl border-2 border-indigo-400/50 rounded-full hover:bg-indigo-500/30 hover:border-indigo-400/80 hover:scale-[1.05] transition-all duration-300 shadow-[0_0_80px_-20px_rgba(99,102,241,0.5)]"
               >
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <span className="relative z-10 flex items-center gap-3 text-indigo-200">
-                  Explore More Resources
-                </span>
+                <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-indigo-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <span className="relative z-10">Explore Resources</span>
               </a>
             </div>
           </div>
