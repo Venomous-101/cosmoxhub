@@ -112,12 +112,9 @@ export default function HomePageContent() {
       <div className="w-full h-24 md:h-32 pointer-events-none" aria-hidden="true" />
 
       <div className="container mx-auto px-4">
-        {/* Leaderboard Ad Container - Tightened & Centered */}
-        <div className="w-full max-w-4xl mx-auto bg-white/[0.02] backdrop-blur-3xl border border-white/5 rounded-[2rem] p-6 grid place-items-center shadow-[0_40px_120px_-20px_rgba(0,0,0,0.5)] relative overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse,rgba(99,102,241,0.03)_0%,transparent_80%)] pointer-events-none" />
-          <div className="relative z-10 w-full flex justify-center items-center">
-            <AdBanner type="leaderboard" label="Sponsored Resource" className="my-0" />
-          </div>
+        {/* Leaderboard Ad natively placed */}
+        <div className="w-full flex justify-center">
+          <AdBanner type="leaderboard" label="Sponsored Resource" className="my-0" />
         </div>
 
         {/* Rigid Spacer */}

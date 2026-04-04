@@ -2,7 +2,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { X, ShieldCheck, Download, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import AdBanner from "./AdBanner";
 
 interface DownloadAdModalProps {
   isOpen: boolean;
@@ -161,13 +160,37 @@ export default function DownloadAdModal({
                   )}
                 </div>
 
-                {/* Ad Injection Zone */}
-                <div className="w-full bg-[#050510] border border-white/5 rounded-2xl overflow-hidden relative">
-                  <AdBanner
-                    type="native"
-                    label="Support CosmoxHub"
-                    className="!my-0 !min-h-[250px]"
-                  />
+                {/* CPAGrip Verification Zone instead of confusing Native Ad */}
+                <div className="w-full bg-[#050510] border border-indigo-500/10 rounded-2xl p-8 flex flex-col items-center justify-center relative">
+                  <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/5 to-transparent rounded-2xl pointer-events-none" />
+                  
+                  {countdown > 0 ? (
+                    <>
+                      <div className="relative w-12 h-12 mb-4">
+                        <div className="absolute inset-0 rounded-full border-t-2 border-indigo-500 animate-spin" />
+                        <div className="absolute inset-2 rounded-full border-b-2 border-pink-500 animate-[spin_1.5s_linear_infinite]" />
+                        <div className="absolute inset-4 rounded-full border-l-2 border-emerald-500 animate-[spin_2s_linear_infinite]" />
+                      </div>
+                      <p className="text-slate-300 font-medium text-sm text-center">
+                        Waiting for Offer Verification...
+                      </p>
+                      <p className="text-slate-500 text-xs mt-2 text-center max-w-[250px]">
+                        The external task window should open automatically. Close it once completed.
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <div className="w-12 h-12 bg-emerald-500/10 rounded-full flex items-center justify-center mb-4 border border-emerald-500/20">
+                        <ShieldCheck className="w-6 h-6 text-emerald-400" />
+                      </div>
+                      <p className="text-emerald-400 font-bold text-sm text-center">
+                        Verification Successful
+                      </p>
+                      <p className="text-slate-500 text-xs mt-1 text-center">
+                        Initiating secure transfer.
+                      </p>
+                    </>
+                  )}
                 </div>
               </div>
 
