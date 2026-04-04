@@ -22,6 +22,14 @@ export default function HomePage() {
 
           <div className="container mx-auto px-4 relative z-10 flex flex-col items-center max-w-5xl">
 
+            {/* Trust Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-200 text-sm md:text-base font-bold mb-8 backdrop-blur-md">
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+              </span>
+              100% Free. No Email Required.
+            </div>
 
             {/* Typography focused Header */}
             <h1 className="font-space font-extrabold text-[3.5rem] md:text-[5.5rem] text-slate-100 text-center leading-[1.05] mb-6 tracking-tight">
