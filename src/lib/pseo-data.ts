@@ -9,6 +9,8 @@ export interface PseoPage {
   targetToolLink: string;
   targetToolName: string;
   iconName: "download" | "sparkles" | "image" | "video" | "calculator" | "calendar" | "fileText" | "key" | "fileStack" | "zap" | "lock" | "message" | "qrcode"; 
+  faqs?: { question: string, answer: string }[];
+  howTo?: { name: string, description: string, steps: { name: string, text: string }[] };
 }
 
 export const pseoData: PseoPage[] = [
@@ -25,7 +27,21 @@ export const pseoData: PseoPage[] = [
     ],
     targetToolLink: "/tools/youtube-thumbnail",
     targetToolName: "Launch Thumbnail Downloader",
-    iconName: "video"
+    iconName: "video",
+    howTo: {
+      name: "How to Download a YouTube Thumbnail in HD",
+      description: "Follow these simple steps to extract and download a high-quality thumbnail from any YouTube video.",
+      steps: [
+        { name: "Copy the YouTube Video URL", text: "Go to YouTube, find the video, and copy its URL from the address bar or share button." },
+        { name: "Paste the Link", text: "Paste the copied URL into the input field on our Thumbnail Downloader page." },
+        { name: "Click Download", text: "Simply hit the download button to save the 1080p or 4K thumbnail directly to your device." }
+      ]
+    },
+    faqs: [
+      { question: "Is it legal to download YouTube thumbnails?", answer: "Yes, it is legal to download thumbnails for personal use, analysis, or inspiration. However, using them commercially might infringe on the creator's copyright. Always seek permission before using someone else's thumbnail in your own content." },
+      { question: "Can I download 4K thumbnails?", answer: "Yes, our tool extracts the highest possible resolution available for the video. If the creator uploaded a 4K thumbnail (maxresdefault), our tool will fetch it." },
+      { question: "Does this work on mobile devices?", answer: "Absolutely. Our utility works perfectly on Android and iOS browsers. Just copy the link from the YouTube app and paste it here." }
+    ]
   },
   {
     slug: "download-youtube-shorts-thumbnail-hd",
@@ -39,7 +55,20 @@ export const pseoData: PseoPage[] = [
     ],
     targetToolLink: "/tools/youtube-thumbnail",
     targetToolName: "Open Shorts Thumbnail Grabber",
-    iconName: "download"
+    iconName: "download",
+    howTo: {
+      name: "How to Extract a YouTube Shorts Thumbnail",
+      description: "Extracting a hidden thumbnail from a YouTube Short is easy with this browser utility.",
+      steps: [
+        { name: "Get the Short Link", text: "Tap the share icon on the YouTube Short and select 'Copy Link'." },
+        { name: "Enter the URL", text: "Paste the link into the extractor box and wait a millisecond for processing." },
+        { name: "Save Image", text: "Right-click or tap-and-hold the generated image to save it directly to your gallery." }
+      ]
+    },
+    faqs: [
+      { question: "Do YouTube Shorts have custom thumbnails?", answer: "Yes, creators can choose a specific frame or upload a custom thumbnail when publishing a Short. Our tool extracts exactly what is set." },
+      { question: "Are Shorts thumbnails vertical or horizontal?", answer: "Shorts thumbnails can technically be extracted in horizontal format (standard 16:9 padded) or vertical depending on the platform's API response. We provide the highest quality source file." }
+    ]
   },
 
   // 2. Age Calculator
@@ -54,7 +83,20 @@ export const pseoData: PseoPage[] = [
     ],
     targetToolLink: "/tools/age-calculator",
     targetToolName: "Open Age Calculator",
-    iconName: "calendar"
+    iconName: "calendar",
+    howTo: {
+      name: "How to Calculate Your Exact Age",
+      description: "Find out exactly how many days, months, and years you've been alive in just two steps.",
+      steps: [
+        { name: "Select Your Birthdate", text: "Use the calendar picker to input your exact date of birth." },
+        { name: "View Results immediately", text: "The calculator instantly processes the date locally and displays your age down to the exact day." }
+      ]
+    },
+    faqs: [
+      { question: "Does this age calculator account for leap years?", answer: "Yes, our algorithm is highly precise and accounts for all leap years that have occurred since your birth year." },
+      { question: "Is my birth date data stored on your servers?", answer: "No. The calculation happens 100% locally in your web browser. We do not track, store, or transmit your personal date of birth." },
+      { question: "Can I calculate age for a future date?", answer: "Currently, the tool calculates age relative to the current date. Future updates will allow customizable comparing dates." }
+    ]
   },
   {
     slug: "chronological-age-calculator",
@@ -68,7 +110,11 @@ export const pseoData: PseoPage[] = [
     ],
     targetToolLink: "/tools/age-calculator",
     targetToolName: "Use Chronological Age Finder",
-    iconName: "calculator"
+    iconName: "calculator",
+    faqs: [
+      { question: "What is chronological age?", answer: "Chronological age is the exact amount of time that has passed from your birth to a given date, usually expressed in years, months, and days." },
+      { question: "Why is chronological age important?", answer: "It is often required for standardized testing, medical assessments, and legal age verifications." }
+    ]
   },
 
   // 3. Image Upscaler
@@ -84,7 +130,22 @@ export const pseoData: PseoPage[] = [
     ],
     targetToolLink: "/tools/image-upscaler",
     targetToolName: "Launch AI Photo Enlarger",
-    iconName: "sparkles"
+    iconName: "sparkles",
+    howTo: {
+      name: "How to Upscale and Enlarge an Image",
+      description: "Follow this process to radically improve the resolution of your photos using AI.",
+      steps: [
+        { name: "Upload your Image", text: "Drag and drop a low-resolution photo into the upload area." },
+        { name: "Select Upscale Factor", text: "Choose between standard 2X, 4X, or 8X upscaling algorithms." },
+        { name: "Wait for AI Processing", text: "Allow the local browser AI model a few moments to redraw and enhance the pixels." },
+        { name: "Download", text: "Save your crystal clear, high-resolution original directly to your computer." }
+      ]
+    },
+    faqs: [
+      { question: "How does AI upscaling work?", answer: "AI upscaling uses localized neural networks (like ESRGAN) to predict and redraw missing pixels rather than simply stretching existing ones, resulting in a significantly sharper image." },
+      { question: "Is this photo enlarger truly free?", answer: "Yes, it is 100% free with no hidden paywalls or watermarks." },
+      { question: "Are my photos uploaded to the cloud?", answer: "No, all AI processing happens client-side inside your browser ensuring total privacy." }
+    ]
   },
   {
     slug: "upscale-image-to-4k-online",
@@ -98,7 +159,11 @@ export const pseoData: PseoPage[] = [
     ],
     targetToolLink: "/tools/image-upscaler",
     targetToolName: "Open 4K Image Upscaler",
-    iconName: "zap"
+    iconName: "zap",
+    faqs: [
+      { question: "Can I upscale anime or illustrations to 4K?", answer: "Yes, our AI models are specifically optimized for both photography and 2D illustrations (like anime/manga) to ensure crisp vector-like edges." },
+      { question: "What is the maximum output file size?", answer: "Since processing happens locally, the maximum size depends on your device's RAM, but typically native 4K (3840x2160) is handled easily." }
+    ]
   },
 
   // 4. Background Remover
@@ -114,7 +179,20 @@ export const pseoData: PseoPage[] = [
     ],
     targetToolLink: "/tools/bg-remover",
     targetToolName: "Make Background Transparent",
-    iconName: "image"
+    iconName: "image",
+    howTo: {
+      name: "How to Make an Image Background Transparent",
+      description: "Remove the background from any photo locally and automatically.",
+      steps: [
+        { name: "Upload Image", text: "Select a photo with a clear subject from your device." },
+        { name: "Auto-Removal", text: "Our AI will instantly detect the main subject and erase the background automatically." },
+        { name: "Save as PNG", text: "Download the final image in PNG format to preserve the transparency layer (alpha channel)." }
+      ]
+    },
+    faqs: [
+      { question: "Why do I need to save it as a PNG?", answer: "JPG files do not support transparency. To maintain the transparent background we just created, the file must be saved in the PNG format." },
+      { question: "Does this tool work well on hair and fur?", answer: "Yes, our localized AI models use advanced edge-detection designed specifically for complex edges like hair, fur, and leaves." }
+    ]
   },
   {
     slug: "remove-background-from-logo-free",
@@ -128,7 +206,11 @@ export const pseoData: PseoPage[] = [
     ],
     targetToolLink: "/tools/bg-remover",
     targetToolName: "Remove Logo Background",
-    iconName: "sparkles"
+    iconName: "sparkles",
+    faqs: [
+      { question: "Will removing the white background ruin my logo quality?", answer: "No, our algorithm explicitly protects vector lines and high-contrast typography, ensuring your logo remains crisp and professional." },
+      { question: "Can I remove black backgrounds too?", answer: "Yes, the AI detects the background color automatically, whether it is white, black, or any solid color, and removes it cleanly." }
+    ]
   },
 
   // 5. Password Generator
@@ -144,7 +226,20 @@ export const pseoData: PseoPage[] = [
     ],
     targetToolLink: "/tools/password-generator",
     targetToolName: "Generate Secure Password",
-    iconName: "key"
+    iconName: "key",
+    howTo: {
+      name: "How to Create a Strong WiFi Password",
+      description: "Follow these steps to generate a password that hackers cannot brute-force.",
+      steps: [
+        { name: "Select Length", text: "Choose a length of at least 16 to 20 characters for your WiFi network." },
+        { name: "Enable Symbols and Numbers", text: "Ensure toggles for special characters (!@#$) and numbers are enabled." },
+        { name: "Generate and Copy", text: "Click generate, then immediately copy the sequence and apply it to your router's admin panel." }
+      ]
+    },
+    faqs: [
+      { question: "How long should my WiFi password be?", answer: "For modern WPA2/WPA3 networks, it is highly recommended to use at least 16-20 characters to prevent brute-force and dictionary attacks." },
+      { question: "Wait, do you save the passwords I generate?", answer: "Absolutely not. The passwords exist entirely in your browser's local memory and are destroyed the moment you close the tab." }
+    ]
   },
 
   // 6. WhatsApp Link Generator
@@ -160,7 +255,20 @@ export const pseoData: PseoPage[] = [
     ],
     targetToolLink: "/tools/whatsapp-link",
     targetToolName: "Create WhatsApp Link",
-    iconName: "message"
+    iconName: "message",
+    howTo: {
+      name: "How to Text on WhatsApp Without Saving the Number",
+      description: "Create an instant chat link and jump right into the conversation.",
+      steps: [
+        { name: "Enter the Phone Number", text: "Type the target phone number, making sure to include the proper country code without any + signs." },
+        { name: "Add a Pre-filled Message", text: "Write an optional default message that will automatically appear in the chat box." },
+        { name: "Click the Link", text: "Click the generated link to automatically open the WhatsApp application directly to the chat." }
+      ]
+    },
+    faqs: [
+      { question: "Is this an official WhatsApp feature?", answer: "Yes, we utilize the official 'wa.me' click-to-chat API provided universally by WhatsApp (Meta)." },
+      { question: "Does my message get saved on your website?", answer: "No, the tool simply crafts a URL string in your browser. We have zero database storage for your generated links." }
+    ]
   },
 
   // 7. HEIC to JPG
@@ -176,7 +284,11 @@ export const pseoData: PseoPage[] = [
     ],
     targetToolLink: "/tools/heic-to-jpg",
     targetToolName: "Convert HEIC to JPG",
-    iconName: "image"
+    iconName: "image",
+    faqs: [
+      { question: "Why taking photos on iPhone creates HEIC files?", answer: "Apple introduced HEIC (High-Efficiency Image Container) to save massive amounts of storage space while maintaining visual quality better than older formats." },
+      { question: "Do I lose quality converting HEIC to JPG?", answer: "Our converter utilizes high-quality compression standards to ensure negligible visible loss when transferring to the JPG format." }
+    ]
   },
 
   // 8. PDF Merge
@@ -192,7 +304,20 @@ export const pseoData: PseoPage[] = [
     ],
     targetToolLink: "/tools/merge-pdf",
     targetToolName: "Merge PDFs Now",
-    iconName: "fileStack"
+    iconName: "fileStack",
+    howTo: {
+      name: "How to Merge Multiple PDFs into One",
+      description: "Safely join different documents without leaving a watermark.",
+      steps: [
+        { name: "Upload PDF Files", text: "Drag and drop the PDF files you want to combine onto the tool." },
+        { name: "Reorder", text: "Drag the files into the correct sequence." },
+        { name: "Merge and Download", text: "Click merge. Within seconds, a single compiled PDF binds your documents locally and initiates a download." }
+      ]
+    },
+    faqs: [
+      { question: "Will my merged PDF have a watermark?", answer: "No. CosmoxHub tools are completely free and will never force a watermark onto your personal documents." },
+      { question: "Are my sensitive documents uploaded to your server?", answer: "No. The entire PDF merging process runs in your browser's memory. Your business documents never leave your computer." }
+    ]
   },
 
   // 9. AI Prompt Optimizer
@@ -208,7 +333,11 @@ export const pseoData: PseoPage[] = [
     ],
     targetToolLink: "/tools/ai-prompt-optimizer",
     targetToolName: "Optimize Your Prompt",
-    iconName: "sparkles"
+    iconName: "sparkles",
+    faqs: [
+      { question: "What is Prompt Engineering?", answer: "Prompt engineering is the science of structuring text specifically to guide generative AI models to produce the highest quality, most accurate output." },
+      { question: "Does this optimizer work for Claude 3?", answer: "Yes, our optimization techniques are model-agnostic and will drastically improve results across OpenAI's ChatGPT, Anthropic's Claude, and Google Gemini." }
+    ]
   },
 
   // 10. PDF Unlocker
@@ -224,7 +353,20 @@ export const pseoData: PseoPage[] = [
     ],
     targetToolLink: "/tools/pdf-unlocker",
     targetToolName: "Unlock PDF File",
-    iconName: "lock"
+    iconName: "lock",
+    howTo: {
+      name: "How to Remove a PDF Password",
+      description: "Strip editing and printing restrictions securely from your documents.",
+      steps: [
+        { name: "Upload Locked PDF", text: "Drag your restricted document onto the target area." },
+        { name: "Enter Current Password", text: "If the document is fully locked, provide the read password to initiate unlocking." },
+        { name: "Save Unlocked File", text: "The system removes the encryption wrapper natively, letting you download a free-use PDF format." }
+      ]
+    },
+    faqs: [
+      { question: "Is removing a PDF password legal?", answer: "It is legal strictly for documents you own, such as your personal bank statements or forms. You should not bypass encryption on copyrighted or classified materials you do not possess rights to." },
+      { question: "Does this upload my bank statements to a server?", answer: "Zero uploads occur. The cryptology bypass happens dynamically via client-side Web Workers." }
+    ]
   },
 
   // 11. Word Counter
@@ -240,7 +382,11 @@ export const pseoData: PseoPage[] = [
     ],
     targetToolLink: "/tools/word-counter",
     targetToolName: "Launch Word Counter",
-    iconName: "fileText"
+    iconName: "fileText",
+    faqs: [
+      { question: "What is the Twitter character limit?", answer: "For standard users, the limit is 280 characters. X Premium users have a much higher limit of up to 25,000 characters." },
+      { question: "Does this counter include spaces?", answer: "Yes, our exact string verification algorithm counts spaces exactly the same way social media platforms do." }
+    ]
   },
 
   // 12. QR Generator
@@ -256,7 +402,21 @@ export const pseoData: PseoPage[] = [
     ],
     targetToolLink: "/tools/qr-generator",
     targetToolName: "Generate WiFi QR Code",
-    iconName: "qrcode"
+    iconName: "qrcode",
+    howTo: {
+      name: "How to Create a WiFi QR Code",
+      description: "Let your guests connect instantly without typing any passwords.",
+      steps: [
+        { name: "Enter Network Name", text: "Type the exact name (SSID) of your WiFi network." },
+        { name: "Input Password", text: "Carefully type the current network password." },
+        { name: "Select Encryption type", text: "It's usually WPA/WPA2. Click generate to create the matrix code." },
+        { name: "Print and Save", text: "Download the QR code image and print it for your living room or office." }
+      ]
+    },
+    faqs: [
+      { question: "Do iPhones support WiFi QR Codes natively?", answer: "Yes, simply open the native camera app on any modern iOS device and point it at the code. It will prompt an instant connection." },
+      { question: "Is it safe to generate WiFi QR codes online?", answer: "Since our generator creates the matrix entirely client-side without sending your password to an external API, it is 100% safe." }
+    ]
   },
 
   // JSON Formatter
@@ -272,7 +432,11 @@ export const pseoData: PseoPage[] = [
     ],
     targetToolLink: "/tools/json-formatter",
     targetToolName: "Format JSON Now",
-    iconName: "fileText"
+    iconName: "fileText",
+    faqs: [
+      { question: "Can this validation detect missing commas?", answer: "Yes, our syntax parser highlights trailing commas, missing brackets, and unescaped quotes with exact line-number reporting." },
+      { question: "Is my proprietary JSON sent to a server?", answer: "No. Security is guaranteed via strict client-side DOM execution. We never see your corporate logs or database payloads." }
+    ]
   },
   {
     slug: "online-json-validator-tool",
@@ -302,7 +466,10 @@ export const pseoData: PseoPage[] = [
     ],
     targetToolLink: "/tools/code-beautifier",
     targetToolName: "Beautify Code",
-    iconName: "sparkles"
+    iconName: "sparkles",
+    faqs: [
+      { question: "Does this work on minified production code?", answer: "Yes, the beautifier will reliably unpack the AST logic of minified scripts and output standard indented blocks." }
+    ]
   },
 
   // PNG to JPG
@@ -318,7 +485,10 @@ export const pseoData: PseoPage[] = [
     ],
     targetToolLink: "/tools/png-to-jpg",
     targetToolName: "Convert Image Now",
-    iconName: "image"
+    iconName: "image",
+    faqs: [
+      { question: "What happens to the transparent background from a PNG?", answer: "Because the JPG format does not support transparency (Alpha), any transparent areas will be filled with a solid color, usually white." }
+    ]
   },
 
   // JPG to PNG
@@ -350,7 +520,16 @@ export const pseoData: PseoPage[] = [
     ],
     targetToolLink: "/tools/split-pdf",
     targetToolName: "Split PDF Files",
-    iconName: "fileStack"
+    iconName: "fileStack",
+    howTo: {
+      name: "How to Extract Pages from a PDF",
+      description: "Quickly grab specific pages out of a massive document.",
+      steps: [
+        { name: "Upload Doc", text: "Drag your master PDF into the local extractor." },
+        { name: "Input Page Numbers", text: "Type the specific pages you need (e.g., 1, 5, 8-10)." },
+        { name: "Save Subset", text: "Click extract to instantly download a brand new PDF with only your selected pages." }
+      ]
+    }
   },
 
   // Image to PDF
@@ -398,7 +577,10 @@ export const pseoData: PseoPage[] = [
     ],
     targetToolLink: "/tools/case-converter",
     targetToolName: "Convert Text Case",
-    iconName: "fileText"
+    iconName: "fileText",
+    faqs: [
+      { question: "What is Title Case?", answer: "Title Case capitalizes the first letter of major words while leaving minor words (like 'in', 'of', 'and') in lowercase. It's the standard for book titles and news headlines." }
+    ]
   },
 
   // Image Resizer

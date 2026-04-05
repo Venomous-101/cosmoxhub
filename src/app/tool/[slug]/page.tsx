@@ -1,9 +1,9 @@
+import React from "react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { pseoData, getIcon } from "@/lib/pseo-data";
+import { pseoData, getIcon, PseoPage } from "@/lib/pseo-data";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
-
+import { ArrowRight, CheckCircle2, ChevronDown } from "lucide-react";
 interface PseoPageProps {
   params: {
     slug: string;
@@ -19,7 +19,7 @@ export async function generateStaticParams() {
 
 // Generate dynamic metadata for SEO
 export async function generateMetadata({ params }: PseoPageProps): Promise<Metadata> {
-  const page = pseoData.find((p) => p.slug === params.slug);
+  const page = pseoData.find((p) => p.slug === params.slug) as PseoPage | undefined;
   
   if (!page) {
     return {
@@ -42,37 +42,82 @@ export async function generateMetadata({ params }: PseoPageProps): Promise<Metad
   };
 }
 
-function DynamicIcon({ iconName }: { iconName: any }) {
-  const Icon = getIcon(iconName);
-  return <Icon size={32} />;
-}
-
 export default function DynamicSeoPage({ params }: PseoPageProps) {
-  const page = pseoData.find((p) => p.slug === params.slug);
+  const page = pseoData.find((p) => p.slug === params.slug) as PseoPage | undefined;
   
   if (!page) {
     notFound();
   }
 
+
   return (
     <div className="min-h-screen bg-[#05050a] text-white">
-      {/* JSON-LD Structured Data for rich search results */}
+      {/* ELITE SEO: JSON-LD "Russian Doll" Nested Structured Data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "SoftwareApplication",
-            "name": page.title,
-            "applicationCategory": "UtilitiesApplication",
-            "operatingSystem": "All",
-            "description": page.metaDescription,
-            "url": `https://cosmoxhub.com/tool/${page.slug}`,
-            "offers": {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "USD"
-            }
+            "@graph": [
+              {
+                "@type": "SoftwareApplication",
+                "name": page.title,
+                "applicationCategory": "UtilitiesApplication",
+                "operatingSystem": "All",
+                "description": page.metaDescription,
+                "url": `https://cosmoxhub.com/tool/${page.slug}`,
+                "offers": {
+                  "@type": "Offer",
+                  "price": "0",
+                  "priceCurrency": "USD"
+                }
+              },
+              ...(page.faqs && page.faqs.length > 0 ? [{
+                "@type": "FAQPage",
+                "mainEntity": page.faqs.map(faq => ({
+                  "@type": "Question",
+                  "name": faq.question,
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": faq.answer
+                  }
+                }))
+              }] : []),
+              ...(page.howTo ? [{
+                "@type": "HowTo",
+                "name": page.howTo.name,
+                "description": page.howTo.description,
+                "step": page.howTo.steps.map((step, idx) => ({
+                  "@type": "HowToStep",
+                  "url": `https://cosmoxhub.com/tool/${page.slug}#step${idx + 1}`,
+                  "name": step.name,
+                  "text": step.text
+                }))
+              }] : []),
+              {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                  {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "https://cosmoxhub.com"
+                  },
+                  {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Tools",
+                    "item": "https://cosmoxhub.com/tools"
+                  },
+                  {
+                    "@type": "ListItem",
+                    "position": 3,
+                    "name": page.title,
+                    "item": `https://cosmoxhub.com/tool/${page.slug}`
+                  }
+                ]
+              }
+            ]
           })
         }}
       />
@@ -83,7 +128,7 @@ export default function DynamicSeoPage({ params }: PseoPageProps) {
         
         <div className="max-w-4xl mx-auto relative z-10 text-center">
           <div className="inline-flex items-center justify-center p-4 bg-indigo-500/10 text-indigo-400 rounded-2xl mb-8">
-            <DynamicIcon iconName={page.iconName} />
+            {React.createElement(getIcon(page.iconName), { size: 32 })}
           </div>
           
           <h1 className="text-4xl md:text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-white to-white/50 mb-6">
@@ -107,6 +152,7 @@ export default function DynamicSeoPage({ params }: PseoPageProps) {
       {/* Content Section */}
       <section className="py-20 px-6 sm:px-12">
         <div className="max-w-3xl mx-auto">
+          {/* SEO Content */}
           <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 md:p-12 prose prose-invert prose-indigo max-w-none">
             {page.content.map((paragraph, idx) => (
               <p key={idx} className="text-slate-300 text-lg leading-relaxed mb-6 last:mb-0">
@@ -132,8 +178,51 @@ export default function DynamicSeoPage({ params }: PseoPageProps) {
               </div>
             </div>
           </div>
+
+          {/* How To Section */}
+          {page.howTo && (
+            <div className="mt-20">
+              <h2 className="text-3xl font-bold text-white mb-8">{page.howTo.name}</h2>
+              <div className="space-y-6">
+                {page.howTo.steps.map((step, idx) => (
+                  <div key={idx} id={`step${idx + 1}`} className="bg-white/[0.02] border border-white/5 p-6 rounded-2xl flex items-start gap-5 transition-transform hover:translate-x-2 duration-300">
+                    <div className="w-12 h-12 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-xl shrink-0">
+                      {idx + 1}
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-white mb-2 text-xl">{step.name}</h3>
+                      <p className="text-slate-400 leading-relaxed text-lg">{step.text}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* FAQ Section */}
+          {page.faqs && page.faqs.length > 0 && (
+            <div className="mt-20">
+              <h2 className="text-3xl font-bold text-white mb-8">Frequently Asked Questions</h2>
+              <div className="space-y-4">
+                {page.faqs.map((faq, idx) => (
+                  <details key={idx} className="group bg-white/[0.02] border border-white/5 rounded-2xl cursor-pointer">
+                    <summary className="font-bold text-white p-6 text-lg list-none flex justify-between items-center hover:text-indigo-400 transition-colors">
+                      <span className="pr-8">{faq.question}</span>
+                      <span className="text-indigo-400 group-open:rotate-180 transition-transform duration-300 shrink-0">
+                        <ChevronDown size={24} />
+                      </span>
+                    </summary>
+                    <div className="p-6 pt-0 text-slate-400 leading-relaxed border-t border-white/5 mt-2">
+                      {faq.answer}
+                    </div>
+                  </details>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
     </div>
   );
 }
+
