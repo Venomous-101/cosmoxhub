@@ -4,6 +4,7 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 import AdScripts from "@/components/AdScripts";
 import AdBanner from "@/components/AdBanner";
 import HDUP from "@/components/HDUP";
+import PredictivePrefetcher from "@/components/PredictivePrefetcher";
 import React from "react";
 import { Analytics } from "@vercel/analytics/react";
 
@@ -156,6 +157,7 @@ export default function RootLayout({
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || "G-HSL8QJ8VHK"} />
         <Analytics />
         <HDUP />
+        <PredictivePrefetcher />
         {children}
         <AdScripts />
         <AdBanner type="social-bar" />
