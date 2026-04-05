@@ -13,7 +13,10 @@ export interface PseoPage {
   howTo?: { name: string, description: string, steps: { name: string, text: string }[] };
 }
 
+import { massivePseoData } from "./pseo-massive";
+
 export const pseoData: PseoPage[] = [
+  ...massivePseoData,
   // 1. YouTube Thumbnail Downloader
   {
     slug: "free-youtube-thumbnail-downloader-hd",
