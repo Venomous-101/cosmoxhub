@@ -14,6 +14,7 @@ import {
   Sparkles,
   Eraser,
   Code2,
+  Minimize,
   LucideIcon
 } from "lucide-react";
 
@@ -78,6 +79,7 @@ export const categories: Category[] = [
     description: "Convert, resize and edit images without any quality loss.",
     color: "#10b981",
     tools: [
+      { title: "Smart Image Compressor", description: "Compress single or bulk images instantly without losing quality.", href: "/tools/image-compressor", icon: Minimize, badge: "Hot" },
       { title: "BG Remover", description: "Remove background from images and add custom colors.", href: "/tools/bg-remover", icon: Eraser, badge: "Elite" },
       { title: "PNG to JPG", description: "Convert PNG images to JPG format instantly in your browser.", href: "/tools/png-to-jpg", icon: Image, badge: "Fast" },
       { title: "JPG to PNG", description: "Convert JPG images to PNG (with transparency support).", href: "/tools/jpg-to-png", icon: FileDown },
