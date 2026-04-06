@@ -14,7 +14,8 @@ import {
   HelpCircle,
   Eye,
   CheckCircle2,
-  Layers
+  Layers,
+  Link2
 } from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
 import ToolGuide from "@/components/ToolGuide";
@@ -34,6 +35,34 @@ export default function QRGeneratorClient() {
   // System States
   const [isHovered, setIsHovered] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [isShortening, setIsShortening] = useState(false);
+
+  // Auto-Shorten URL
+  const shortenUrl = async () => {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    // Only shorten if it looks like a URL
+    if (!trimmed.startsWith("http") && !trimmed.includes(".")) return;
+    
+    setIsShortening(true);
+    try {
+      const fullUrl = trimmed.startsWith("http") ? trimmed : `https://${trimmed}`;
+      const res = await fetch("/api/shorten", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: fullUrl }),
+      });
+      const data = await res.json();
+      if (data.shortUrl) {
+        setText(data.shortUrl);
+      }
+    } catch {
+      // Silently fail — user keeps original URL
+    }
+    setIsShortening(false);
+  };
+
+  const isLongUrl = text.trim().length > 60 && (text.includes("http") || text.includes("."));
 
   // Smart Validation & Auto-Formatting
   const getProcessedValue = () => {
@@ -283,6 +312,18 @@ export default function QRGeneratorClient() {
                             </button>
                         )}
                     </div>
+
+                    {/* Auto-Shorten Button */}
+                    {isLongUrl && (
+                        <button
+                            onClick={shortenUrl}
+                            disabled={isShortening}
+                            className="mt-3 w-full flex items-center justify-center gap-2 py-2.5 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-400 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all disabled:opacity-50"
+                        >
+                            <Link2 size={14} className={isShortening ? "animate-spin" : ""} />
+                            {isShortening ? "Shortening..." : "Auto-Shorten Link → Cleaner QR"}
+                        </button>
+                    )}
                     
                     {/* Smart Feedback Badge */}
                     <div className="mt-4 flex justify-center">
