@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, ElementRef, useEffect } from "react";
+import { useState, useRef, ElementRef } from "react";
 import { 
   QrCode, 
   Download, 
@@ -10,7 +10,6 @@ import {
   Sparkles, 
   Zap, 
   Layout, 
-  Share2,
   Grid,
   HelpCircle,
   Eye,
@@ -144,17 +143,26 @@ export default function QRGeneratorClient() {
 
   const downloadQR = async () => {
     setIsExporting(true);
-    // Slight delay to ensure DOM is ready and state reflects
-    await new Promise(resolve => setTimeout(resolve, 500));
+    // Allow React to render the HD canvas with latest state
+    await new Promise(resolve => setTimeout(resolve, 800));
     
-    // Capture the hidden HD canvas
-    const canvas = document.getElementById("react-qrcode-hd") as HTMLCanvasElement;
+    // Try HD canvas first, fallback to display canvas
+    const hdCanvas = document.getElementById("react-qrcode-hd") as HTMLCanvasElement | null;
+    const displayCanvas = document.getElementById("react-qrcode-display") as HTMLCanvasElement | null;
+    const canvas = hdCanvas || displayCanvas;
+    
     if (canvas) {
-      const url = canvas.toDataURL("image/png");
-      const link = document.createElement("a");
-      link.download = `cosmoxhub-qr-ultra-${Date.now()}.png`;
-      link.href = url;
-      link.click();
+      try {
+        const url = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.download = `cosmoxhub-qr-ultra-${Date.now()}.png`;
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (_err) {
+        // Silent fallback
+      }
     }
     setIsExporting(false);
   };
@@ -215,7 +223,7 @@ export default function QRGeneratorClient() {
                             fgColor={fgColor}
                             bgColor={transparentBg && bgColor !== "#000000" ? "#ffffff" : bgColor} // Best contrast preview for transparent
                             qrStyle={qrStyle}
-                            eyeRadius={qrStyle === 'dots' ? [10, 10, 0, 10] : 0}
+                            eyeRadius={qrStyle === 'dots' ? 10 : 0}
                             eyeColor={eyeColor}
                             logoImage={logoBase64 || undefined}
                             logoWidth={60}
@@ -227,7 +235,7 @@ export default function QRGeneratorClient() {
                         />
 
                         {/* Hidden HD Generator (1024x1024) */}
-                        <div className="fixed -top-[9999px] -left-[9999px] invisible opacity-0 pointer-events-none">
+                        <div style={{ position: 'absolute', left: '-9999px', top: '-9999px', opacity: 0, pointerEvents: 'none' }}>
                             <QRCode
                                 id="react-qrcode-hd"
                                 value={processedText}
@@ -235,7 +243,7 @@ export default function QRGeneratorClient() {
                                 fgColor={fgColor}
                                 bgColor={actualBgColor}
                                 qrStyle={qrStyle}
-                                eyeRadius={qrStyle === 'dots' ? [40, 40, 0, 40] : 0}
+                                eyeRadius={qrStyle === 'dots' ? 40 : 0}
                                 eyeColor={eyeColor}
                                 logoImage={logoBase64 || undefined}
                                 logoWidth={220}
