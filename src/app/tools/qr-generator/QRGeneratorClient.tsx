@@ -71,8 +71,15 @@ export default function QRGeneratorClient() {
 
   const feedback = getInputFeedback();
 
-  const applyPreset = (preset: 'cyber' | 'minimal' | 'corporate' | 'golden') => {
-    if (preset === 'cyber') {
+  const applyPreset = (preset: 'classic' | 'cyber' | 'minimal' | 'corporate' | 'golden') => {
+    if (preset === 'classic') {
+      setFgColor("#000000");
+      setEyeColor("#000000");
+      setBgColor("#ffffff");
+      setQrStyle("squares");
+      setTransparentBg(false);
+      setLogoBase64(null);
+    } else if (preset === 'cyber') {
       setFgColor("#00ffcc");
       setEyeColor("#ff007f");
       setBgColor("#0a0a1a");
@@ -340,10 +347,13 @@ export default function QRGeneratorClient() {
             <div className="space-y-8">
                 {/* 1-Click Aesthetics Presets */}
                 <div className="space-y-3">
-                    <label className="text-amber-500 text-[10px] font-black uppercase tracking-widest block">Elite Presets</label>
+                    <label className="text-amber-500 text-[10px] font-black uppercase tracking-widest block">Quick Styles</label>
+                    <button onClick={() => applyPreset('classic')} className="w-full py-3 bg-white text-black border-2 border-white rounded-xl text-[11px] font-black uppercase hover:bg-slate-100 transition-colors flex items-center justify-center gap-2 shadow-lg shadow-white/10">
+                        <QrCode size={14} /> Classic Standard
+                    </button>
                     <div className="grid grid-cols-2 gap-2">
                         <button onClick={() => applyPreset('cyber')} className="py-2.5 bg-[#0a0a1a] border border-[#00ffcc]/30 text-[#00ffcc] rounded-xl text-[10px] font-black uppercase hover:bg-[#00ffcc]/10 transition-colors">Cyberpunk</button>
-                        <button onClick={() => applyPreset('minimal')} className="py-2.5 bg-white text-black border border-white/30 rounded-xl text-[10px] font-black uppercase hover:bg-slate-200 transition-colors">Minimal Dark</button>
+                        <button onClick={() => applyPreset('minimal')} className="py-2.5 bg-black text-white border border-white/30 rounded-xl text-[10px] font-black uppercase hover:bg-slate-900 transition-colors">Minimal Dark</button>
                         <button onClick={() => applyPreset('corporate')} className="py-2.5 bg-blue-900/30 text-blue-400 border border-blue-500/30 rounded-xl text-[10px] font-black uppercase hover:bg-blue-900/50 transition-colors">Corporate Blue</button>
                         <button onClick={() => applyPreset('golden')} className="py-2.5 bg-amber-500/10 text-amber-500 border border-amber-500/30 rounded-xl text-[10px] font-black uppercase hover:bg-amber-500/20 transition-colors">Cosmox Golden</button>
                     </div>
