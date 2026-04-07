@@ -1,43 +1,26 @@
-import { Metadata } from "next";
+import { generateToolMetadata, generateWebAppJsonLd } from "@/lib/seo-helpers";
 import SplitPdfClient from "./SplitPdfClient";
 
-export const metadata: Metadata = {
-  title: "Split PDF - Free Online Utility Tool | CosmoXHub",
-  description: "Split any PDF file into multiple documents or extract specific pages instantly with our free online tool. 100% private, secure, and browser-side processing.",
-  keywords: ["split pdf", "extract pdf pages", "pdf splitter", "cut pdf", "separate pdf pages", "free pdf tools", "secure pdf split", "cosmoxhub"],
-  openGraph: {
-    title: "Split PDF - Free Online Utility Tool | CosmoXHub",
-    description: "Extract specific pages or ranges from any PDF document with precision. 100% private client-side processing. Fastest and most secure PDF splitting.",
-    type: "website",
-  }
-};
+export const metadata = generateToolMetadata({
+  toolName: "PDF Splitter",
+  slug: "split-pdf",
+  description: "Split a PDF into individual pages or extract specific page ranges online for free. No server upload, 100% private, instant download on CosmoxHub.",
+  keywords: ["split pdf", "split pdf online", "extract pdf pages", "pdf splitter free", "separate pdf pages", "pdf page extractor", "cut pdf pages"],
+});
 
-export default function SplitPDFPage() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "CosmoxHub Elite PDF Splitter",
-    "operatingSystem": "Any",
-    "applicationCategory": "PDFTool",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "featureList": [
-       "Precision range-based PDF extraction",
-       "High-res client-side byte splitting",
-       "Secure no-upload workflow",
-       "Elite document metadata analysis",
-       "Zero-latency processing architecture"
-    ]
-  };
+export default function SplitPdfPage() {
+  const faqs = [
+    { question: "Can I extract specific page ranges from a PDF?", answer: "Yes. You can specify any custom page range (e.g., pages 3-7) or split the entire PDF into individual single-page files." },
+    { question: "Is splitting PDFs on CosmoxHub private?", answer: "Absolutely. All PDF splitting happens locally in your browser using pdf-lib. Your documents are never uploaded to a server." },
+    { question: "What is the maximum PDF size I can split?", answer: "There is no imposed limit. Larger PDFs may take longer depending on your device memory, but CosmoxHub handles multi-hundred page documents." },
+    { question: "Can I split a password-protected PDF?", answer: "If the PDF has user-level password protection, you will need to unlock it first using CosmoxHub's PDF Password Remover tool." },
+  ];
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: generateWebAppJsonLd({ toolName: "PDF Splitter", slug: "split-pdf", description: "Split PDF into pages or extract page ranges. Free, private, no signup.", faqs }) }}
       />
       <SplitPdfClient />
     </>

@@ -1,43 +1,26 @@
-import { Metadata } from "next";
+import { generateToolMetadata, generateWebAppJsonLd } from "@/lib/seo-helpers";
 import WebpToPngClient from "./WebpToPngClient";
 
-export const metadata: Metadata = {
-  title: "WebP to PNG - Free Online Utility Tool | CosmoXHub",
-  description: "Convert WebP images to lossless PNG format instantly with our free online tool. 100% private, free, and bulk processing in your browser with full transparency support. Perfect for developers and designers.",
-  keywords: ["webp to png", "convert webp to png", "image converter online", "bulk webp converter", "free online tool", "cosmoxhub"],
-  openGraph: {
-    title: "WebP to PNG - Free Online Utility Tool | CosmoXHub",
-    description: "High-speed, private WebP to PNG conversion with zero quality loss and full transparency support.",
-    type: "website",
-  }
-};
+export const metadata = generateToolMetadata({
+  toolName: "WebP to PNG Converter",
+  slug: "webp-to-png",
+  description: "Convert WebP images to PNG online free. Preserves transparency (alpha channel). Bulk convert up to 20 WebP files. No signup, 100% private on CosmoxHub.",
+  keywords: ["webp to png", "convert webp to png", "webp converter online", "webp to png free", "bulk webp to png", "webp image converter"],
+});
 
-export default function WebPToPNGPage() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "CosmoxHub Elite WebP to PNG Converter",
-    "operatingSystem": "Any",
-    "applicationCategory": "MultimediaApplication",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "featureList": [
-      "Lossless bulk processing",
-      "Full Alpha-channel transparency preservation",
-      "100% Client-side local processing",
-      "Privacy-first engineering",
-      "High-speed browser execution"
-    ]
-  };
+export default function WebpToPngPage() {
+  const faqs = [
+    { question: "Why convert WebP to PNG?", answer: "While WebP is great for web performance, many design tools, print workflows, and older apps do not support WebP. Converting to PNG ensures maximum compatibility." },
+    { question: "Is transparency (alpha channel) preserved?", answer: "Yes. CosmoxHub's WebP to PNG converter fully preserves the alpha channel, so transparent backgrounds remain perfectly clear in the PNG output." },
+    { question: "Can I convert multiple WebP files at once?", answer: "Yes! Upload up to 20 WebP images simultaneously and download all PNGs as a single ZIP file." },
+    { question: "Is there any quality loss when converting?", answer: "No. PNG is a lossless format, so the conversion from WebP to PNG preserves all visual detail without any compression artifacts." },
+  ];
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: generateWebAppJsonLd({ toolName: "WebP to PNG Converter", slug: "webp-to-png", description: "Convert WebP to PNG free. Bulk, lossless, preserves transparency.", faqs }) }}
       />
       <WebpToPngClient />
     </>

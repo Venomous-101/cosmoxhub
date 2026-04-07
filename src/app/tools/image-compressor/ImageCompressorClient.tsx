@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef } from "react";
 import { 
@@ -165,7 +165,7 @@ export default function ImageCompressorClient() {
         
         const content = await zip.generateAsync({ type: "blob" });
         const { saveAs } = await import('file-saver');
-        saveAs(content, "compressed_images_cosmoxhub.zip");
+        saveAs(content, "compressed_images_CosmoxHub.zip");
       } catch (e) {
         console.error("Zipping failed", e);
       }
@@ -425,7 +425,7 @@ export default function ImageCompressorClient() {
 
         <div className="p-8 bg-[#0a0a1f]/40 border border-white/5 rounded-[2.5rem] prose prose-invert max-w-none">
           <p className="text-slate-400 leading-relaxed italic">
-            Why settle for massive image payloads when you can intelligently shrink them with our **Smart Bulk Image Compressor**? CosmoXHub provides unmatched image optimization technology directly embedded in your browser. With advanced WebAssembly techniques, we guarantee your JPG, WebP, and PNG visuals are compressed significantly (often by up to 80%) while maintaining striking visual accuracy.
+            Why settle for massive image payloads when you can intelligently shrink them with our **Smart Bulk Image Compressor**? CosmoxHub provides unmatched image optimization technology directly embedded in your browser. With advanced WebAssembly techniques, we guarantee your JPG, WebP, and PNG visuals are compressed significantly (often by up to 80%) while maintaining striking visual accuracy.
           </p>
           <p className="text-slate-400 leading-relaxed mt-4">
             Security and speed are at the heart of our mission. Unlike older image minification methods that force you to upload precious content to an insecure remote cloud, the **Smart Image Compressor** performs memory-safe compression exclusively on your own desktop or mobile processor. Use the custom MB/KB sliders to meet strict upload size constraints on portals, job applications, or forums with absolute ease, and export dozens of processed results in a neat `.zip` package.

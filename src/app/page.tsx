@@ -4,8 +4,8 @@ import Footer from "@/components/Footer";
 import HomePageContent from "@/components/HomePageContent";
 
 export const metadata: Metadata = {
-  title: "CosmoxHub — 26+ Free Online Tools | AI, PDF, Image, Text & More",
-  description: "All the tools you need in one place. AI Image Upscaler, BG Remover, PDF Merger, QR Generator, Image Converter. All free, 100% private, no signup.",
+  title: "CosmoxHub — 28+ Free Online Tools | PDF, Image, AI & Text",
+  description: "Free online tools for everything. AI Image Upscaler, Background Remover, PDF Merger, QR Code Generator, Image Compressor, HEIC Converter and 22 more. No signup, 100% private.",
 };
 
 export default function HomePage() {

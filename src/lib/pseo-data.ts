@@ -1,4 +1,4 @@
-import { LucideIcon, Download, Sparkles, Image as ImageIcon, Video, Calculator, Calendar, FileText, Key, FileStack, Zap, Lock, MessageSquare, QrCode } from "lucide-react";
+﻿import { LucideIcon, Download, Sparkles, Image as ImageIcon, Video, Calculator, Calendar, FileText, Key, FileStack, Zap, Lock, MessageSquare, QrCode } from "lucide-react";
 
 export interface PseoPage {
   slug: string;

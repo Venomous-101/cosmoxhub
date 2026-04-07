@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo } from "react";
 import { 
@@ -43,7 +43,7 @@ export default function WhatsAppLinkClient() {
     },
     {
       title: "Privacy and Security",
-      content: "CosmoXHub is a zero-tracking platform. We don't log phone numbers or messages. All link generation happens locally in your browser, ensuring your business leads and personal data remain confidential.",
+      content: "CosmoxHub is a zero-tracking platform. We don't log phone numbers or messages. All link generation happens locally in your browser, ensuring your business leads and personal data remain confidential.",
       icon: Phone
     }
   ];
@@ -264,7 +264,7 @@ export default function WhatsAppLinkClient() {
               Transform the way your customers connect with you. Our **WhatsApp Link Generator - Free Online Utility Tool** allows you to skip the manual 'add contact' step and move straight to the conversation. By creating a direct 'Click-to-Chat' link with a custom pre-filled message, you remove friction from your sales funnel, customer support, or personal networking. Simply enter your country code, phone number, and greeting, and your shortened wa.me link is ready to be shared on Instagram, Facebook, or your website.
             </p>
             <p className="text-slate-400 leading-relaxed mt-4">
-              At CosmoXHub, we believe in efficiency without compromise. Our **WhatsApp Link Generator** is optimized for high-speed performance and mobile responsiveness. Whether you are a business owner needing a 'Contact Us' button or an individual simplifying your digital identity, our tool provides the most reliable way to create professional communication links. Like all CosmoXHub utilities, your data is processed instantly without being logged, ensuring your marketing strategy remains both effective and private.
+              At CosmoxHub, we believe in efficiency without compromise. Our **WhatsApp Link Generator** is optimized for high-speed performance and mobile responsiveness. Whether you are a business owner needing a 'Contact Us' button or an individual simplifying your digital identity, our tool provides the most reliable way to create professional communication links. Like all CosmoxHub utilities, your data is processed instantly without being logged, ensuring your marketing strategy remains both effective and private.
             </p>
           </div>
         </div>

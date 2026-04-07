@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState } from "react";
 import {
   FileDown, FileText, Settings, Type, Layout, Sparkles,
@@ -193,7 +193,7 @@ export default function TextToPdfClient() {
       const blob = new Blob([pdfBytes as unknown as BlobPart], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
-      a.href = url; a.download = `cosmoxhub-doc-${Date.now()}.pdf`;
+      a.href = url; a.download = `CosmoxHub-doc-${Date.now()}.pdf`;
       document.body.appendChild(a); a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
@@ -388,10 +388,10 @@ export default function TextToPdfClient() {
 
         <div className="p-8 bg-[#0a0a1f]/40 border border-white/5 rounded-[2.5rem] prose prose-invert max-w-none">
           <p className="text-slate-400 leading-relaxed italic">
-            Documentation should be accessible, professional, and immutable. Our **Text to PDF - Free Online Utility Tool** is a streamlined solution for users who need to transform raw text into polished, shareable PDF documents. Whether you&apos;re a developer archiving logs, a writer preserving a draft, or a student formatting an assignment, our tool bridges the gap between simple text input and high-quality document output. By converting your content into the universally accepted PDF format, CosmoXHub ensures your message remains consistent across all devices and operating systems.
+            Documentation should be accessible, professional, and immutable. Our **Text to PDF - Free Online Utility Tool** is a streamlined solution for users who need to transform raw text into polished, shareable PDF documents. Whether you&apos;re a developer archiving logs, a writer preserving a draft, or a student formatting an assignment, our tool bridges the gap between simple text input and high-quality document output. By converting your content into the universally accepted PDF format, CosmoxHub ensures your message remains consistent across all devices and operating systems.
           </p>
           <p className="text-slate-400 leading-relaxed mt-4">
-            The **Text to PDF** at CosmoXHub is engineered for speed and precision, offering a &apos;Zero-Configuration&apos; experience while maintaining elite performance. We understand that in a fast-paced digital environment, you need tools that work instantly without the overhead of heavy software suites. Our converter supports multi-page generation and preserves your text&apos;s structural flow perfectly. As a core part of the CosmoXHub PDF suite, this is a 100% free online tool that operates exclusively in your browser. This means your sensitive documents are never uploaded to a server, providing the ultimate layer of privacy and security for your professional data.
+            The **Text to PDF** at CosmoxHub is engineered for speed and precision, offering a &apos;Zero-Configuration&apos; experience while maintaining elite performance. We understand that in a fast-paced digital environment, you need tools that work instantly without the overhead of heavy software suites. Our converter supports multi-page generation and preserves your text&apos;s structural flow perfectly. As a core part of the CosmoxHub PDF suite, this is a 100% free online tool that operates exclusively in your browser. This means your sensitive documents are never uploaded to a server, providing the ultimate layer of privacy and security for your professional data.
           </p>
         </div>
       </div>

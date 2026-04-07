@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo } from "react";
 import { 
@@ -302,10 +302,10 @@ export default function LoremIpsumClient() {
 
         <div className="p-8 bg-[#0a0a1f]/40 border border-white/5 rounded-[2.5rem] prose prose-invert max-w-none">
           <p className="text-slate-400 leading-relaxed italic">
-            Great design deserves a professional preview. Our **Lorem Ipsum Generator - Free Online Utility Tool** is the essential companion for UI/UX designers, web developers, and graphic artists who need high-quality placeholder text. Instead of using repetitive or distracting content, our generator provides classically structured Latin text that helps viewers focus on the visual layout and typography without being sidetracked by readable copy. Whether you&apos;re building a landing page, a mobile app interface, or a print brochure, CosmoXHub delivers perfectly formatted dummy text in seconds.
+            Great design deserves a professional preview. Our **Lorem Ipsum Generator - Free Online Utility Tool** is the essential companion for UI/UX designers, web developers, and graphic artists who need high-quality placeholder text. Instead of using repetitive or distracting content, our generator provides classically structured Latin text that helps viewers focus on the visual layout and typography without being sidetracked by readable copy. Whether you&apos;re building a landing page, a mobile app interface, or a print brochure, CosmoxHub delivers perfectly formatted dummy text in seconds.
           </p>
           <p className="text-slate-400 leading-relaxed mt-4">
-            The **Lorem Ipsum Generator** at CosmoXHub offers granular control over your output. You can specify the exact number of paragraphs, words, or even list items to fit your specific design constraints. We have streamlined the process to ensure maximum efficiency; with our &apos;One-Click Copy&apos; feature, you can populate your designs with realistic content faster than ever before. True to our mission, this is a 100% free online tool designed to empower the creative community with professional-grade utilities that are private, secure, and incredibly fast.
+            The **Lorem Ipsum Generator** at CosmoxHub offers granular control over your output. You can specify the exact number of paragraphs, words, or even list items to fit your specific design constraints. We have streamlined the process to ensure maximum efficiency; with our &apos;One-Click Copy&apos; feature, you can populate your designs with realistic content faster than ever before. True to our mission, this is a 100% free online tool designed to empower the creative community with professional-grade utilities that are private, secure, and incredibly fast.
           </p>
         </div>
       </div>

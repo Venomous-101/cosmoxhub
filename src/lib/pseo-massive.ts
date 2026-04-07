@@ -1,4 +1,4 @@
-import { PseoPage } from "./pseo-data";
+﻿import { PseoPage } from "./pseo-data";
 
 const bgRemoverKeywords = [
   "transparent background from image",

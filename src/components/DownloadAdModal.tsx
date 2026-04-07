@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { X, ShieldCheck, Download, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -53,9 +53,9 @@ export default function DownloadAdModal({
     triggerLocker();
 
     // EXPOSE GLOBAL FUNCTION FOR CPAGRIP SUCCESS
-    // The user MUST add `window.unlockCosmoxhub();` in CPAGrip's "Javascript on Completion" setting.
+    // The user MUST add `window.unlockCosmoxHub();` in CPAGrip's "Javascript on Completion" setting.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (window as any).unlockCosmoxhub = () => {
+    (window as any).unlockCosmoxHub = () => {
       // Force clean any stuck CPAGrip overlays
       document.querySelectorAll('body > div').forEach((el) => {
         const z = window.getComputedStyle(el).zIndex;
@@ -87,9 +87,9 @@ export default function DownloadAdModal({
         // 5 seconds passed, no tasks generated. Auto-bypass!
         clearInterval(failsafeInterval);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if (typeof (window as any).unlockCosmoxhub === "function") {
+        if (typeof (window as any).unlockCosmoxHub === "function") {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (window as any).unlockCosmoxhub();
+          (window as any).unlockCosmoxHub();
         }
       }
     }, 1000);

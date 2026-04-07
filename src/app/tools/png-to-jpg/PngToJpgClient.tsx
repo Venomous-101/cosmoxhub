@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef } from "react";
 import { 
@@ -158,7 +158,7 @@ export default function PngToJpgClient() {
         if (img.convertedUrl) {
           const link = document.createElement("a");
           link.href = img.convertedUrl;
-          link.download = `${img.name}-cosmoxhub.jpg`;
+          link.download = `${img.name}-CosmoxHub.jpg`;
           link.click();
         }
       });
@@ -167,11 +167,11 @@ export default function PngToJpgClient() {
   };
 
   const triggerDownloadSingle = (img: ImageFile) => {
-    setAdModalFileName(`${img.name}-cosmoxhub.jpg`);
+    setAdModalFileName(`${img.name}-CosmoxHub.jpg`);
     setPendingDownloadAction(() => () => {
       const link = document.createElement("a");
       link.href = img.convertedUrl!;
-      link.download = `${img.name}-cosmoxhub.jpg`;
+      link.download = `${img.name}-CosmoxHub.jpg`;
       link.click();
     });
     setIsAdModalOpen(true);
@@ -409,10 +409,10 @@ export default function PngToJpgClient() {
 
         <div className="p-8 bg-[#0a0a1f]/40 border border-white/5 rounded-[2.5rem] prose prose-invert max-w-none">
           <p className="text-slate-400 leading-relaxed italic">
-            Why settle for large PNG files when you can optimize your storage with our **PNG to JPG - Free Online Utility Tool**? CosmoXHub provides a professional-grade converter that transforms your high-resolution PNGs into space-efficient JPEGs in milliseconds. Whether you&apos;re preparing images for a website, an email attachment, or a digital portfolio, our tool ensures your files are web-ready without compromising on visual integrity.
+            Why settle for large PNG files when you can optimize your storage with our **PNG to JPG - Free Online Utility Tool**? CosmoxHub provides a professional-grade converter that transforms your high-resolution PNGs into space-efficient JPEGs in milliseconds. Whether you&apos;re preparing images for a website, an email attachment, or a digital portfolio, our tool ensures your files are web-ready without compromising on visual integrity.
           </p>
           <p className="text-slate-400 leading-relaxed mt-4">
-            Our **PNG to JPG** converter is unique because it operates entirely within your browser&apos;s secure environment. This means your private photos never touch our servers, offering you total peace of mind. With support for bulk processing of up to 20 images, a customizable quality slider for perfect compression, and instant download options, CosmoXHub is the ultimate destination for efficient image management. Experience the power of client-side technology and make your workflow faster today.
+            Our **PNG to JPG** converter is unique because it operates entirely within your browser&apos;s secure environment. This means your private photos never touch our servers, offering you total peace of mind. With support for bulk processing of up to 20 images, a customizable quality slider for perfect compression, and instant download options, CosmoxHub is the ultimate destination for efficient image management. Experience the power of client-side technology and make your workflow faster today.
           </p>
         </div>
       </div>

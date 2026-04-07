@@ -1,43 +1,26 @@
-import { Metadata } from "next";
+import { generateToolMetadata, generateWebAppJsonLd } from "@/lib/seo-helpers";
 import PdfToImageClient from "./PdfToImageClient";
 
-export const metadata: Metadata = {
-  title: "PDF to PNG/JPG Bulk Converter - Free Online Tool | CosmoXHub",
-  description: "Convert single or multiple PDFs to high-quality PNG or JPG images instantly. Bulk upload, vector-precision rendering, and 100% private browser-side processing.",
-  keywords: ["pdf to png", "pdf to jpg", "pdf to image", "bulk pdf converter", "pdf page to png", "batch pdf to image", "free pdf tools", "cosmoxhub"],
-  openGraph: {
-    title: "PDF to PNG/JPG Bulk Converter - Free Online Tool | CosmoXHub",
-    description: "Convert bulk PDFs to high-resolution PNG or JPG images. Supports multi-file upload with vector-precision. 100% secure and private.",
-    type: "website",
-  }
-};
+export const metadata = generateToolMetadata({
+  toolName: "PDF to Image Converter",
+  slug: "pdf-to-image",
+  description: "Convert PDF pages to high-quality PNG or JPG images online for free. Bulk PDF conversion, custom DPI, ZIP download. No server upload, 100% private on CosmoxHub.",
+  keywords: ["pdf to image", "pdf to png", "pdf to jpg", "convert pdf to image", "pdf page to image", "extract images from pdf", "pdf converter"],
+});
 
-export default function PDFToImagePage() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "CosmoxHub PDF to PNG/JPG Bulk Converter",
-    "operatingSystem": "Any",
-    "applicationCategory": "MultimediaApplication",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "featureList": [
-      "Bulk PDF to PNG/JPG conversion",
-      "Vector-precision PDF rendering",
-      "High-res up to 3x Ultra scale",
-      "Multi-file drag-and-drop upload",
-      "Zero-server browser-side processing"
-    ]
-  };
+export default function PdfToImagePage() {
+  const faqs = [
+    { question: "What image formats does the converter output?", answer: "You can export PDF pages as high-quality PNG or JPEG images. PNG is recommended for documents with sharp text, while JPEG is better for photos." },
+    { question: "Can I convert multiple PDFs at once?", answer: "Yes! CosmoxHub's PDF to Image converter supports bulk conversion of multiple PDF files simultaneously, with a ZIP download of all outputs." },
+    { question: "Is my PDF uploaded to a server?", answer: "Absolutely not. All conversion happens locally in your browser using PDF.js. Your documents never leave your device." },
+    { question: "What DPI quality can I choose?", answer: "You can select from standard (72 DPI), high (150 DPI) and ultra (300 DPI) quality settings, suitable for both screen and print use." },
+  ];
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: generateWebAppJsonLd({ toolName: "PDF to Image Converter", slug: "pdf-to-image", description: "Convert PDF pages to PNG or JPG images. Free, bulk, private.", faqs }) }}
       />
       <PdfToImageClient />
     </>

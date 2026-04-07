@@ -19,7 +19,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-slate-400 text-sm leading-relaxed max-w-[240px]">
-              The internet&apos;s elite toolkit. 26+ powerful utilities designed for privacy, speed, and total efficiency. Free forever.
+              28+ free online tools for image, PDF, AI and text processing. No signup. 100% private. Runs in your browser.
             </p>
           </div>
 
@@ -50,7 +50,7 @@ export default function Footer() {
         {/* Global Tools Explore Section (For Crawling) */}
         <div className="pt-16 border-t border-indigo-500/5 mb-20">
           <h4 className="text-slate-400 text-[11px] font-bold tracking-[0.3em] uppercase mb-10 text-center bg-gradient-to-r from-transparent via-indigo-500/10 to-transparent py-3">
-            Explore All 26 Elite Tools
+            Explore All 28 Free Online Tools
           </h4>
           <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-5 max-w-6xl mx-auto px-4">
             {categories[4].tools.concat(categories.slice(0, 4).flatMap(c => c.tools)).map((tool) => (

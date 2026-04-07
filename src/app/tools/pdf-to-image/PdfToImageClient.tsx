@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useCallback } from "react";
 import { FileImage, Upload, Download, Settings, Maximize, FilePlus, Trash2, Layers, CheckCircle2 } from "lucide-react";
@@ -480,7 +480,7 @@ export default function PdfToImageClient() {
                 <span className="text-white font-bold">
                   secure PDF to image converter
                 </span>{" "}
-                that preserves every detail. CosmoXHub provides a{" "}
+                that preserves every detail. CosmoxHub provides a{" "}
                 <span className="text-red-500 font-bold underline">
                   free online utility tool
                 </span>{" "}
@@ -505,7 +505,7 @@ export default function PdfToImageClient() {
                 for any destination.
               </p>
               <p>
-                Choose CosmoXHub for a{" "}
+                Choose CosmoxHub for a{" "}
                 <span className="text-white font-bold">
                   private, secure, and professional
                 </span>{" "}

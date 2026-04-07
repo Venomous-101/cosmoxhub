@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef, useEffect } from "react";
 import { 
@@ -59,7 +59,7 @@ export default function HeicToJpgClient() {
     },
     {
       title: "Privacy Moat",
-      content: "Your personal gallery is your business. Unlike cloud-based converters, CosmoXHub runs the entire HEIC-to-JPG algorithm in your browser's RAM. No server uploads, no data storage, 100% security.",
+      content: "Your personal gallery is your business. Unlike cloud-based converters, CosmoxHub runs the entire HEIC-to-JPG algorithm in your browser's RAM. No server uploads, no data storage, 100% security.",
       icon: CheckCircle2
     }
   ];
@@ -67,7 +67,7 @@ export default function HeicToJpgClient() {
   const faqs = [
     {
       question: "Why can't I open HEIC files on my computer?",
-      answer: "HEIC is a newer format used primarily by Apple for efficiency. Many Windows versions and legacy photo viewers don't support it natively, requiring a tool like CosmoXHub to convert them into standard JPGs."
+      answer: "HEIC is a newer format used primarily by Apple for efficiency. Many Windows versions and legacy photo viewers don't support it natively, requiring a tool like CosmoxHub to convert them into standard JPGs."
     },
     {
       question: "Does conversion reduce image quality?",
@@ -385,10 +385,10 @@ export default function HeicToJpgClient() {
 
           <div className="p-8 bg-[#0a0a1f]/40 border border-white/5 rounded-[2.5rem] prose prose-invert max-w-none">
             <p className="text-slate-400 leading-relaxed italic">
-              Struggling to open iPhone photos on your PC? Our **HEIC to JPG - Free Online Utility Tool** is the ultimate solution for cross-platform compatibility. HEIC (High Efficiency Image Coding) is excellent for saving space on mobile devices, but it often fails to load on legacy software or web platforms. CosmoXHub provides a blazing-fast, professional-grade converter that turns those inaccessible files into standard, high-quality JPEGs in a heartbeat.
+              Struggling to open iPhone photos on your PC? Our **HEIC to JPG - Free Online Utility Tool** is the ultimate solution for cross-platform compatibility. HEIC (High Efficiency Image Coding) is excellent for saving space on mobile devices, but it often fails to load on legacy software or web platforms. CosmoxHub provides a blazing-fast, professional-grade converter that turns those inaccessible files into standard, high-quality JPEGs in a heartbeat.
             </p>
             <p className="text-slate-400 leading-relaxed mt-4">
-              Our **HEIC to JPG** converter is designed with a &apos;Security-First&apos; philosophy. Unlike other online converters that upload your personal gallery to external servers, CosmoXHub processes every pixel directly in your browser. This means your private memories stay private. With support for bulk uploads of up to 20 images and customizable compression settings, we empower you to optimize your photo library without ever risking your data. Experience the most secure free online tool for HEIC conversion today.
+              Our **HEIC to JPG** converter is designed with a &apos;Security-First&apos; philosophy. Unlike other online converters that upload your personal gallery to external servers, CosmoxHub processes every pixel directly in your browser. This means your private memories stay private. With support for bulk uploads of up to 20 images and customizable compression settings, we empower you to optimize your photo library without ever risking your data. Experience the most secure free online tool for HEIC conversion today.
             </p>
           </div>
         </div>

@@ -1,43 +1,26 @@
-import { Metadata } from "next";
+import { generateToolMetadata, generateWebAppJsonLd } from "@/lib/seo-helpers";
 import WhatsAppLinkClient from "./WhatsAppLinkClient";
 
-export const metadata: Metadata = {
-  title: "WhatsApp Link Generator - Free Online Utility Tool | CosmoXHub",
-  description: "Create custom WhatsApp click-to-chat links with pre-filled messages instantly. Use our high-speed free online tool for business marketing and personal use. 100% private.",
-  keywords: ["whatsapp link generator", "wa link creator", "whatsapp message link", "direct chat link", "cosmoxhub"],
-  openGraph: {
-    title: "WhatsApp Link Generator - Free Online Utility Tool | CosmoXHub",
-    description: "Generate personalized WhatsApp chat links with custom messages instantly. 100% free.",
-    type: "website",
-  }
-};
+export const metadata = generateToolMetadata({
+  toolName: "WhatsApp Link Generator",
+  slug: "whatsapp-link",
+  description: "Generate a direct WhatsApp chat link with a pre-filled message online free. Perfect for business CTAs, portfolios and contact forms. No phone number saved on CosmoxHub.",
+  keywords: ["whatsapp link generator", "whatsapp chat link", "wa.me link generator", "create whatsapp link", "whatsapp click to chat", "whatsapp business link"],
+});
 
 export default function WhatsAppLinkPage() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "CosmoxHub Elite WhatsApp Link Generator",
-    "operatingSystem": "Any",
-    "applicationCategory": "ConnectivityTool",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "featureList": [
-       "Instant WhatsApp chat link generation",
-       "Live message bubble preview",
-       "Integrated QR code for direct scanning",
-       "Professional contact card visualization",
-       "Zero-latency link orchestration"
-    ]
-  };
+  const faqs = [
+    { question: "What is a WhatsApp chat link?", answer: "A WhatsApp chat link (wa.me link) lets anyone click it to start a WhatsApp conversation with a specific phone number. It can include a pre-filled message, making it ideal for business CTAs." },
+    { question: "Does the generator save my phone number?", answer: "No. CosmoxHub is a zero-tracking platform. Your phone number and message are only used locally in your browser to construct the link — nothing is logged or stored." },
+    { question: "Can I add a custom message to the link?", answer: "Yes! When someone clicks your link, the custom message you set will be pre-filled in their WhatsApp chat window, saving them time." },
+    { question: "Does it work internationally?", answer: "Yes. As long as you include the country code (e.g., +1 for USA, +92 for Pakistan), the link works for any phone number worldwide." },
+  ];
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: generateWebAppJsonLd({ toolName: "WhatsApp Link Generator", slug: "whatsapp-link", description: "Generate WhatsApp chat links with pre-filled messages. Free, private.", faqs }) }}
       />
       <WhatsAppLinkClient />
     </>

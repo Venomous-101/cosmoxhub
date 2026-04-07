@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import { Unlock, FileText, ShieldCheck, Download, Trash2, Key, AlertCircle, Zap, Loader2 } from "lucide-react";
@@ -49,7 +49,7 @@ export default function PdfUnlockerClient() {
       
       const link = document.createElement("a");
       link.href = url;
-      link.download = `unlocked-cosmoxhub-${file.name}`;
+      link.download = `unlocked-CosmoxHub-${file.name}`;
       link.click();
       
       URL.revokeObjectURL(url);
@@ -195,7 +195,7 @@ export default function PdfUnlockerClient() {
           ]}
           faqs={[
             {
-              question: "Is unlocking PDFs on CosmoXHub secure?",
+              question: "Is unlocking PDFs on CosmoxHub secure?",
               answer: "Yes, it is the most secure method in the world. Your files and passwords never touch our servers. All decryption happens locally in your browser's secure sandbox."
             },
             {
@@ -214,7 +214,7 @@ export default function PdfUnlockerClient() {
           <div className="grid md:grid-cols-2 gap-10 text-slate-400 text-sm leading-relaxed font-medium">
             <div className="space-y-4">
               <p>
-                Handling sensitive documents requires a <span className="text-white font-bold">secure PDF password remover</span> that you can trust. CosmoXHub provides a <span className="text-red-500 font-bold underline">free online utility tool</span> that prioritizes your data integrity above all else. By utilizing advanced <span className="text-white font-bold">local processing</span> technology, we allow you to <span className="text-white font-bold">unlock PDF files</span> without ever uploading them to a remote server.
+                Handling sensitive documents requires a <span className="text-white font-bold">secure PDF password remover</span> that you can trust. CosmoxHub provides a <span className="text-red-500 font-bold underline">free online utility tool</span> that prioritizes your data integrity above all else. By utilizing advanced <span className="text-white font-bold">local processing</span> technology, we allow you to <span className="text-white font-bold">unlock PDF files</span> without ever uploading them to a remote server.
               </p>
               <p>
                 This "Zero-Server" approach is the <span className="text-white font-bold">fastest and most private</span> way to manage your encrypted content. In an era where data privacy is paramount, using a browser-side decryptor ensures that your corporate contracts, financial statements, and personal records remain strictly on your own device.
@@ -225,7 +225,7 @@ export default function PdfUnlockerClient() {
                 Our elite decryption logic is compatible with standard PDF encryption protocols, ensuring that once unlocked, your files can be opened, edited, and shared across any platform without further prompts. The process is instantaneous, removing user-level and owner-level restrictions in milliseconds.
               </p>
               <p>
-                Join thousands of professionals who choose CosmoXHub for their <span className="text-white font-bold">private, secure, and professional</span> document management needs. Experience high-fidelity results with no registration required and no watermarks—just pure, elite utility.
+                Join thousands of professionals who choose CosmoxHub for their <span className="text-white font-bold">private, secure, and professional</span> document management needs. Experience high-fidelity results with no registration required and no watermarks—just pure, elite utility.
               </p>
             </div>
           </div>

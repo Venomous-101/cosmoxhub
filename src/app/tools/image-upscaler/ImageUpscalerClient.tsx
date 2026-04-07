@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import {
@@ -972,7 +972,7 @@ export default function ImageUpscalerClient() {
             Looking for a way to upscale images to 4K without losing quality? CosmoxHub offers the premier **Image Upscaler - Free Online Utility Tool** that uses advanced AI to breathe life into low-resolution photos. Whether you need to enlarge a small graphic for print, enhance a blurry childhood memory, or create high-definition textures for digital art, our tool delivers professional-grade results instantly. And the best part? It&apos;s completely free and runs entirely in your browser, ensuring your images never leave your device.
           </p>
           <p className="text-slate-400 leading-relaxed mt-4">
-            Our **Image Upscaler** is engineered for speed and precision. By leveraging ESRGAN neural networks, it doesn&apos;t just stretch pixels—it intelligently reconstructs them, adding realistic detail and sharpness. With features like &apos;Ultra Mode&apos; for maximum texture recovery and &apos;Stability Mode&apos; for older hardware, we provide the most accessible high-end upscaling experience on the web. Transform your visuals and break the resolution barrier with CosmoXHub, the ultimate free online tool for image enhancement.
+            Our **Image Upscaler** is engineered for speed and precision. By leveraging ESRGAN neural networks, it doesn&apos;t just stretch pixels—it intelligently reconstructs them, adding realistic detail and sharpness. With features like &apos;Ultra Mode&apos; for maximum texture recovery and &apos;Stability Mode&apos; for older hardware, we provide the most accessible high-end upscaling experience on the web. Transform your visuals and break the resolution barrier with CosmoxHub, the ultimate free online tool for image enhancement.
           </p>
         </div>
 

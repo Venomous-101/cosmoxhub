@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import { 
@@ -56,7 +56,7 @@ export default function AgeCalculatorClient() {
     },
     {
       title: "Zero-Tracking Privacy",
-      content: "Your birthday is personal. That's why CosmoXHub processes all calculations locally in your browser. We never transmit your birth date to our servers, ensuring your identity remains 100% private.",
+      content: "Your birthday is personal. That's why CosmoxHub processes all calculations locally in your browser. We never transmit your birth date to our servers, ensuring your identity remains 100% private.",
       icon: Calendar
     }
   ];
@@ -239,10 +239,10 @@ export default function AgeCalculatorClient() {
 
           <div className="p-8 bg-[#0a0a1f]/40 border border-white/5 rounded-[2.5rem] prose prose-invert max-w-none">
             <p className="text-slate-400 leading-relaxed italic">
-              Time is our most valuable asset, and knowing exactly how much of it has passed is more than just a curiosity. Our **Age Calculator - Free Online Utility Tool** provides a precise, multi-dimensional breakdown of your life&apos;s timeline. Beyond just years and months, CosmoXHub calculates your age down to the exact day, hour, and minute. Whether you&apos;re planning a milestone celebration, calculating the age of a historical event, or simply want to know exactly how many days old you are, our tool delivers instantaneous and accurate results.
+              Time is our most valuable asset, and knowing exactly how much of it has passed is more than just a curiosity. Our **Age Calculator - Free Online Utility Tool** provides a precise, multi-dimensional breakdown of your life&apos;s timeline. Beyond just years and months, CosmoxHub calculates your age down to the exact day, hour, and minute. Whether you&apos;re planning a milestone celebration, calculating the age of a historical event, or simply want to know exactly how many days old you are, our tool delivers instantaneous and accurate results.
             </p>
             <p className="text-slate-400 leading-relaxed mt-4">
-              The **Age Calculator** at CosmoXHub is designed for maximum clarity and user ease. There is no need to manually count leap years or remember days in a specific month; our algorithm handles all chronological complexities in the background. As with every CosmoXHub utility, your birth date is processed locally in your browser. We don&apos;t store your personal milestones or track your data. It is the definitive free online tool for anyone needing a fast, reliable, and private way to track time&apos;s progression and celebrate horizontal growth.
+              The **Age Calculator** at CosmoxHub is designed for maximum clarity and user ease. There is no need to manually count leap years or remember days in a specific month; our algorithm handles all chronological complexities in the background. As with every CosmoxHub utility, your birth date is processed locally in your browser. We don&apos;t store your personal milestones or track your data. It is the definitive free online tool for anyone needing a fast, reliable, and private way to track time&apos;s progression and celebrate horizontal growth.
             </p>
           </div>
         </div>

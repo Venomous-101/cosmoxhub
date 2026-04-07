@@ -1,4 +1,4 @@
-export const metadata = {
+﻿export const metadata = {
   title: "Privacy Policy | CosmoxHub",
   description: "Read our privacy commitment: No data storage, no user tracking, and 100% privacy-focused online tools.",
 };

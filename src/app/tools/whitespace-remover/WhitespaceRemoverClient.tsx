@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { 
@@ -60,7 +60,7 @@ export default function WhitespaceRemoverClient() {
     },
     {
       question: "Is my text data safe?",
-      answer: "100%. Like all CosmoXHub utilities, the Whitespace Remover processes everything locally in your browser. Nothing is ever uploaded to our servers."
+      answer: "100%. Like all CosmoxHub utilities, the Whitespace Remover processes everything locally in your browser. Nothing is ever uploaded to our servers."
     }
   ];
 
@@ -244,10 +244,10 @@ export default function WhitespaceRemoverClient() {
 
         <div className="p-8 bg-[#0a0a1f]/40 border border-white/5 rounded-[2.5rem] prose prose-invert max-w-none">
           <p className="text-slate-400 leading-relaxed italic">
-            Precision in communication often requires cleanliness in formatting. Our **Whitespace Remover - Free Online Utility Tool** is a high-performance utility designed to strip away the digital clutter from your text. Whether you&apos;re a developer cleaning up minified code, a student fixing formatting errors in an essay, or a professional preparing a report, our tool provides an instant solution for removing redundant spaces, tabs, and unnecessary line breaks. By compressing your text without losing structural integrity, CosmoXHub ensures your content is as professional as it is readable.
+            Precision in communication often requires cleanliness in formatting. Our **Whitespace Remover - Free Online Utility Tool** is a high-performance utility designed to strip away the digital clutter from your text. Whether you&apos;re a developer cleaning up minified code, a student fixing formatting errors in an essay, or a professional preparing a report, our tool provides an instant solution for removing redundant spaces, tabs, and unnecessary line breaks. By compressing your text without losing structural integrity, CosmoxHub ensures your content is as professional as it is readable.
           </p>
           <p className="text-slate-400 leading-relaxed mt-4">
-            The **Whitespace Remover** at CosmoXHub is built with a developer-first mindset, offering advanced options like &apos;Single Line Conversion&apos; and &apos;Empty Line Removal&apos;. These features are essential for optimizing data for small JSON snippets, creating compact CSV files, or simply making a string more manageable for web deployment. Every byte counts in the digital world, and our tool helps you save space effectively. As a cornerstone of the CosmoXHub suite, this is a 100% free online tool that executes entirely within your browser, guaranteeing that your raw text remains confidential and secure.
+            The **Whitespace Remover** at CosmoxHub is built with a developer-first mindset, offering advanced options like &apos;Single Line Conversion&apos; and &apos;Empty Line Removal&apos;. These features are essential for optimizing data for small JSON snippets, creating compact CSV files, or simply making a string more manageable for web deployment. Every byte counts in the digital world, and our tool helps you save space effectively. As a cornerstone of the CosmoxHub suite, this is a 100% free online tool that executes entirely within your browser, guaranteeing that your raw text remains confidential and secure.
           </p>
         </div>
       </div>

@@ -1,43 +1,26 @@
-import { Metadata } from "next";
+import { generateToolMetadata, generateWebAppJsonLd } from "@/lib/seo-helpers";
 import JsonFormatterClient from "./JsonFormatterClient";
 
-export const metadata: Metadata = {
-  title: "JSON Formatter - Free Online Utility Tool | CosmoXHub",
-  description: "Format, validate, and beautify your JSON data instantly with our secure free online tool. Professional-grade JSON viewer with 100% private local processing.",
-  keywords: ["json formatter", "json viewer", "json validator", "beautify json online", "minify json", "json parser secure", "cosmoxhub"],
-  openGraph: {
-    title: "JSON Formatter - Free Online Utility Tool | CosmoXHub",
-    description: "Format, validate, and beautify your JSON data instantly with our elite developer-grade tool. 100% private and secure.",
-    type: "website",
-  }
-};
+export const metadata = generateToolMetadata({
+  toolName: "JSON Formatter & Validator",
+  slug: "json-formatter",
+  description: "Format, validate and beautify JSON online free. Fix JSON errors, minify JSON, syntax highlight and tree view. Instant parsing — no server upload on CosmoxHub.",
+  keywords: ["json formatter", "json validator", "format json online", "json beautifier", "json pretty print", "validate json", "json minifier"],
+});
 
-export default function JSONFormatterPage() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "CosmoxHub Elite JSON Formatter & Validator",
-    "operatingSystem": "Any",
-    "applicationCategory": "DeveloperTool",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "featureList": [
-       "Real-time JSON validation",
-       "High-fidelity beautification",
-       "Aggressive minification for APIs",
-       "Elite collapsible code view",
-       "Zero-latency client-side processing"
-    ]
-  };
+export default function JsonFormatterPage() {
+  const faqs = [
+    { question: "Can the JSON formatter fix broken JSON?", answer: "Yes. The validator highlights exactly where JSON syntax errors occur and what type of error it is, making it easy to fix malformed JSON." },
+    { question: "Can I minify JSON to reduce file size?", answer: "Yes! Use the minify button to strip all whitespace and produce a compact, production-ready JSON string." },
+    { question: "What is the maximum JSON file size it supports?", answer: "There is no artificial limit. The parser handles files with tens of thousands of lines depending on your device's memory." },
+    { question: "Is my JSON data private?", answer: "Completely. All formatting and validation happens in your browser using native JavaScript. No data is sent to any server." },
+  ];
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: generateWebAppJsonLd({ toolName: "JSON Formatter & Validator", slug: "json-formatter", description: "Format, validate and beautify JSON online free. Instant, private.", faqs }) }}
       />
       <JsonFormatterClient />
     </>

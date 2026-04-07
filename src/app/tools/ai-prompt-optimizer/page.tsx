@@ -1,43 +1,26 @@
-import { Metadata } from "next";
+import { generateToolMetadata, generateWebAppJsonLd } from "@/lib/seo-helpers";
 import PromptOptimizerClient from "./PromptOptimizerClient";
 
-export const metadata: Metadata = {
-  title: "AI Prompt Optimizer - Free Online Utility Tool | CosmoXHub",
-  description: "Optimize your AI prompts for ChatGPT, Claude, and Midjourney with our elite prompt engineering tool. 100% private, secure, and free online utility.",
-  keywords: ["ai prompt optimizer", "prompt engineering tool", "chatgpt prompt optimizer", "claude prompt generator", "midjourney prompt helper", "secure prompt engineering", "cosmoxhub"],
-  openGraph: {
-    title: "AI Prompt Optimizer - Free Online Utility Tool | CosmoXHub",
-    description: "Refine and optimize your AI prompts for ChatGPT, Claude, and Midjourney using elite frameworks like RTF, RISEN, and COSTAR. 100% private and secure.",
-    type: "website",
-  }
-};
+export const metadata = generateToolMetadata({
+  toolName: "AI Prompt Optimizer",
+  slug: "ai-prompt-optimizer",
+  description: "Optimize and enhance AI prompts for ChatGPT, Claude, Gemini and Midjourney online free. Transform basic prompts into expert-level instructions on CosmoxHub.",
+  keywords: ["ai prompt optimizer", "prompt enhancer", "chatgpt prompt generator", "claude prompt optimizer", "ai prompt engineering tool", "improve ai prompts", "prompt generator free"],
+});
 
-export default function AIPromptOptimizerPage() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "CosmoxHub Elite AI Prompt Optimizer",
-    "operatingSystem": "Any",
-    "applicationCategory": "AIUtility",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "featureList": [
-      "5 Expert frameworks (RTF, RISEN, COSTAR, CARE, EXPERT)",
-      "Model-specific targeting (ChatGPT, Claude, Gemini)",
-      "Tone and style control",
-      "100% Client-side privacy",
-      "One-click copy to clipboard"
-    ]
-  };
+export default function AiPromptOptimizerPage() {
+  const faqs = [
+    { question: "Which AI models does the prompt optimizer support?", answer: "CosmoxHub's prompt optimizer supports ChatGPT (GPT-4), Claude (Anthropic), Google Gemini, and image models like Midjourney and DALL-E." },
+    { question: "How does it improve my prompts?", answer: "It adds persona definitions, structured XML tags, chain-of-thought reasoning, negative constraints, and output format specifications to maximize AI response quality." },
+    { question: "Is this tool based on real prompt engineering principles?", answer: "Yes. It applies documented prompt engineering techniques from Anthropic's Claude prompting guide and OpenAI's best practices documentation." },
+    { question: "Are my prompts stored or used for AI training?", answer: "No. All optimization happens in your browser. Your prompts are never sent to any server or used for training." },
+  ];
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: generateWebAppJsonLd({ toolName: "AI Prompt Optimizer", slug: "ai-prompt-optimizer", description: "Optimize AI prompts for ChatGPT, Claude and Gemini. Free, expert-level.", faqs }) }}
       />
       <PromptOptimizerClient />
     </>

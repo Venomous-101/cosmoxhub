@@ -28,19 +28,19 @@ export default function HomePageContent() {
             100% Free. No Email Required.
           </div>
 
-          {/* H1 */}
-          <h1 className="font-space font-extrabold text-[4rem] md:text-[6.5rem] text-slate-100 text-center leading-[1.05] mb-12 tracking-tight">
-            All the tools you need,<br className="hidden md:block" />
+          {/* H1 — Keyword-Rich for Google */}
+          <h1 className="font-space font-extrabold text-[3.2rem] md:text-[5.5rem] text-slate-100 text-center leading-[1.05] mb-6 tracking-tight">
+            Free Online Tools —{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
-              in one single place.
+              PDF, Image, AI & More
             </span>
           </h1>
 
-          {/* Subtitle */}
-          <p className="text-xl md:text-2xl text-slate-400 text-center max-w-3xl mx-auto mb-24 leading-relaxed font-light">
-            26+ powerful online utilities for AI image reconstruction, PDF manipulation, and developer workflows.{" "}
-            <span className="text-slate-200 font-semibold">100% Free. No Signups. No Limits.</span>
-          </p>
+          {/* H2 — Supporting Semantic Signal */}
+          <h2 className="text-xl md:text-2xl text-slate-400 text-center max-w-3xl mx-auto mb-24 leading-relaxed font-light">
+            26+ powerful browser-based utilities for PDF, image, AI & text tasks.{" "}
+            <span className="text-slate-200 font-semibold">No signup. No limits. 100% private.</span>
+          </h2>
 
           {/* Stats Bar */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl bg-[#0a0a1f] border border-slate-800 rounded-[2.5rem] p-12 mt-4 shadow-2xl">

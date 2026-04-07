@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useCallback } from "react";
 import { 
@@ -235,7 +235,7 @@ export default function CodeBeautifierClient() {
           faqs={[
             {
               question: "Will my code be sent to a server for formatting?",
-              answer: "No. All reformatting logic happens locally in your browser. This makes CosmoXHub the most secure choice for formatting sensitive proprietary code."
+              answer: "No. All reformatting logic happens locally in your browser. This makes CosmoxHub the most secure choice for formatting sensitive proprietary code."
             },
             {
               question: "Does it support TypeScript or SCSS?",
@@ -253,7 +253,7 @@ export default function CodeBeautifierClient() {
           <div className="grid md:grid-cols-2 gap-10 text-slate-400 text-sm leading-relaxed font-medium">
             <div className="space-y-4">
               <p>
-                Maintaining clean, readable code is essential for modern development, but manual formatting is a massive time sink. CosmoXHub's <span className="text-white font-bold">secure code beautifier</span> provides a professional-grade environment for restructuring messy source files instantly. As a <span className="text-violet-500 font-bold underline">free online utility tool</span>, we prioritize your workflow efficiency without compromising on security.
+                Maintaining clean, readable code is essential for modern development, but manual formatting is a massive time sink. CosmoxHub's <span className="text-white font-bold">secure code beautifier</span> provides a professional-grade environment for restructuring messy source files instantly. As a <span className="text-violet-500 font-bold underline">free online utility tool</span>, we prioritize your workflow efficiency without compromising on security.
               </p>
               <p>
                 Our engine is optimized to be the <span className="text-white font-bold">fastest code formatter</span> available online. By utilizing <span className="text-white font-bold">local processing</span>, we eliminate the latency of server-side roundtrips while ensuring that your intellectual property remains private. This makes it the ideal choice for developers working with sensitive enterprise systems.
@@ -264,7 +264,7 @@ export default function CodeBeautifierClient() {
                 From complex HTML5 structures to deeply nested JavaScript objects and modern CSS3 layouts, our beautifier applies deterministic rules that satisfy the most rigorous style guides. The interface is designed for high-intensity developer labs, featuring one-click extraction and character count detection for precise code auditing.
               </p>
               <p>
-                Join the global development community that relies on CosmoXHub for <span className="text-white font-bold">private, secure, and professional</span> code organization. Scale your productivity and eliminate technical debt with the world's most advanced browser-side code reorganization suite.
+                Join the global development community that relies on CosmoxHub for <span className="text-white font-bold">private, secure, and professional</span> code organization. Scale your productivity and eliminate technical debt with the world's most advanced browser-side code reorganization suite.
               </p>
             </div>
           </div>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { 
@@ -41,7 +41,7 @@ export default function CaseConverterClient() {
     },
     {
       title: "Zero-Data Footprint",
-      content: "Your content stays in your browser. All text transformations are executed locally in your RAM. CosmoXHub never uploads, logs, or processes your text on external servers, keeping sensitive data 100% private.",
+      content: "Your content stays in your browser. All text transformations are executed locally in your RAM. CosmoxHub never uploads, logs, or processes your text on external servers, keeping sensitive data 100% private.",
       icon: Maximize
     }
   ];
@@ -242,10 +242,10 @@ export default function CaseConverterClient() {
 
         <div className="p-8 bg-[#0a0a1f]/40 border border-white/5 rounded-[2.5rem] prose prose-invert max-w-none">
           <p className="text-slate-400 leading-relaxed italic">
-            Formatting text shouldn&apos;t be a manual chore. Our **Case Converter - Free Online Utility Tool** is engineered for professionals who need to switch between text styles with surgical precision. Whether you&apos;re normalizing a database export, preparing a title for a blog post, or ensuring your social media captions follow sentence case rules, CosmoXHub provides a comprehensive suite of transformation options. With just one click, you can toggle between UPPERCASE, lowercase, Title Case, Sentence case, and even unconventional formats like iNVERTED cASE.
+            Formatting text shouldn&apos;t be a manual chore. Our **Case Converter - Free Online Utility Tool** is engineered for professionals who need to switch between text styles with surgical precision. Whether you&apos;re normalizing a database export, preparing a title for a blog post, or ensuring your social media captions follow sentence case rules, CosmoxHub provides a comprehensive suite of transformation options. With just one click, you can toggle between UPPERCASE, lowercase, Title Case, Sentence case, and even unconventional formats like iNVERTED cASE.
           </p>
           <p className="text-slate-400 leading-relaxed mt-4">
-            The **Case Converter** at CosmoXHub is built for speed and accessibility. We understand that in a fast-paced digital environment, every second counts. That&apos;s why our tool includes one-click &apos;Copy&apos; and &apos;Download&apos; features, allowing you to move your transformed text into your workflow instantly. True to our privacy-first philosophy, all transformations occur in your browser; your content is never uploaded to any server. It is the premier free online tool for writers, developers, and designers who demand excellence and efficiency in their text processing tasks.
+            The **Case Converter** at CosmoxHub is built for speed and accessibility. We understand that in a fast-paced digital environment, every second counts. That&apos;s why our tool includes one-click &apos;Copy&apos; and &apos;Download&apos; features, allowing you to move your transformed text into your workflow instantly. True to our privacy-first philosophy, all transformations occur in your browser; your content is never uploaded to any server. It is the premier free online tool for writers, developers, and designers who demand excellence and efficiency in their text processing tasks.
           </p>
         </div>
       </div>

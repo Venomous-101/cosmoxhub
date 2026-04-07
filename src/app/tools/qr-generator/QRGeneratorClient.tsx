@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef, ElementRef } from "react";
 import { 
@@ -148,7 +148,7 @@ export default function QRGeneratorClient() {
     },
     {
       title: "Privacy Fortress",
-      content: "Your destination URLs and personal data are never tracked. Unlike 'Dynamic' QR tools that route through third-party servers, CosmoXHub generates 'Static' codes locally in your browser for total privacy.",
+      content: "Your destination URLs and personal data are never tracked. Unlike 'Dynamic' QR tools that route through third-party servers, CosmoxHub generates 'Static' codes locally in your browser for total privacy.",
       icon: QrCode
     }
   ];
@@ -191,7 +191,7 @@ export default function QRGeneratorClient() {
       try {
         const url = canvas.toDataURL("image/png");
         const link = document.createElement("a");
-        link.download = `cosmoxhub-qr-ultra-${Date.now()}.png`;
+        link.download = `CosmoxHub-qr-ultra-${Date.now()}.png`;
         link.href = url;
         document.body.appendChild(link);
         link.click();

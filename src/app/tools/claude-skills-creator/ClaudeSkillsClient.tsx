@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState } from "react";
 import {
   Brain, Download, Copy, Check, Settings, Sparkles,
@@ -256,7 +256,7 @@ ${instructionLines}
           faqs={[
             {
               question: "Is my agent definition kept private?",
-              answer: "Absolutely. CosmoXHub utilizes local processing for all agent definitions. Your proprietary skills and instructions never leave your browser."
+              answer: "Absolutely. CosmoxHub utilizes local processing for all agent definitions. Your proprietary skills and instructions never leave your browser."
             },
             {
               question: "What is a SKILLS.md file used for?",
@@ -274,7 +274,7 @@ ${instructionLines}
           <div className="grid md:grid-cols-2 gap-10 text-slate-400 text-sm leading-relaxed font-medium">
             <div className="space-y-4">
               <p>
-                As AI becomes more integrated into professional workflows, the need for specialized, role-defined assistants is paramount. CosmoXHub's <span className="text-white font-bold">secure AI agent builder</span> provides the ultimate lab for engineering high-fidelity SKILLS.md files. This <span className="text-purple-500 font-bold underline">free online utility tool</span> empowers developers to define personas with surgical precision.
+                As AI becomes more integrated into professional workflows, the need for specialized, role-defined assistants is paramount. CosmoxHub's <span className="text-white font-bold">secure AI agent builder</span> provides the ultimate lab for engineering high-fidelity SKILLS.md files. This <span className="text-purple-500 font-bold underline">free online utility tool</span> empowers developers to define personas with surgical precision.
               </p>
               <p>
                 We are proud to offer the <span className="text-white font-bold">fastest SKILLS.md generator</span> for the modern AI ecosystem. By prioritizing <span className="text-white font-bold">local processing</span>, we ensure that your agent's core capabilities and proprietary guardrails are never exposed to external servers, maintaining 100% privacy for your AI architecture.
@@ -285,7 +285,7 @@ ${instructionLines}
                 Our platform supports the most advanced prompt engineering frameworks, allowing you to build everything from elite full-stack developers to complex data analyst personas. The structured markdown output is compatible with all frontier models, ensuring your agent behaves with the specific tone and expertise level required for high-stakes professional environments.
               </p>
               <p>
-                Join the vanguard of AI engineering by choosing CosmoXHub for your <span className="text-white font-bold">private, secure, and professional</span> agent definition needs. Master the art of the system prompt and deploy elite AI capabilities with confidence using our state-of-the-art builder.
+                Join the vanguard of AI engineering by choosing CosmoxHub for your <span className="text-white font-bold">private, secure, and professional</span> agent definition needs. Master the art of the system prompt and deploy elite AI capabilities with confidence using our state-of-the-art builder.
               </p>
             </div>
           </div>

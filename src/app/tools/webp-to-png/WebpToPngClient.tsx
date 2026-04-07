@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef } from "react";
 import {
@@ -368,7 +368,7 @@ export default function WebpToPngClient() {
               Need a reliable way to convert WebP to PNG without losing quality? CosmoxHub presents the definitive WebP to PNG - Free Online Utility Tool designed for speed, privacy, and full transparency support. WebP is great for the web, but many legacy applications and designers still require the high-fidelity of PNG. Our converter allows you to switch formats in bulk, handling up to 20 images at once, all while keeping your data strictly on your device.
             </p>
             <p className="text-slate-400 leading-relaxed mt-4">
-              Our WebP to PNG converter is built for perfectionists. It preserves the full Alpha channel of your images, ensuring that transparent backgrounds remain perfectly clear in the final PNG asset. Because it runs 100% client-side, there are no upload wait times and zero server-side logs of your files. Whether you&apos;re a developer optimizing assets or a designer preparing a portfolio, CosmoXHub offers the most secure and efficient way to manage your image library. Experience the ultimate free online tool for lossless image conversion today.
+              Our WebP to PNG converter is built for perfectionists. It preserves the full Alpha channel of your images, ensuring that transparent backgrounds remain perfectly clear in the final PNG asset. Because it runs 100% client-side, there are no upload wait times and zero server-side logs of your files. Whether you&apos;re a developer optimizing assets or a designer preparing a portfolio, CosmoxHub offers the most secure and efficient way to manage your image library. Experience the ultimate free online tool for lossless image conversion today.
             </p>
           </div>
         </div>

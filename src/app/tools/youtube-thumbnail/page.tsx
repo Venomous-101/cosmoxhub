@@ -1,43 +1,26 @@
-import { Metadata } from "next";
+import { generateToolMetadata, generateWebAppJsonLd } from "@/lib/seo-helpers";
 import YoutubeThumbnailClient from "./YoutubeThumbnailClient";
 
-export const metadata: Metadata = {
-  title: "YouTube Thumbnail Downloader - Free Online Utility Tool | CosmoXHub",
-  description: "Download high-quality YouTube video thumbnails instantly with our high-speed free online tool. Support for HD, HQ, and default resolutions. 100% free and easy to use.",
-  keywords: ["youtube thumbnail downloader", "get youtube thumbnail", "yt thumbnail grabber", "download youtube cover", "cosmoxhub"],
-  openGraph: {
-    title: "YouTube Thumbnail Downloader - Free Online Utility Tool | CosmoXHub",
-    description: "Extract high-resolution YouTube thumbnails instantly with our elite developer-grade tool. 100% free.",
-    type: "website",
-  }
-};
+export const metadata = generateToolMetadata({
+  toolName: "YouTube Thumbnail Downloader",
+  slug: "youtube-thumbnail",
+  description: "Download YouTube thumbnails in HD, Full HD and 4K quality for free. Works with all YouTube URLs including Shorts. No signup, instant download on CosmoxHub.",
+  keywords: ["youtube thumbnail downloader", "download youtube thumbnail", "youtube thumbnail hd", "yt thumbnail grabber", "get youtube thumbnail", "youtube cover image", "youtube thumbnail 4k"],
+});
 
-export default function YouTubeThumbnailPage() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "CosmoxHub Elite YouTube Thumbnail Downloader",
-    "operatingSystem": "Any",
-    "applicationCategory": "MultimediaApplication",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "featureList": [
-       "Real-time YouTube URL ID extraction",
-       "High-res maxresdefault fetch engine",
-       "Multi-resolution visual asset gallery",
-       "Elite one-tap discovery/download protocol",
-       "Zero-latency client-side parsing"
-    ]
-  };
+export default function YoutubeThumbnailPage() {
+  const faqs = [
+    { question: "What resolutions can I download YouTube thumbnails in?", answer: "You can download YouTube thumbnails in Standard (480p), High Definition (720p), Full HD (1080p) and Max Resolution quality, depending on what the video uploader provided." },
+    { question: "Does it work with YouTube Shorts?", answer: "Yes! CosmoxHub's YouTube thumbnail downloader automatically detects and works with all YouTube URL formats including Shorts, youtu.be links, and standard watch URLs." },
+    { question: "Is this free?", answer: "100% free. No signup, no watermarks, no download limits." },
+    { question: "Can I download thumbnails from private videos?", answer: "No. You can only download thumbnails from public YouTube videos. Private and unlisted video thumbnails are not accessible." },
+  ];
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: generateWebAppJsonLd({ toolName: "YouTube Thumbnail Downloader", slug: "youtube-thumbnail", description: "Download YouTube video thumbnails in HD quality free. Works with all URLs.", faqs }) }}
       />
       <YoutubeThumbnailClient />
     </>

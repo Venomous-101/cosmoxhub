@@ -1,4 +1,4 @@
-export const metadata = {
+﻿export const metadata = {
   title: "Terms of Service | CosmoxHub",
   description: "Read our rules of usage: CosmoxHub is free for everyone, providing ethical and privacy-first online tools.",
 };

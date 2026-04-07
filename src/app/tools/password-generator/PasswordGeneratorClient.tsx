@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo, useEffect } from "react";
 import { 
@@ -40,7 +40,7 @@ export default function PasswordGeneratorClient() {
     },
     {
       title: "Local Fortress",
-      content: "Your passwords never leave your device. All generation happens locally in your browser's memory. This 'Zero-Knowledge' approach ensures that even CosmoXHub cannot see the passwords you create.",
+      content: "Your passwords never leave your device. All generation happens locally in your browser's memory. This 'Zero-Knowledge' approach ensures that even CosmoxHub cannot see the passwords you create.",
       icon: ShieldCheck
     }
   ];
@@ -48,7 +48,7 @@ export default function PasswordGeneratorClient() {
   const faqs = [
     {
       question: "Is it safe to generate passwords online?",
-      answer: "Yes, specifically with CosmoXHub. Unlike server-side generators, our tool runs entirely in your browser. No data is sent to any server, making it as safe as generating a password offline."
+      answer: "Yes, specifically with CosmoxHub. Unlike server-side generators, our tool runs entirely in your browser. No data is sent to any server, making it as safe as generating a password offline."
     },
     {
       question: "What is a 'Good' entropy score?",
@@ -330,10 +330,10 @@ export default function PasswordGeneratorClient() {
 
           <div className="p-8 bg-[#0a0a1f]/40 border border-white/5 rounded-[2.5rem] prose prose-invert max-w-none">
             <p className="text-slate-400 leading-relaxed italic">
-              Securing your digital life starts with a strong foundation. Our **Password Generator - Free Online Utility Tool** is engineered to provide high-entropy, unbreakable strings that protect your most sensitive accounts. Whether you need a simple 12-character combination for a new social media profile or a complex 64-character sequence for enterprise-level security, CosmoXHub gives you full control over length, symbols, numbers, and casing.
+              Securing your digital life starts with a strong foundation. Our **Password Generator - Free Online Utility Tool** is engineered to provide high-entropy, unbreakable strings that protect your most sensitive accounts. Whether you need a simple 12-character combination for a new social media profile or a complex 64-character sequence for enterprise-level security, CosmoxHub gives you full control over length, symbols, numbers, and casing.
             </p>
             <p className="text-slate-400 leading-relaxed mt-4">
-              Safety is at the core of our **Password Generator**. Unlike many online generators that might log your credentials or send them across the web, CosmoXHub's algorithm runs entirely on your local machine. Your passwords are never stored, never transmitted, and never seen by anyone else. It is the ultimate free online tool for individuals and businesses who refuse to compromise on cybersecurity. Generate, copy, and protect your digital assets with absolute confidence.
+              Safety is at the core of our **Password Generator**. Unlike many online generators that might log your credentials or send them across the web, CosmoxHub's algorithm runs entirely on your local machine. Your passwords are never stored, never transmitted, and never seen by anyone else. It is the ultimate free online tool for individuals and businesses who refuse to compromise on cybersecurity. Generate, copy, and protect your digital assets with absolute confidence.
             </p>
           </div>
         </div>

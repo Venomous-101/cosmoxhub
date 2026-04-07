@@ -1,43 +1,26 @@
-import { Metadata } from "next";
+import { generateToolMetadata, generateWebAppJsonLd } from "@/lib/seo-helpers";
 import TextToPdfClient from "./TextToPdfClient";
 
-export const metadata: Metadata = {
-  title: "Text to PDF - Free Online Utility Tool | CosmoXHub",
-  description: "Convert plain text into professional PDF documents instantly with our high-speed free online tool. Support for custom fonts and paper sizes. 100% private.",
-  keywords: ["text to pdf", "convert text to pdf", "txt to pdf converter", "online text to pdf", "professional pdf creator", "cosmoxhub"],
-  openGraph: {
-    title: "Text to PDF - Free Online Utility Tool | CosmoXHub",
-    description: "Convert plain text into professional PDF documents instantly with our high-speed free online tool. Support for custom fonts and paper sizes.",
-    type: "website",
-  }
-};
+export const metadata = generateToolMetadata({
+  toolName: "Text to PDF Converter",
+  slug: "text-to-pdf",
+  description: "Convert plain text to PDF online for free. Format your text, set fonts and margins and download a professional PDF document instantly. No signup on CosmoxHub.",
+  keywords: ["text to pdf", "convert text to pdf", "txt to pdf online", "create pdf from text", "text to pdf converter free", "plain text to pdf"],
+});
 
 export default function TextToPdfPage() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "CosmoxHub Elite Text to PDF Generator",
-    "operatingSystem": "Any",
-    "applicationCategory": "Utility",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "featureList": [
-      "Bold/Italic/Underline formatting",
-      "Multiple font families",
-      "Alignment control",
-      "Multi-page auto flow",
-      "100% Client-side privacy"
-    ]
-  };
+  const faqs = [
+    { question: "Can I customize fonts and margins?", answer: "Yes. You can select from multiple professional fonts, adjust font size, set page margins, and choose A4 or Letter page size." },
+    { question: "Is there a text length limit?", answer: "No. Multi-page PDFs are generated automatically when your text exceeds a single page." },
+    { question: "Is my document content private?", answer: "Yes. All conversion happens locally in your browser. Your text is never uploaded to any server." },
+    { question: "What PDF version is created?", answer: "CosmoxHub generates standard PDF 1.4 compatible documents that can be opened by all PDF readers including Adobe Acrobat, Preview, and browser viewers." },
+  ];
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: generateWebAppJsonLd({ toolName: "Text to PDF Converter", slug: "text-to-pdf", description: "Convert plain text to PDF free. Custom fonts, margins, instant download.", faqs }) }}
       />
       <TextToPdfClient />
     </>

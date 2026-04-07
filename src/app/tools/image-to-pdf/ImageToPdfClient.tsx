@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef } from "react";
 import { 
@@ -124,7 +124,7 @@ export default function ImageToPdfClient() {
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `cosmoxhub-${Date.now()}.pdf`;
+      link.download = `CosmoxHub-${Date.now()}.pdf`;
       link.click();
       URL.revokeObjectURL(url);
     } catch (err: unknown) {
@@ -354,7 +354,7 @@ export default function ImageToPdfClient() {
           faqs={[
             {
               question: "Is there a limit to how many images I can convert to PDF?",
-              answer: "CosmoXHub is optimized for productivity. You can convert up to 20 images at once into a single, high-quality PDF document."
+              answer: "CosmoxHub is optimized for productivity. You can convert up to 20 images at once into a single, high-quality PDF document."
             },
             {
               question: "Will my images be uploaded to any server?",
@@ -372,7 +372,7 @@ export default function ImageToPdfClient() {
           <div className="grid md:grid-cols-2 gap-10 text-slate-400 text-sm leading-relaxed font-medium">
             <div className="space-y-4">
               <p>
-                In a world where digital privacy is often compromised, CosmoXHub offers a <span className="text-white font-bold">secure image to PDF converter</span> that keeps your data local. Whether you are creating a portfolio, archiving receipts, or preparing a presentation, our <span className="text-sky-500 font-bold underline">free online utility tool</span> ensures that your images stay on your device throughout the entire conversion process.
+                In a world where digital privacy is often compromised, CosmoxHub offers a <span className="text-white font-bold">secure image to PDF converter</span> that keeps your data local. Whether you are creating a portfolio, archiving receipts, or preparing a presentation, our <span className="text-sky-500 font-bold underline">free online utility tool</span> ensures that your images stay on your device throughout the entire conversion process.
               </p>
               <p>
                 As the <span className="text-white font-bold">fastest bulk image converter</span> available, we bypass traditional server latency by using browser-native processing. This means instant <span className="text-white font-bold">JPG to PDF</span> and <span className="text-white font-bold">PNG to PDF</span> generation, allowing your workflow to remain uninterrupted and elite.

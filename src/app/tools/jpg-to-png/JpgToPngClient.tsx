@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef } from "react";
 import {
@@ -57,7 +57,7 @@ export default function JpgToPngClient() {
     },
     {
       title: "Zero Data Risk",
-      content: "At CosmoXHub, privacy is our cornerstone. Our JPG to PNG engine runs in your browser's RAM, ensuring your files never leave your device. Fast, free, and 100% secure.",
+      content: "At CosmoxHub, privacy is our cornerstone. Our JPG to PNG engine runs in your browser's RAM, ensuring your files never leave your device. Fast, free, and 100% secure.",
       icon: CheckCircle2
     }
   ];
@@ -139,7 +139,7 @@ export default function JpgToPngClient() {
         if (img.convertedUrl) {
           const link = document.createElement("a");
           link.href = img.convertedUrl;
-          link.download = `${img.name}-cosmoxhub.png`;
+          link.download = `${img.name}-CosmoxHub.png`;
           link.click();
         }
       });
@@ -148,11 +148,11 @@ export default function JpgToPngClient() {
   };
 
   const triggerDownloadSingle = (img: ImageFile) => {
-    setAdModalFileName(`${img.name}-cosmoxhub.png`);
+    setAdModalFileName(`${img.name}-CosmoxHub.png`);
     setPendingDownloadAction(() => () => {
       const link = document.createElement("a");
       link.href = img.convertedUrl!;
-      link.download = `${img.name}-cosmoxhub.png`;
+      link.download = `${img.name}-CosmoxHub.png`;
       link.click();
     });
     setIsAdModalOpen(true);
@@ -290,10 +290,10 @@ export default function JpgToPngClient() {
 
         <div className="p-8 bg-[#0a0a1f]/40 border border-white/5 rounded-[2.5rem] prose prose-invert max-w-none">
           <p className="text-slate-400 leading-relaxed italic">
-            Convert your JPEGs to the versatile PNG format with our **JPG to PNG - Free Online Utility Tool**. CosmoXHub offers a seamless, high-performance solution for users who need to preserve image quality or prepare assets for layers-based design work. While JPG is excellent for photography, PNG is the gold standard for web graphics that require crisp edges and potential transparency. Our tool bridges that gap with a single click.
+            Convert your JPEGs to the versatile PNG format with our **JPG to PNG - Free Online Utility Tool**. CosmoxHub offers a seamless, high-performance solution for users who need to preserve image quality or prepare assets for layers-based design work. While JPG is excellent for photography, PNG is the gold standard for web graphics that require crisp edges and potential transparency. Our tool bridges that gap with a single click.
           </p>
           <p className="text-slate-400 leading-relaxed mt-4">
-            Our **JPG to PNG** converter is engineered for speed and absolute privacy. By running the entire conversion process locally in your browser, we ensure that your sensitive images are never uploaded to our servers. This client-side approach not only protects your personal data but also eliminates the latency of traditional cloud-based tools. With the ability to process up to 20 images at once and download them instantly, CosmoXHub is the definitive free online tool for professional image conversion.
+            Our **JPG to PNG** converter is engineered for speed and absolute privacy. By running the entire conversion process locally in your browser, we ensure that your sensitive images are never uploaded to our servers. This client-side approach not only protects your personal data but also eliminates the latency of traditional cloud-based tools. With the ability to process up to 20 images at once and download them instantly, CosmoxHub is the definitive free online tool for professional image conversion.
           </p>
         </div>
       </div>

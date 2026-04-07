@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { 
@@ -82,7 +82,7 @@ export default function MergePdfClient() {
       }
       const link = document.createElement("a");
       link.href = url;
-      link.download = `cosmoxhub-merged-${Date.now()}.pdf`;
+      link.download = `CosmoxHub-merged-${Date.now()}.pdf`;
       link.click();
       
       setIsMerging(false);
@@ -254,7 +254,7 @@ export default function MergePdfClient() {
           ]}
           faqs={[
             {
-              question: "Is merging PDFs on CosmoXHub secure?",
+              question: "Is merging PDFs on CosmoxHub secure?",
               answer: "Yes, it is the most secure method available. Unlike other tools, we process your files entirely in your browser. Your sensitive documents never leave your computer or touch a server."
             },
             {
@@ -273,7 +273,7 @@ export default function MergePdfClient() {
           <div className="grid md:grid-cols-2 gap-10 text-slate-400 text-sm leading-relaxed font-medium">
             <div className="space-y-4">
               <p>
-                In the modern digital workspace, the ability to <span className="text-white font-bold">merge PDF files</span> quickly and securely is essential. CosmoXHub provides a professional-grade, <span className="text-rose-500 font-bold underline">free online utility tool</span> designed to handle your most sensitive documents with absolute privacy. By leveraging advanced browser-side technology, we ensure that your files never touch a cloud server, making this the <span className="text-white font-bold">fastest and safest way</span> to combine documents.
+                In the modern digital workspace, the ability to <span className="text-white font-bold">merge PDF files</span> quickly and securely is essential. CosmoxHub provides a professional-grade, <span className="text-rose-500 font-bold underline">free online utility tool</span> designed to handle your most sensitive documents with absolute privacy. By leveraging advanced browser-side technology, we ensure that your files never touch a cloud server, making this the <span className="text-white font-bold">fastest and safest way</span> to combine documents.
               </p>
               <p>
                 Whether you are combining legal contracts, academic reports, or personal records, our <span className="text-white font-bold">local processing</span> architecture guarantees that your data stays on your device. This eliminates the risk of data breaches associated with traditional online PDF mergers that upload your private information to external servers.
@@ -284,7 +284,7 @@ export default function MergePdfClient() {
                 Our interface is built for precision. You have full control over the sequence of your merged document, allowing you to reorder pages with a single click. The result is a high-fidelity unified PDF that maintains the original resolution and metadata of your source files.
               </p>
               <p>
-                Experience the difference between standard tools and elite performance. CosmoXHub's PDF Suite is optimized for speed, security, and simplicity. No registration, no hidden fees, and no watermarks—just pure, high-performance utility at your fingertips.
+                Experience the difference between standard tools and elite performance. CosmoxHub's PDF Suite is optimized for speed, security, and simplicity. No registration, no hidden fees, and no watermarks—just pure, high-performance utility at your fingertips.
               </p>
             </div>
           </div>

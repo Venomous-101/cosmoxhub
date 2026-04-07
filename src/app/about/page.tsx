@@ -1,4 +1,4 @@
-import { Zap, Shield, Heart, Globe } from "lucide-react";
+﻿import { Zap, Shield, Heart, Globe } from "lucide-react";
 
 export const metadata = {
   title: "About Us | CosmoxHub",
