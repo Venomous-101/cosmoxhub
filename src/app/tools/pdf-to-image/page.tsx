@@ -2,12 +2,12 @@ import { Metadata } from "next";
 import PdfToImageClient from "./PdfToImageClient";
 
 export const metadata: Metadata = {
-  title: "PDF to Image Converter - Free Online Utility Tool | CosmoXHub",
-  description: "Convert PDF to high-quality JPG or PNG images instantly with our secure free online tool. Extract pages with vector-precision and 100% private local processing.",
-  keywords: ["pdf to image", "pdf to jpg", "pdf to png", "extract images from pdf", "pdf page to image", "free pdf tools", "secure pdf to image", "cosmoxhub"],
+  title: "PDF to PNG/JPG Bulk Converter - Free Online Tool | CosmoXHub",
+  description: "Convert single or multiple PDFs to high-quality PNG or JPG images instantly. Bulk upload, vector-precision rendering, and 100% private browser-side processing.",
+  keywords: ["pdf to png", "pdf to jpg", "pdf to image", "bulk pdf converter", "pdf page to png", "batch pdf to image", "free pdf tools", "cosmoxhub"],
   openGraph: {
-    title: "PDF to Image Converter - Free Online Utility Tool | CosmoXHub",
-    description: "Extract high-resolution images from your PDF pages with vector-precision. Perfect for social media and presentations. 100% secure and private.",
+    title: "PDF to PNG/JPG Bulk Converter - Free Online Tool | CosmoXHub",
+    description: "Convert bulk PDFs to high-resolution PNG or JPG images. Supports multi-file upload with vector-precision. 100% secure and private.",
     type: "website",
   }
 };
@@ -16,7 +16,7 @@ export default function PDFToImagePage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "CosmoxHub Elite PDF to Image",
+    "name": "CosmoxHub PDF to PNG/JPG Bulk Converter",
     "operatingSystem": "Any",
     "applicationCategory": "MultimediaApplication",
     "offers": {
@@ -25,11 +25,11 @@ export default function PDFToImagePage() {
       "priceCurrency": "USD"
     },
     "featureList": [
+      "Bulk PDF to PNG/JPG conversion",
       "Vector-precision PDF rendering",
-      "High-res JPG/PNG extraction",
-      "Secure browser-side state management",
-      "Elite quality up to 3x scale",
-      "Zero-server-risk architecture"
+      "High-res up to 3x Ultra scale",
+      "Multi-file drag-and-drop upload",
+      "Zero-server browser-side processing"
     ]
   };
 
