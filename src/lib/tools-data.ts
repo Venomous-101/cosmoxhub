@@ -15,6 +15,7 @@ import {
   Eraser,
   Code2,
   Minimize,
+  FileArchive,
   LucideIcon
 } from "lucide-react";
 
@@ -43,9 +44,10 @@ export const categories: Category[] = [
     tools: [
       { title: "Merge PDF", description: "Combine multiple PDF files into one document in seconds.", href: "/tools/merge-pdf", icon: FileStack, badge: "Popular" },
       { title: "Split PDF", description: "Extract specific pages from a PDF or split into multiple files.", href: "/tools/split-pdf", icon: Scissors },
+      { title: "PDF Compressor", description: "Reduce PDF file size instantly. Bulk compress multiple PDFs at once.", href: "/tools/pdf-compressor", icon: FileArchive, badge: "New" },
       { title: "PDF Password Remover", description: "Unlock protected PDF files instantly. 100% Client-side privacy.", href: "/tools/pdf-unlocker", icon: Unlock, badge: "Elite" },
       { title: "Image to PDF", description: "Convert JPG, PNG, or any image into a PDF document.", href: "/tools/image-to-pdf", icon: ImagePlus, badge: "Hot" },
-      { title: "PDF to Image", description: "Export every page of a PDF as a high-quality image.", href: "/tools/pdf-to-image", icon: FileImage },
+      { title: "PDF to Image", description: "Export every page of a PDF as a high-quality PNG or JPG image.", href: "/tools/pdf-to-image", icon: FileImage },
     ],
   },
   {
