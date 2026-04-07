@@ -43,7 +43,7 @@ async function compressPdf(file: File, level: CompressionLevel): Promise<Blob> {
     objectsPerTick: level === "high" ? 50 : 100,
   });
 
-  return new Blob([saved], { type: "application/pdf" });
+  return new Blob([saved.buffer] as any, { type: "application/pdf" });
 }
 
 export default function PdfCompressorClient() {
@@ -329,9 +329,10 @@ export default function PdfCompressorClient() {
                         </div>
                         {/* Progress bar */}
                         <div className="mt-2 h-1 bg-white/5 rounded-full overflow-hidden">
-                          <div
+                          <motion.div
                             className="h-full bg-gradient-to-r from-violet-500 to-emerald-500 rounded-full"
-                            style={{ width: `${100 - (entry.savings ?? 0)}%` }}
+                            initial={{ width: 0 }}
+                            animate={{ width: `${100 - (entry.savings ?? 0)}%` }}
                           />
                         </div>
                       </div>
