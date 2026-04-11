@@ -29,7 +29,7 @@ export default function ToolCard({ title, description, href, icon: Icon, color =
   return (
     <Link 
       href={href} 
-      className="card p-6 flex flex-col gap-5 relative overflow-hidden h-full group no-underline transition-all duration-200 hover:-translate-y-1 hover:border-[#7C3AED]/40 hover:shadow-lg hover:shadow-[#7C3AED]/10 cursor-pointer"
+      className="bg-[#111111] border border-white/8 rounded-2xl p-5 flex flex-col gap-5 relative overflow-hidden h-full group no-underline transition-all duration-200 hover:-translate-y-1 hover:border-[#7C3AED]/40 hover:shadow-lg hover:shadow-[#7C3AED]/10 hover:bg-[#111111] cursor-pointer"
     >
       {/* Glow effect */}
       <div 
@@ -59,7 +59,7 @@ export default function ToolCard({ title, description, href, icon: Icon, color =
 
       {/* Arrow hint */}
       <div 
-        className={`pt-3 mt-auto mb-6 text-sm font-bold opacity-70 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-300 ${styles.arrow} flex items-center gap-1`}
+        className={`pt-3 mt-auto mb-2 text-sm font-bold opacity-70 group-hover:opacity-100 group-hover:translate-x-2 group-hover:text-[#A78BFA] transition-all duration-200 text-gray-500 flex items-center gap-1`}
       >
         Use Tool <span>&rarr;</span>
       </div>

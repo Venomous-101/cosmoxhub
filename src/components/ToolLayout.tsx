@@ -99,22 +99,16 @@ export default function ToolLayout({
           <RelatedTools currentPath={pathname} isSidebar={false} />
         </div>
 
-        {/* ── Subtle Affiliate Banner (bottom, non-intrusive) ────────── */}
-        <div className="max-w-4xl mx-auto px-4 pb-12">
-          <a
-            href="https://omg10.com/4/10812784"
-            target="_blank"
-            rel="noopener noreferrer sponsored"
-            className="flex items-center justify-between gap-4 w-full px-5 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-white/10 hover:bg-white/[0.05] transition-all group"
-          >
-            <p className="text-xs text-gray-600 group-hover:text-gray-500 transition-colors">
-              <span className="text-gray-500 font-medium">Sponsored —</span>{" "}
-              Discover premium tools and resources curated for creators &amp; developers.
-            </p>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-gray-600 group-hover:text-gray-400 transition-colors shrink-0">
-              Explore →
-            </span>
-          </a>
+        {/* Small support line - bottom of every tool page */}
+        <div className="max-w-4xl mx-auto px-4 py-4 pb-12 border-t border-white/5 text-center">
+          <p className="text-xs text-gray-600">
+            CosmoxHub is free forever. If it helped you,{' '}
+            <a href="https://www.buymeacoffee.com/cosmoxhub" target="_blank" rel="noopener noreferrer"
+              className="text-yellow-500 hover:text-yellow-400 transition-colors">
+              buy us a coffee ☕
+            </a>
+            {' '}— completely optional.
+          </p>
         </div>
       </main>
 

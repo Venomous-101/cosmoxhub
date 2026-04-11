@@ -15,9 +15,8 @@ export default function HomePageContent() {
         <p className="text-xs font-bold tracking-[0.3em] text-gray-400 uppercase mb-4">
           100% Free. No Email Required.
         </p>
-        <h1 className="text-5xl md:text-7xl font-black text-white leading-tight mb-4">
-          Free Online Tools —
-          <br />
+        <h1 className="text-5xl md:text-7xl font-black leading-tight mb-4 text-white">
+          Free Online Tools —{' '}
           <span className="text-[#7C3AED]">PDF, Image, AI</span>
           <span className="text-white"> &amp; More</span>
         </h1>
@@ -53,55 +52,58 @@ export default function HomePageContent() {
       </section>
 
       {/* ── CHANGE 3: Premium Stats Bar ──────────────────────────────────── */}
-      <div className="flex items-center justify-center gap-8 md:gap-12 py-6 border-y border-white/5 mb-16 px-4">
-        <div className="text-center">
-          <p className="text-3xl md:text-4xl font-black text-white">26+</p>
-          <p className="text-xs text-gray-500 uppercase tracking-widest mt-1">Free Utilities</p>
-        </div>
-        <div className="w-px h-10 bg-white/10" />
-        <div className="text-center">
-          <p className="text-3xl md:text-4xl font-black text-white">Zero</p>
-          <p className="text-xs text-gray-500 uppercase tracking-widest mt-1">Signup Needed</p>
-        </div>
-        <div className="w-px h-10 bg-white/10" />
-        <div className="text-center">
-          <p className="text-3xl md:text-4xl font-black text-white">100%</p>
-          <p className="text-xs text-gray-500 uppercase tracking-widest mt-1">Secure &amp; Private</p>
-        </div>
+      <div className="flex items-center justify-center gap-8 md:gap-16 py-6 border-y border-white/5 mb-16 px-4">
+        {[
+          { value: '28+', label: 'Free Utilities' },
+          { value: 'Zero', label: 'Signup Needed' },
+          { value: '100%', label: 'Secure & Private' },
+        ].map((stat, i) => (
+          <div key={i} className="text-center">
+            <p className="text-4xl md:text-5xl font-black text-white">{stat.value}</p>
+            <p className="text-xs text-gray-500 uppercase tracking-[0.2em] mt-1">{stat.label}</p>
+          </div>
+        ))}
       </div>
 
       {/* ── Tool Grid ────────────────────────────────────────────────────── */}
       <SearchableToolGrid searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
-      {/* ── CHANGE 1: Single Bottom Ad (moved from between sections) ──────── */}
-      <div className="max-w-4xl mx-auto px-4 pt-8 pb-4">
-        <a
-          href="https://www.profitablecpmratenetwork.com/ijdcjcbjbu?key=95dadbf472e8f7896aec68822c9bfeca"
-          target="_blank"
-          rel="noopener noreferrer sponsored"
-          className="flex items-center justify-between gap-4 w-full px-5 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-white/10 hover:bg-white/[0.05] transition-all group"
-        >
-          <p className="text-xs text-gray-600 group-hover:text-gray-500 transition-colors">
-            <span className="text-gray-500 font-medium">Sponsored —</span>{" "}
-            Discover premium tools and resources curated for creators &amp; developers.
+      {/* Support Section — replaces all ads */}
+      <section className="border-t border-b border-white/5 py-10 px-4 my-8">
+        <div className="max-w-xl mx-auto text-center">
+          <p className="text-2xl mb-3">☕</p>
+          <h3 className="text-white font-semibold text-base mb-2">
+            CosmoxHub is 100% free — forever.
+          </h3>
+          <p className="text-gray-500 text-sm mb-5 leading-relaxed">
+            No ads, no tracking, no paywalls. If these tools saved you time, 
+            a coffee keeps us building more.
           </p>
-          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-600 group-hover:text-gray-400 transition-colors shrink-0">
-            Explore →
-          </span>
-        </a>
-      </div>
+          <a
+            href="https://www.buymeacoffee.com/cosmoxhub"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-[#FFDD00] hover:bg-yellow-300 text-gray-900 font-bold px-6 py-3 rounded-xl text-sm transition-colors"
+          >
+            ☕ Buy me a coffee
+          </a>
+          <p className="text-gray-600 text-xs mt-3">
+            Completely optional. Tools are free regardless.
+          </p>
+        </div>
+      </section>
 
       {/* ── CHANGE 6: Clean Bottom CTA ───────────────────────────────────── */}
-      <section className="text-center py-20 px-4 border-t border-white/5 mt-8">
-        <div className="w-12 h-12 bg-[#7C3AED]/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+      <section className="text-center py-16 px-4 border-t border-white/5 mt-8">
+        <div className="w-12 h-12 bg-[#7C3AED]/20 rounded-2xl flex items-center justify-center mx-auto mb-5">
           <span className="text-2xl">⚡</span>
         </div>
         <h2 className="text-3xl font-bold text-white mb-3">
           More tools coming <span className="text-[#7C3AED]">every week.</span>
         </h2>
-        <p className="text-gray-400 max-w-md mx-auto mb-8">
-          High-performance tools that don&apos;t compromise on privacy or speed.
-          Built for professionals, free for everyone.
+        <p className="text-gray-400 max-w-sm mx-auto mb-8 text-sm leading-relaxed">
+          High-performance browser tools that never compromise on 
+          privacy or speed. Free for everyone, always.
         </p>
         <div className="flex gap-3 justify-center flex-wrap">
           <a
@@ -114,7 +116,7 @@ export default function HomePageContent() {
             href="#pdf-tools"
             className="bg-white/5 hover:bg-white/10 text-white font-semibold px-6 py-3 rounded-xl text-sm transition-colors border border-white/10"
           >
-            Explore All Tools
+            Explore All Tools &uarr;
           </a>
         </div>
       </section>
