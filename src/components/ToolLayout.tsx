@@ -99,17 +99,8 @@ export default function ToolLayout({
           <RelatedTools currentPath={pathname} isSidebar={false} />
         </div>
 
-        {/* Small support line - bottom of every tool page */}
-        <div className="max-w-4xl mx-auto px-4 py-4 pb-12 border-t border-white/5 text-center">
-          <p className="text-xs text-gray-600">
-            CosmoxHub is free forever. If it helped you,{' '}
-            <a href="https://www.buymeacoffee.com/cosmoxhub" target="_blank" rel="noopener noreferrer"
-              className="text-yellow-500 hover:text-yellow-400 transition-colors">
-              buy us a coffee ☕
-            </a>
-            {' '}— completely optional.
-          </p>
-        </div>
+        {/* Spacer for bottom of tool page */}
+        <div className="pb-12"></div>
       </main>
 
       <Footer />

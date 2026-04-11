@@ -68,30 +68,8 @@ export default function HomePageContent() {
       {/* ── Tool Grid ────────────────────────────────────────────────────── */}
       <SearchableToolGrid searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
-      {/* Support Section — replaces all ads */}
-      <section className="border-t border-b border-white/5 py-10 px-4 my-8">
-        <div className="max-w-xl mx-auto text-center">
-          <p className="text-2xl mb-3">☕</p>
-          <h3 className="text-white font-semibold text-base mb-2">
-            CosmoxHub is 100% free — forever.
-          </h3>
-          <p className="text-gray-500 text-sm mb-5 leading-relaxed">
-            No ads, no tracking, no paywalls. If these tools saved you time, 
-            a coffee keeps us building more.
-          </p>
-          <a
-            href="https://www.buymeacoffee.com/cosmoxhub"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-[#FFDD00] hover:bg-yellow-300 text-gray-900 font-bold px-6 py-3 rounded-xl text-sm transition-colors"
-          >
-            ☕ Buy me a coffee
-          </a>
-          <p className="text-gray-600 text-xs mt-3">
-            Completely optional. Tools are free regardless.
-          </p>
-        </div>
-      </section>
+      {/* ── Additional spacing before bottom CTA ───────────────────────────── */}
+      <div className="my-8"></div>
 
       {/* ── CHANGE 6: Clean Bottom CTA ───────────────────────────────────── */}
       <section className="text-center py-16 px-4 border-t border-white/5 mt-8">
