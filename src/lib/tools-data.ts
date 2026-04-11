@@ -38,7 +38,7 @@ export interface Category {
 export const categories: Category[] = [
   {
     id: "pdf-tools",
-    label: "Elite PDF Tools",
+    label: "PDF Tools",
     description: "Process PDFs instantly in your browser. No upload required.",
     color: "#ef4444",
     tools: [
@@ -77,7 +77,7 @@ export const categories: Category[] = [
   },
   {
     id: "image-tools",
-    label: "Image Magic",
+    label: "Image Tools",
     description: "Convert, resize and edit images without any quality loss.",
     color: "#10b981",
     tools: [

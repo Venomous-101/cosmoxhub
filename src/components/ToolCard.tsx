@@ -29,7 +29,7 @@ export default function ToolCard({ title, description, href, icon: Icon, color =
   return (
     <Link 
       href={href} 
-      className="card p-8 flex flex-col gap-6 relative overflow-hidden h-full group no-underline transition-transform hover:-translate-y-1"
+      className="card p-6 flex flex-col gap-5 relative overflow-hidden h-full group no-underline transition-all duration-200 hover:-translate-y-1 hover:border-[#7C3AED]/40 hover:shadow-lg hover:shadow-[#7C3AED]/10 cursor-pointer"
     >
       {/* Glow effect */}
       <div 
@@ -38,7 +38,7 @@ export default function ToolCard({ title, description, href, icon: Icon, color =
 
       {/* Icon */}
       <div 
-        className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border ${styles.iconBg} ${styles.iconBorder}`}
+        className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border ${styles.iconBg} ${styles.iconBorder} group-hover:scale-110 transition-transform duration-200`}
       >
         <Icon size={22} color={color} strokeWidth={2} />
       </div>
