@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useRef, useEffect } from "react";
 import ToolLayout from "@/components/ToolLayout";
@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import DownloadAdModal from "@/components/DownloadAdModal";
+import ReviewTestimonial from "@/components/ReviewTestimonial";
 
 // Client-side only import type
 type RemoveBgFn = (source: Blob | string | File, options?: Record<string, unknown>) => Promise<Blob>;
@@ -506,6 +507,14 @@ export default function BGRemoverClient() {
           toolName="Elite Background Remover" 
           sections={guideSections}
           faqs={faqs}
+        />
+
+        <ReviewTestimonial 
+          toolName="AI Background Remover"
+          ratingValue="4.9"
+          ratingCount="1428"
+          authorName="Sarah Jenkins"
+          reviewText="I was paying $10/month for Remove.bg for my Shopify store. CosmoxHub's Ultra-Precision mode actually gives me cleaner edges on hair and fur, and it's completely free. The fact that it runs locally on my Macbook is just insane."
         />
 
         {/* Dynamic SEO Content Section */}
