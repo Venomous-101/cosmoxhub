@@ -5,7 +5,7 @@ import { FileArchive, Upload, Download, Trash2, CheckCircle2, AlertCircle, Zap, 
 import ToolLayout from "@/components/ToolLayout";
 import { motion, AnimatePresence } from "framer-motion";
 import ToolGuide from "@/components/ToolGuide";
-import ReviewTestimonial from "@/components/ReviewTestimonial";
+
 
 type CompressionLevel = "low" | "medium" | "high";
 
@@ -369,14 +369,6 @@ export default function PdfCompressorClient() {
           ]}
         />
         
-        <ReviewTestimonial 
-          toolName="PDF Compressor"
-          ratingValue="4.8"
-          ratingCount="2104"
-          authorName="Michael Chen"
-          reviewText="This is the only PDF compressor that doesn't upload my confidential legal documents to a random server. It processes everything locally on my phone and the output quality is fantastic for email attachments."
-        />
-
         {/* Dynamic SEO Content Section */}
         <div className="mt-16 p-8 md:p-12 bg-[#050510]/60 backdrop-blur-2xl border-t border-white/5 rounded-[2.5rem] prose prose-invert prose-violet max-w-none shadow-2xl">
           <p className="text-slate-300 leading-relaxed text-lg mb-6">

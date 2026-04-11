@@ -2,153 +2,122 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowLeft, Lock, Sparkles, AlertCircle } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import type { LucideIcon } from "lucide-react";
-import AdBanner from "./AdBanner";
 import RelatedTools from "./RelatedTools";
+import type { LucideIcon } from "lucide-react";
 
 interface ToolLayoutProps {
   title: string;
   description: string;
   icon: LucideIcon;
   color?: string;
+  badge?: string;
   children: React.ReactNode;
 }
 
-const colorMap: Record<string, { iconBg: string, iconBorder: string }> = {
-  "#ef4444": { iconBg: "bg-red-500/15", iconBorder: "border-red-500/30" },
-  "#f59e0b": { iconBg: "bg-amber-500/15", iconBorder: "border-amber-500/30" },
-  "#10b981": { iconBg: "bg-emerald-500/15", iconBorder: "border-emerald-500/30" },
-  "#06b6d4": { iconBg: "bg-cyan-500/15", iconBorder: "border-cyan-500/30" },
-  "#3b82f6": { iconBg: "bg-blue-500/15", iconBorder: "border-blue-500/30" },
-  "#6366f1": { iconBg: "bg-indigo-500/15", iconBorder: "border-indigo-500/30" },
-  "#8b5cf6": { iconBg: "bg-violet-500/15", iconBorder: "border-violet-500/30" },
-  "#ec4899": { iconBg: "bg-pink-500/15", iconBorder: "border-pink-500/30" },
-  "#0ea5e9": { iconBg: "bg-sky-500/15", iconBorder: "border-sky-500/30" },
-  "default": { iconBg: "bg-indigo-500/15", iconBorder: "border-indigo-500/30" }
+const colorMap: Record<string, { iconBg: string; iconText: string }> = {
+  "#ef4444": { iconBg: "bg-red-500/20",     iconText: "text-red-400" },
+  "#f59e0b": { iconBg: "bg-amber-500/20",   iconText: "text-amber-400" },
+  "#10b981": { iconBg: "bg-emerald-500/20", iconText: "text-emerald-400" },
+  "#06b6d4": { iconBg: "bg-cyan-500/20",    iconText: "text-cyan-400" },
+  "#3b82f6": { iconBg: "bg-blue-500/20",    iconText: "text-blue-400" },
+  "#6366f1": { iconBg: "bg-indigo-500/20",  iconText: "text-indigo-400" },
+  "#8b5cf6": { iconBg: "bg-violet-500/20",  iconText: "text-violet-400" },
+  "#ec4899": { iconBg: "bg-pink-500/20",    iconText: "text-pink-400" },
+  "#0ea5e9": { iconBg: "bg-sky-500/20",     iconText: "text-sky-400" },
+  default:   { iconBg: "bg-[#7C3AED]/20",   iconText: "text-[#A78BFA]" },
 };
 
-export default function ToolLayout({ title, description, icon: Icon, color = "#6366f1", children }: ToolLayoutProps) {
+export default function ToolLayout({
+  title,
+  description,
+  icon: Icon,
+  color = "#6366f1",
+  badge,
+  children,
+}: ToolLayoutProps) {
   const styles = colorMap[color] || colorMap["default"];
   const pathname = usePathname();
 
   return (
     <div className="min-h-screen flex flex-col bg-[#050510] text-[#f1f5f9]">
       <Navbar />
+
       <main className="flex-grow">
-        <div className="container mx-auto px-4 max-w-6xl py-12">
-          {/* Back link */}
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 text-slate-400 no-underline text-sm font-medium mb-8 transition-colors duration-200 hover:text-slate-200"
-          >
-            <ArrowLeft size={16} /> Back to All Tools
-          </Link>
-
-          {/* Tool Header */}
-          <div className="flex items-start gap-4 mb-10">
-            <div 
-              className={`w-14 h-14 rounded-xl flex items-center justify-center shrink-0 shadow-sm border ${styles.iconBg} ${styles.iconBorder}`}
+        {/* ── Tool Header ─────────────────────────────────────────── */}
+        <div className="border-b border-white/5 px-4 py-8">
+          <div className="max-w-4xl mx-auto">
+            <Link
+              href="/"
+              className="text-gray-500 hover:text-white text-sm flex items-center gap-2 mb-6 transition-colors w-fit"
             >
-              <Icon size={28} color={color} strokeWidth={1.8} />
-            </div>
-            <div className="flex-grow pt-2">
-              <h1 className="font-space text-4xl md:text-5xl font-black text-white mb-4 tracking-tighter">
-                {title}
-              </h1>
-              <p className="text-slate-400 text-lg leading-relaxed max-w-3xl font-medium">
-                {description}
-              </p>
-            </div>
-          </div>
-          
-          {/* Section Divider */}
-          <div className="w-full h-px bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent my-12" />
+              ← Back to All Tools
+            </Link>
 
-          {/* Top Ad Section */}
-          <div className="mb-16">
-            <AdBanner type="native" label="Sponsored Utility" className="rounded-3xl" />
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div className="lg:col-span-9">
-              {/* Tool content - Premium Container with internal padding */}
-              <div className="bg-[#0f111a]/80 backdrop-blur-sm border border-indigo-500/20 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden p-1 md:p-2">
-                <div className="bg-[#050510]/50 rounded-[2.2rem] p-6 md:p-10 border border-white/5">
-                  {children}
-                </div>
+            <div className="flex items-start gap-4">
+              <div
+                className={`w-12 h-12 ${styles.iconBg} rounded-xl flex items-center justify-center shrink-0`}
+              >
+                <Icon size={22} className={styles.iconText} strokeWidth={1.8} />
               </div>
 
-              {/* Spacer */}
-              <div className="h-12" />
-
-              {/* Privacy note - Separated and Boxed */}
-              <div className="px-8 py-6 bg-emerald-500/5 rounded-3xl border border-emerald-500/10 flex flex-col md:flex-row items-center gap-6 shadow-lg">
-                <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center shrink-0 border border-emerald-500/20">
-                  <Lock size={24} className="text-emerald-500" />
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <h1 className="text-2xl font-bold text-white">{title}</h1>
+                  {badge && (
+                    <span className="text-xs font-semibold bg-[#7C3AED]/20 text-[#A78BFA] border border-[#7C3AED]/30 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                      {badge}
+                    </span>
+                  )}
                 </div>
-                <div>
-                  <h4 className="text-emerald-400 font-bold text-lg mb-1">Your Privacy is Guaranteed</h4>
-                  <p className="text-slate-400 text-sm leading-relaxed m-0">
-                    <strong className="text-slate-200 font-semibold underline decoration-emerald-500/30">100% Local Browser Based.</strong> All processing happens purely in your browser memory. No files ever touch our servers. Use with total confidence.
-                  </p>
-                </div>
+                <p className="text-gray-400 text-sm">{description}</p>
               </div>
-
-              {/* Huge Spacer before Related Meta */}
-              <div className="h-24" />
             </div>
-
-            {/* Sidebar for Desktop */}
-            <aside className="lg:col-span-3 space-y-6">
-               {/* Sustainability Note: Emotional Engagement */}
-               <div className="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-6 relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <Sparkles size={40} className="text-amber-500" />
-                  </div>
-                  <h4 className="font-space text-[11px] font-black uppercase tracking-[0.2em] text-amber-500 mb-3 flex items-center gap-2">
-                    <AlertCircle size={14} /> Support Our Mission
-                  </h4>
-                  <p className="text-xs text-slate-400 leading-relaxed font-medium">
-                    "Sorry for any annoyance caused by ads. We run minimal ads only to cover server & AI costs, keeping these elite tools <span className="text-amber-500/80">100% free</span> for you forever."
-                  </p>
-               </div>
-
-               {/* Monetized Sponsored CTA */}
-               <a 
-                 href="https://omg10.com/4/10812784"
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 className="block bg-gradient-to-br from-indigo-500/10 to-violet-500/10 border border-indigo-500/20 rounded-2xl p-6 group hover:border-indigo-500/40 transition-all hover:-translate-y-0.5"
-               >
-                 <h4 className="font-space text-[11px] font-black uppercase tracking-[0.2em] text-indigo-400 mb-2">
-                   Trending Resources
-                 </h4>
-                 <p className="text-xs text-slate-400 leading-relaxed font-medium group-hover:text-slate-300 transition-colors">
-                   Discover premium tools and resources curated for creators and developers.
-                 </p>
-                 <span className="mt-3 inline-block text-[10px] font-black uppercase tracking-widest text-indigo-500 group-hover:text-indigo-400">
-                   Explore Now →
-                 </span>
-               </a>
-
-               <div className="bg-[#0f111a] border border-indigo-500/10 rounded-2xl p-6 sticky top-24">
-                  <h3 className="font-space text-sm font-black uppercase tracking-widest text-indigo-400 mb-6">
-                    Quick Access
-                  </h3>
-                  <div className="space-y-4">
-                    <RelatedTools currentPath={pathname} isSidebar={true} />
-                  </div>
-               </div>
-               <AdBanner type="native" label="Hot Utility" className="rounded-2xl" />
-            </aside>
           </div>
+        </div>
 
-          <AdBanner type="leaderboard" label="Discover More Tools" className="mt-12" />
+        {/* ── Tool UI Area ─────────────────────────────────────────── */}
+        <div className="max-w-4xl mx-auto px-4 py-10">
+          {children}
+        </div>
+
+        {/* ── Privacy Badge ────────────────────────────────────────── */}
+        <div className="max-w-4xl mx-auto px-4 py-6 border-t border-white/5">
+          <p className="text-xs text-gray-600 text-center">
+            🔒{" "}
+            <span className="text-gray-500">100% private.</span> All processing
+            happens in your browser. Your files are never uploaded to any server.
+          </p>
+        </div>
+
+        {/* ── Related Tools ─────────────────────────────────────────── */}
+        <div className="max-w-4xl mx-auto px-4 py-10 border-t border-white/5">
+          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-5">
+            Related Tools
+          </h3>
+          <RelatedTools currentPath={pathname} isSidebar={false} />
+        </div>
+
+        {/* ── Subtle Affiliate Banner (bottom, non-intrusive) ────────── */}
+        <div className="max-w-4xl mx-auto px-4 pb-12">
+          <a
+            href="https://omg10.com/4/10812784"
+            target="_blank"
+            rel="noopener noreferrer sponsored"
+            className="flex items-center justify-between gap-4 w-full px-5 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-white/10 hover:bg-white/[0.05] transition-all group"
+          >
+            <p className="text-xs text-gray-600 group-hover:text-gray-500 transition-colors">
+              <span className="text-gray-500 font-medium">Sponsored —</span>{" "}
+              Discover premium tools and resources curated for creators &amp; developers.
+            </p>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-gray-600 group-hover:text-gray-400 transition-colors shrink-0">
+              Explore →
+            </span>
+          </a>
         </div>
       </main>
+
       <Footer />
     </div>
   );
