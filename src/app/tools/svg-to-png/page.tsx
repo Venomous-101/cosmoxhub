@@ -6,10 +6,10 @@ import ToolLayout from '@/components/ToolLayout';
 const tool = categories.find((c) => c.id === 'image-tools')?.tools.find((t) => t.href === '/tools/svg-to-png');
 
 export const metadata: Metadata = {
-  title: `${tool?.title} | CosmoxHub`,
-  description: tool?.description,
+  title: `${tool?.title || 'SVG to PNG'} | CosmoxHub`,
+  description: tool?.description || 'Convert SVG files to PNG at any resolution.',
   alternates: {
-    canonical: `https://cosmoxhub.com${tool?.href}`,
+    canonical: `https://cosmoxhub.com${tool?.href || '/tools/svg-to-png'}`,
   },
 };
 
@@ -17,11 +17,11 @@ export default function SvgToPngPage() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    name: tool?.title,
-    description: tool?.description,
+    name: tool?.title || 'SVG to PNG',
+    description: tool?.description || 'Convert SVG files to PNG at any resolution.',
     applicationCategory: 'DesignApplication',
     operatingSystem: 'Any',
-    url: `https://cosmoxhub.com${tool?.href}`,
+    url: `https://cosmoxhub.com${tool?.href || '/tools/svg-to-png'}`,
     offers: {
       '@type': 'Offer',
       price: '0',
