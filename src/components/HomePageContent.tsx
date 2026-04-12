@@ -86,17 +86,17 @@ export default function HomePageContent() {
       {/* ── Tool Grid ────────────────────────────────────────────────────── */}
       <SearchableToolGrid searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
-      {/* ── BUG 3 FIX: CTA section — Footer is outside this in page.tsx ─── */}
-      <section className="w-full text-center py-20 px-4 border-t border-white/5 mt-8">
-        <div className="max-w-lg mx-auto">
-          <div className="w-12 h-12 bg-[#7C3AED]/20 rounded-2xl flex items-center justify-center mx-auto mb-5">
+      {/* ── CTA Section — fully centered, clear of footer ─────────────── */}
+      <section className="w-full py-24 px-4 border-t border-white/5 mt-16">
+        <div className="flex flex-col items-center w-full">
+          <div className="w-12 h-12 bg-[#7C3AED]/20 rounded-2xl flex items-center justify-center mb-5">
             <span className="text-2xl">⚡</span>
           </div>
-          <h2 className="text-3xl font-bold text-white mb-3">
+          <h2 className="text-3xl font-bold text-white mb-3 text-center">
             More tools coming{' '}
             <span className="text-[#7C3AED]">every week.</span>
           </h2>
-          <p className="text-gray-400 text-sm leading-relaxed mb-8 max-w-sm mx-auto">
+          <p className="text-gray-400 text-sm leading-relaxed mb-10 max-w-sm text-center">
             High-performance browser tools that never compromise on privacy or speed.
             Free for everyone, always.
           </p>
