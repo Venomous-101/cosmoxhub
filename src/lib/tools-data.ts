@@ -114,6 +114,7 @@ export const categories: Category[] = [
       { title: "Age Calculator", description: "Calculate exact age in years, months, days and hours.", href: "/tools/age-calculator", icon: CalendarDays },
       { title: "Password Generator", description: "Generate strong, secure, random passwords instantly.", href: "/tools/password-generator", icon: KeyRound },
       { title: "Invoice Number Generator", description: "Generate sequential invoice numbers in bulk.", href: "/tools/invoice-generator", icon: Receipt, badge: "New" },
+      { title: "IQ Test", description: "Multi-domain cognitive assessment: patterns, logic, memory, speed & more. 100% private.", href: "/tools/iq-test", icon: Brain, badge: "Elite" },
     ],
   },
 ];
