@@ -481,21 +481,24 @@ export default function IQTestClient() {
       color="#7C3AED"
       badge="NEW"
     >
-      <AnimatePresence mode="wait">
-        {phase === "intro"   && <IntroScreen   key="intro"   onStart={startTest} />}
-        {phase === "testing" && q && (
-          <QuestionScreen
-            key={q.id}
-            q={q} qNum={idx + 1} total={questions.length}
-            selected={selected} revealed={revealed}
-            timeLeft={timeLeft} memState={memState} memCountdown={memCountdown}
-            onSelect={handleSelect} onNext={handleNext}
-          />
-        )}
-        {phase === "results" && result && (
-          <ResultScreen key="results" result={result} animIQ={animIQ} onReset={reset} />
-        )}
-      </AnimatePresence>
+      {/* Full-width wrapper — no right-side dead space */}
+      <div className="w-full max-w-2xl mx-auto">
+        <AnimatePresence mode="wait">
+          {phase === "intro"   && <IntroScreen   key="intro"   onStart={startTest} />}
+          {phase === "testing" && q && (
+            <QuestionScreen
+              key={q.id}
+              q={q} qNum={idx + 1} total={questions.length}
+              selected={selected} revealed={revealed}
+              timeLeft={timeLeft} memState={memState} memCountdown={memCountdown}
+              onSelect={handleSelect} onNext={handleNext}
+            />
+          )}
+          {phase === "results" && result && (
+            <ResultScreen key="results" result={result} animIQ={animIQ} onReset={reset} />
+          )}
+        </AnimatePresence>
+      </div>
     </ToolLayout>
   );
 }
@@ -509,48 +512,66 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -24 }}
-      className="space-y-8"
+      className="w-full space-y-0"
     >
-      <div className="text-center space-y-4 pt-4">
+      {/* ── Hero ──────────────────────────────────────────────── */}
+      <div className="text-center space-y-5 pb-10">
         <div className="w-20 h-20 bg-[#7C3AED]/20 rounded-3xl flex items-center justify-center mx-auto ring-1 ring-[#7C3AED]/30">
           <Brain size={36} className="text-[#7C3AED]" />
         </div>
-        <h2 className="text-2xl sm:text-3xl font-black text-white">Cognitive IQ Assessment</h2>
-        <p className="text-gray-400 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
-          30 questions across 7 cognitive domains. Calibrated against psychometric norms.
-          Allow <span className="text-white font-semibold">15–20 minutes</span> of uninterrupted focus.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {(Object.entries(DOMAIN) as [Domain, { label: string; hex: string }][]).map(([key, cfg]) => (
-          <div key={key} className="flex items-center gap-3 p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
-            <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: cfg.hex }} />
-            <span className="text-xs text-gray-300 font-medium">{cfg.label}</span>
-          </div>
-        ))}
-      </div>
-
-      <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-5 space-y-2.5">
-        {[
-          "Each question is individually timed. Work at your natural pace.",
-          "Memory questions: memorize the sequence shown, then answer from recall.",
-          "Speed questions have very short timers — respond immediately.",
-          "This assessment prioritizes accuracy over flattery. Real difficulty awaits.",
-          "100% private. All processing and results stay in your browser.",
-        ].map((t, i) => (
-          <p key={i} className="text-sm text-gray-500">
-            <span className="text-gray-600">• </span>{t}
+        <div className="space-y-3">
+          <h2 className="text-3xl sm:text-4xl font-black text-white">Cognitive IQ Assessment</h2>
+          <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
+            30 questions · 7 cognitive domains · Calibrated against psychometric norms
           </p>
-        ))}
+          <p className="text-gray-600 text-sm">
+            Allow <span className="text-white font-semibold">15–20 minutes</span> of uninterrupted focus.
+          </p>
+        </div>
       </div>
 
-      <button
-        onClick={onStart}
-        className="w-full h-14 bg-[#7C3AED] hover:bg-violet-600 text-white font-bold rounded-2xl transition-all duration-200 flex items-center justify-center gap-3 text-base shadow-lg shadow-[#7C3AED]/20"
-      >
-        Begin Assessment <ChevronRight size={20} />
-      </button>
+      {/* ── Domains ───────────────────────────────────────────── */}
+      <div className="border-t border-white/[0.06] pt-8 pb-8 space-y-4">
+        <p className="text-xs text-gray-600 uppercase tracking-widest font-semibold">Cognitive Domains Tested</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {(Object.entries(DOMAIN) as [Domain, { label: string; hex: string }][]).map(([key, cfg]) => (
+            <div key={key} className="flex items-center gap-3 p-4 rounded-2xl bg-white/[0.03] border border-white/[0.06] w-full">
+              <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: cfg.hex }} />
+              <span className="text-sm text-gray-300 font-medium">{cfg.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Rules ─────────────────────────────────────────────── */}
+      <div className="border-t border-white/[0.06] pt-8 pb-8 space-y-4">
+        <p className="text-xs text-gray-600 uppercase tracking-widest font-semibold">Before You Begin</p>
+        <div className="space-y-3">
+          {[
+            { icon: "⏱", text: "Each question is individually timed. Work at your natural pace." },
+            { icon: "🧠", text: "Memory questions: memorize the sequence shown, then answer from recall." },
+            { icon: "⚡", text: "Speed questions have very short timers — respond immediately." },
+            { icon: "🎯", text: "This assessment prioritizes accuracy over flattery. Real difficulty awaits." },
+            { icon: "🔒", text: "100% private. All processing and results stay in your browser." },
+          ].map((item, i) => (
+            <div key={i} className="flex items-start gap-3 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.05] w-full">
+              <span className="text-base shrink-0 mt-0.5">{item.icon}</span>
+              <span className="text-sm text-gray-400 leading-relaxed">{item.text}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── CTA ───────────────────────────────────────────────── */}
+      <div className="border-t border-white/[0.06] pt-8">
+        <button
+          onClick={onStart}
+          className="w-full h-14 bg-[#7C3AED] hover:bg-violet-600 text-white font-bold rounded-2xl transition-all duration-200 flex items-center justify-center gap-3 text-base shadow-lg shadow-[#7C3AED]/25 hover:shadow-[#7C3AED]/40"
+        >
+          Begin Assessment <ChevronRight size={20} />
+        </button>
+        <p className="text-center text-xs text-gray-700 mt-4">Free · No signup · No data stored</p>
+      </div>
     </motion.div>
   );
 }
