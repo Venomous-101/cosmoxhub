@@ -197,7 +197,7 @@ export default function ImageCompressorClient() {
       icon={Minimize}
       color="#06b6d4"
     >
-      <div className="grid lg:grid-cols-[1fr_320px] gap-8 items-start">
+      <div className="grid lg:grid-cols-[3fr_2fr] gap-8 items-start">
         <div className="space-y-6">
           <AnimatePresence mode="wait">
             {images.length === 0 ? (

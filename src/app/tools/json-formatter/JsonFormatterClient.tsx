@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useCallback } from "react";
 import { 
@@ -59,7 +59,7 @@ export default function JsonFormatterClient() {
       icon={Braces}
       color="#3b82f6"
     >
-      <div className="grid lg:grid-cols-[1fr_320px] gap-8 items-start">
+      <div className="grid lg:grid-cols-[3fr_2fr] gap-8 items-start">
         <div className="space-y-6">
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
             <motion.div

@@ -237,7 +237,7 @@ export default function ImageResizerClient() {
       description="Resize and crop images to perfect dimensions for social media or custom needs with our high-speed free online tool. 100% private and browser-side."
       icon={Maximize2} color="#10b981"
     >
-      <div className="grid lg:grid-cols-[1fr_340px] gap-8 items-start">
+      <div className="grid lg:grid-cols-[3fr_2fr] gap-8 items-start">
         <div className="space-y-6">
           <AnimatePresence mode="wait">
             {images.length === 0 ? (

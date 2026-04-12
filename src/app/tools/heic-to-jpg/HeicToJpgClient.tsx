@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useRef, useEffect } from "react";
 import { 
@@ -185,7 +185,7 @@ export default function HeicToJpgClient() {
       icon={Smartphone}
       color="#e11d48"
     >
-      <div className="grid lg:grid-cols-[1fr_320px] gap-8 items-start">
+      <div className="grid lg:grid-cols-[3fr_2fr] gap-8 items-start">
         <div className="space-y-6">
           <AnimatePresence mode="wait">
             {!heic2any ? (

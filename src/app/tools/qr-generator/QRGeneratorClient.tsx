@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useRef, ElementRef } from "react";
 import { 
@@ -212,7 +212,7 @@ export default function QRGeneratorClient() {
       icon={QrCode}
       color="#f59e0b"
     >
-      <div className="grid lg:grid-cols-[1fr_360px] gap-8 items-start">
+      <div className="grid lg:grid-cols-[3fr_2fr] gap-8 items-start">
         <div className="space-y-6">
           <motion.div
             initial={{ opacity: 0, y: 10 }}

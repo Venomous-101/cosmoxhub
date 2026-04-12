@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { 
@@ -107,7 +107,7 @@ export default function CaseConverterClient() {
       icon={Type}
       color="#f59e0b"
     >
-      <div className="grid lg:grid-cols-[1fr_320px] gap-8 items-start text-white">
+      <div className="grid lg:grid-cols-[3fr_2fr] gap-8 items-start text-white">
         <div className="space-y-6">
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}

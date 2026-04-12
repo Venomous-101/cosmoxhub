@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useMemo } from "react";
 import { 
@@ -84,7 +84,7 @@ export default function WhatsAppLinkClient() {
       icon={MessageSquare}
       color="#22c55e"
     >
-      <div className="grid lg:grid-cols-[1fr_340px] gap-8 items-start">
+      <div className="grid lg:grid-cols-[3fr_2fr] gap-8 items-start">
         <div className="space-y-6">
           <motion.div
             initial={{ opacity: 0, y: 10 }}

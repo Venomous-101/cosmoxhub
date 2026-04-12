@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { 
@@ -101,7 +101,7 @@ export default function WhitespaceRemoverClient() {
       icon={Eraser}
       color="#10b981"
     >
-      <div className="grid lg:grid-cols-[1fr_320px] gap-8 items-start">
+      <div className="grid lg:grid-cols-[3fr_2fr] gap-8 items-start">
         <div className="space-y-6">
           <motion.div
             initial={{ opacity: 0, y: 10 }}

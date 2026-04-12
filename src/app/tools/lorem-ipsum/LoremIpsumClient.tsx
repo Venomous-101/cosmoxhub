@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useMemo } from "react";
 import { 
@@ -146,7 +146,7 @@ export default function LoremIpsumClient() {
       icon={Quote}
       color="#06b6d4"
     >
-      <div className="grid lg:grid-cols-[1fr_320px] gap-8 items-start">
+      <div className="grid lg:grid-cols-[3fr_2fr] gap-8 items-start">
         <div className="space-y-6">
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
