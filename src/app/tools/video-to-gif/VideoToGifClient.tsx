@@ -102,10 +102,36 @@ export default function VideoToGifClient() {
   return (
     <div className="space-y-6">
       
+      {/* FFmpeg engine loading state */}
       {!loaded && (
-        <div className="bg-yellow-500/10 border border-yellow-500/20 text-yellow-300 p-4 rounded-xl text-sm flex items-center gap-3">
-          {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Film className="w-5 h-5" />}
-          <span>{isLoading ? 'Loading FFmpeg engine. This might take a moment...' : 'FFmpeg failed to load. Please ensure your browser supports WebAssembly.'}</span>
+        <div className="w-full rounded-xl border border-white/8 bg-[#111111] p-8 flex flex-col items-center justify-center gap-4 text-center min-h-[120px]">
+          {isLoading ? (
+            <>
+              {/* Animated spinner */}
+              <div className="relative w-12 h-12">
+                <div className="absolute inset-0 rounded-full border-2 border-[#7C3AED]/20" />
+                <div className="absolute inset-0 rounded-full border-2 border-t-[#7C3AED] animate-spin" />
+              </div>
+              <div>
+                <p className="text-white font-semibold text-sm">Loading Video Engine</p>
+                <p className="text-gray-500 text-xs mt-1">
+                  Downloading FFmpeg WebAssembly (~15MB) — one-time load, runs 100% in your browser.
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center">
+                <Film className="w-5 h-5 text-red-400" />
+              </div>
+              <div>
+                <p className="text-red-400 font-semibold text-sm">Engine failed to load</p>
+                <p className="text-gray-500 text-xs mt-1">
+                  Please ensure your browser supports WebAssembly and try refreshing the page.
+                </p>
+              </div>
+            </>
+          )}
         </div>
       )}
 
