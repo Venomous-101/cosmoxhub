@@ -6,10 +6,15 @@ import ToolLayout from '@/components/ToolLayout';
 const tool = categories.find((c) => c.id === 'image-tools')?.tools.find((t) => t.href === '/tools/video-to-gif');
 
 export const metadata: Metadata = {
-  title: `${tool?.title} | CosmoxHub`,
+  title: `Video to GIF Converter — Free Online Tool | CosmoxHub`,
   description: tool?.description,
   alternates: {
-    canonical: `https://cosmoxhub.com${tool?.href}`,
+    canonical: `https://www.cosmoxhub.com/tools/video-to-gif`,
+  },
+  other: {
+    // Hint browser to prefetch FFmpeg WASM on page load (complements hover preload)
+    "link-prefetch-ffmpeg-core": "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js",
+    "link-prefetch-ffmpeg-wasm": "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.wasm",
   },
 };
 
