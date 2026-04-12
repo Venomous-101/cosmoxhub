@@ -16,7 +16,8 @@ import {
   Code2,
   Minimize,
   FileArchive,
-  LucideIcon
+  LucideIcon,
+  Link, FileCode, GitCompare, Search, Palette, Star, Film, ImageIcon, Receipt
 } from "lucide-react";
 
 export interface Tool {
@@ -73,6 +74,12 @@ export const categories: Category[] = [
       { title: "Code Beautifier 2.0", description: "Format and clean JSON, JS, CSS, and HTML instantly.", href: "/tools/code-beautifier", icon: Code2, badge: "New" },
       { title: "AI Agent Creator", description: "Generate professional skills.md files for AI agents.", href: "/tools/claude-skills-creator", icon: Brain, badge: "New" },
       { title: "JSON Formatter", description: "Standard prettifier and validator for small JSON snippets.", href: "/tools/json-formatter", icon: Code },
+      { title: "URL Encoder / Decoder", description: "Encode or decode URLs and query strings instantly.", href: "/tools/url-encoder", icon: Link, badge: "New" },
+      { title: "Image to Base64", description: "Convert any image to Base64 string or Data URL.", href: "/tools/image-to-base64", icon: Code, badge: "New" },
+      { title: "Markdown to HTML", description: "Convert Markdown to HTML with live preview.", href: "/tools/markdown-to-html", icon: FileCode, badge: "New" },
+      { title: "Text Diff Checker", description: "Compare two texts and highlight differences.", href: "/tools/text-diff", icon: GitCompare, badge: "New" },
+      { title: "Regex Tester", description: "Test and debug regular expressions with live highlighting.", href: "/tools/regex-tester", icon: Search, badge: "Elite" },
+      { title: "Font Pairing Tool", description: "Find perfect Google Font combinations with live preview.", href: "/tools/font-pairing", icon: Type, badge: "New" },
     ],
   },
   {
@@ -89,6 +96,10 @@ export const categories: Category[] = [
       { title: "WebP to PNG", description: "Convert WebP images to PNG with full transparency support.", href: "/tools/webp-to-png", icon: ImagePlus, badge: "New" },
       { title: "Image Resizer", description: "Resize images to any dimension while preserving quality.", href: "/tools/image-resizer", icon: Maximize2 },
       { title: "Image Upscaler", description: "Enhance image resolution (2x, 4x) in the browser.", href: "/tools/image-upscaler", icon: Maximize, badge: "New" },
+      { title: "Color Palette Generator", description: "Generate beautiful color palettes from any base color.", href: "/tools/color-palette", icon: Palette, badge: "New" },
+      { title: "Favicon Generator", description: "Create favicons from text, emoji, or image.", href: "/tools/favicon-generator", icon: Star, badge: "New" },
+      { title: "Video to GIF", description: "Convert video to GIF in your browser. No upload.", href: "/tools/video-to-gif", icon: Film, badge: "New" },
+      { title: "SVG to PNG", description: "Convert SVG files to PNG at any resolution.", href: "/tools/svg-to-png", icon: ImageIcon, badge: "New" },
     ],
   },
   {
@@ -102,6 +113,7 @@ export const categories: Category[] = [
       { title: "YouTube Thumbnail", description: "Download HD thumbnails from any YouTube video.", href: "/tools/youtube-thumbnail", icon: Video, badge: "New" },
       { title: "Age Calculator", description: "Calculate exact age in years, months, days and hours.", href: "/tools/age-calculator", icon: CalendarDays },
       { title: "Password Generator", description: "Generate strong, secure, random passwords instantly.", href: "/tools/password-generator", icon: KeyRound },
+      { title: "Invoice Number Generator", description: "Generate sequential invoice numbers in bulk.", href: "/tools/invoice-generator", icon: Receipt, badge: "New" },
     ],
   },
 ];

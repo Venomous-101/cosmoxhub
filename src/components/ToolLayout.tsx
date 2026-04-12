@@ -6,11 +6,13 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import RelatedTools from "./RelatedTools";
 import type { LucideIcon } from "lucide-react";
+import { Wrench } from "lucide-react";
+import { allTools } from "@/lib/tools-data";
 
 interface ToolLayoutProps {
   title: string;
   description: string;
-  icon: LucideIcon;
+  icon?: LucideIcon;
   color?: string;
   badge?: string;
   children: React.ReactNode;
@@ -32,13 +34,16 @@ const colorMap: Record<string, { iconBg: string; iconText: string }> = {
 export default function ToolLayout({
   title,
   description,
-  icon: Icon,
+  icon: IconProp,
   color = "#6366f1",
   badge,
   children,
 }: ToolLayoutProps) {
-  const styles = colorMap[color] || colorMap["default"];
   const pathname = usePathname();
+  const toolFromPath = allTools.find((t) => t.href === pathname);
+  const Icon: LucideIcon = IconProp ?? toolFromPath?.icon ?? Wrench;
+  const resolvedBadge = badge ?? toolFromPath?.badge;
+  const styles = colorMap[color] || colorMap["default"];
 
   return (
     <div className="min-h-screen flex flex-col bg-[#050510] text-[#f1f5f9]">
@@ -65,9 +70,9 @@ export default function ToolLayout({
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <h1 className="text-2xl font-bold text-white">{title}</h1>
-                  {badge && (
+                  {resolvedBadge && (
                     <span className="text-xs font-semibold bg-[#7C3AED]/20 text-[#A78BFA] border border-[#7C3AED]/30 px-2 py-0.5 rounded-full uppercase tracking-wider">
-                      {badge}
+                      {resolvedBadge}
                     </span>
                   )}
                 </div>
