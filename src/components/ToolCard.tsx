@@ -57,11 +57,12 @@ export default function ToolCard({ title, description, href, icon: Icon, color =
         <p className="text-sm text-slate-400 leading-relaxed mb-4">{description}</p>
       </div>
 
-      {/* Arrow hint */}
-      <div 
-        className={`pt-3 mt-auto mb-2 text-sm font-bold opacity-70 group-hover:opacity-100 group-hover:translate-x-2 group-hover:text-[#A78BFA] transition-all duration-200 text-gray-500 flex items-center gap-1`}
-      >
-        Use Tool <span>&rarr;</span>
+      {/* Use Tool button — centered, subtle glassmorphism */}
+      <div className="mt-auto pt-4">
+        <div className="w-full flex items-center justify-center gap-2 text-sm font-semibold text-gray-400 bg-white/[0.04] border border-white/[0.08] rounded-xl py-2.5 px-4 group-hover:bg-[#7C3AED]/10 group-hover:border-[#7C3AED]/30 group-hover:text-[#A78BFA] transition-all duration-200">
+          Use Tool
+          <span className="group-hover:translate-x-0.5 transition-transform duration-200 inline-block">→</span>
+        </div>
       </div>
     </Link>
   );
