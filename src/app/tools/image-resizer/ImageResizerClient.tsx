@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useRef } from "react";
 import {
@@ -263,7 +263,7 @@ export default function ImageResizerClient() {
                       <motion.div key={img.id} layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
                         className="group relative bg-[#0a0a1a]/80 backdrop-blur-xl border border-white/5 rounded-3xl p-4 flex gap-4 items-center hover:border-emerald-500/30 transition-all shadow-xl">
                         <div className="relative w-24 h-24 rounded-2xl overflow-hidden bg-slate-900 ring-1 ring-white/10 group-hover:ring-emerald-500/30 transition-all shrink-0">
-                          <img src={img.resultUrl || img.preview} alt={img.name} className="w-full h-full object-cover" />
+                          <img loading="lazy" decoding="async" src={img.resultUrl || img.preview} alt={img.name} className="w-full h-full object-cover" />
                           {img.status === "completed" && (
                             <div className="absolute inset-0 bg-emerald-500/20 flex items-center justify-center backdrop-blur-[2px]">
                               <CheckCircle2 className="w-8 h-8 text-emerald-400" />
@@ -278,8 +278,8 @@ export default function ImageResizerClient() {
                         <div className="flex-1 min-w-0 pr-8">
                           <h4 className="text-slate-200 text-sm font-bold truncate mb-1">{img.name}</h4>
                           <div className="flex flex-wrap gap-2 text-[10px] uppercase tracking-widest font-black text-slate-500 mb-3">
-                            <span className="bg-white/5 px-2 py-0.5 rounded-sm">{img.originalWidth}×{img.originalHeight}</span>
-                            {img.resultW && <span className="text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-sm">→ {img.resultW}×{img.resultH}</span>}
+                            <span className="bg-white/5 px-2 py-0.5 rounded-sm">{img.originalWidth}�{img.originalHeight}</span>
+                            {img.resultW && <span className="text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-sm">? {img.resultW}�{img.resultH}</span>}
                           </div>
                           {img.status === "completed" ? (
                             <button onClick={() => { 
@@ -382,7 +382,7 @@ export default function ImageResizerClient() {
                         <button key={p.label} onClick={() => applyPreset(p.w, p.h)}
                           className="w-full flex items-center justify-between px-4 py-2.5 bg-white/5 hover:bg-emerald-500/10 border border-white/5 hover:border-emerald-500/30 rounded-xl transition-all group">
                           <span className="text-[10px] font-black text-slate-400 group-hover:text-white uppercase tracking-wider">{p.label}</span>
-                          <span className="text-[9px] font-bold text-slate-600 group-hover:text-emerald-500 font-mono">{p.w}×{p.h}</span>
+                          <span className="text-[9px] font-bold text-slate-600 group-hover:text-emerald-500 font-mono">{p.w}�{p.h}</span>
                         </button>
                       ))}
                     </div>

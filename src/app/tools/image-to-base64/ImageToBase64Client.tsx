@@ -75,7 +75,7 @@ export default function ImageToBase64Client() {
             />
             {previewUrl ? (
               <>
-                <img src={previewUrl} alt="Preview" className="w-full h-full object-contain absolute inset-0 p-4 opacity-50 group-hover:opacity-30 transition-opacity" />
+                <img loading="lazy" decoding="async" src={previewUrl} alt="Preview" className="w-full h-full object-contain absolute inset-0 p-4 opacity-50 group-hover:opacity-30 transition-opacity" />
                 <div className="relative z-10 flex flex-col items-center p-4 bg-[#0A0A0A]/80 rounded-lg backdrop-blur-sm border border-white/8">
                   <ImageIcon className="w-8 h-8 text-[#A78BFA] mb-2" />
                   <p className="text-white font-medium truncate max-w-[200px]">{filename}</p>

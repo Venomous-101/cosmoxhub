@@ -169,7 +169,7 @@ export default function SvgToPngClient() {
            <div className="flex-1 min-h-[300px] w-full bg-[#0A0A0A] border-2 border-dashed border-white/5 rounded-xl flex items-center justify-center overflow-hidden relative">
              <canvas ref={canvasRef} className="hidden" />
              {pngDataUrl ? (
-               <img src={pngDataUrl} alt="Preview" className="max-w-full max-h-full object-contain p-4" />
+               <img loading="lazy" decoding="async" src={pngDataUrl} alt="Preview" className="max-w-full max-h-full object-contain p-4" />
              ) : (
                <div className="flex flex-col items-center justify-center text-gray-500">
                  <ImageIcon className="w-8 h-8 mb-2 opacity-50" />

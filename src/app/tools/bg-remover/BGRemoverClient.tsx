@@ -410,7 +410,7 @@ export default function BGRemoverClient() {
               <div className="absolute inset-0 select-none touch-none pointer-events-none">
                 {/* Bottom layer: Original Image */}
                 <div className="absolute inset-0">
-                  <img src={preview} alt="Original" className="w-full h-full object-contain pointer-events-none" draggable={false} />
+                  <img loading="lazy" decoding="async" src={preview} alt="Original" className="w-full h-full object-contain pointer-events-none" draggable={false} />
                   <div className="absolute top-4 right-4 bg-black/60 backdrop-blur text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-white/10">Original</div>
                 </div>
 
@@ -423,7 +423,7 @@ export default function BGRemoverClient() {
                     <div className={`absolute inset-0 ${
                       bgMode === "white" ? "bg-white" : bgMode === "blue" ? "bg-[#0055ff]" : "checkerboard-bg"
                     }`}></div>
-                    <img src={result} alt="Isolated" className="w-full h-full object-contain pointer-events-none absolute inset-0 drop-shadow-[0_0_20px_rgba(0,0,0,0.5)]" draggable={false} />
+                    <img loading="lazy" decoding="async" src={result} alt="Isolated" className="w-full h-full object-contain pointer-events-none absolute inset-0 drop-shadow-[0_0_20px_rgba(0,0,0,0.5)]" draggable={false} />
                     <div className="absolute top-4 left-4 bg-violet-600 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-[0_0_15px_rgba(139,92,246,0.5)]">AI Isolated</div>
                   </div>
                 )}

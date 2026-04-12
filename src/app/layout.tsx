@@ -6,8 +6,18 @@ import PredictivePrefetcher from "@/components/PredictivePrefetcher";
 import React from "react";
 import { Analytics } from "@vercel/analytics/react";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space" });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+  preload: true,
+});
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space",
+  display: "swap",
+  preload: true,
+});
 
 export const metadata = {
   title: {
@@ -44,18 +54,18 @@ export const metadata = {
   ],
   authors: [{ name: "CosmoxHub" }],
   creator: "CosmoxHub",
-  metadataBase: new URL("https://cosmoxhub.com"),
+  metadataBase: new URL("https://www.cosmoxhub.com"),
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://cosmoxhub.com",
+    url: "https://www.cosmoxhub.com",
     siteName: "CosmoxHub",
     title: "CosmoxHub — 28+ Free Online Tools for Everyone",
     description:
       "28+ free online tools in one place. AI Image Upscaler, PDF Merger, Background Remover, QR Code Generator and more. No signup, no limits, lightning fast.",
     images: [
       {
-        url: "https://cosmoxhub.com/og-image.png",
+        url: "https://www.cosmoxhub.com/og-image.png",
         width: 1200,
         height: 630,
         alt: "CosmoxHub — Free Online Tools",
@@ -66,7 +76,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "CosmoxHub — 28+ Free Online Tools for Everyone",
     description: "28+ free online tools in one place. No signup, no limits.",
-    images: ["https://cosmoxhub.com/og-image.png"],
+    images: ["https://www.cosmoxhub.com/og-image.png"],
   },
   robots: {
     index: true,
@@ -77,7 +87,7 @@ export const metadata = {
     },
   },
   alternates: {
-    canonical: "https://cosmoxhub.com",
+    canonical: "https://www.cosmoxhub.com",
   },
   verification: {
     google: "vJAvqwICv8kMeZ7CaG4I0lhehtNQrbHPprc0HjxRM0E",

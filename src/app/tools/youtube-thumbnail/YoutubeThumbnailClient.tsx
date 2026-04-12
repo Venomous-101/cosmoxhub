@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useCallback } from "react";
 import { 
@@ -180,7 +180,7 @@ export default function YoutubeThumbnailClient() {
                             className="bg-[#0a0a1a]/80 backdrop-blur-xl border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl group/card ring-1 ring-white/5"
                         >
                             <div className="aspect-video relative overflow-hidden bg-black/40">
-                                <img 
+                                <img loading="lazy" decoding="async" 
                                     src={`https://img.youtube.com/vi/${videoId}/${res.id}.jpg`}
                                     alt={res.label}
                                     className="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-700"

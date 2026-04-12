@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useRef } from "react";
 import {
@@ -191,7 +191,7 @@ export default function JpgToPngClient() {
                       className="group relative bg-[#0a0a1a]/80 backdrop-blur-xl border border-white/5 rounded-3xl p-4 flex gap-4 items-center hover:border-emerald-500/30 transition-all shadow-xl">
                       <div className="relative w-24 h-24 rounded-2xl overflow-hidden bg-slate-900 ring-1 ring-white/10 group-hover:ring-emerald-500/30 transition-all shrink-0">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={img.preview} alt={img.name} className="w-full h-full object-cover" />
+                        <img loading="lazy" decoding="async" src={img.preview} alt={img.name} className="w-full h-full object-cover" />
                         {img.status === "completed" && (
                           <div className="absolute inset-0 bg-emerald-500/20 flex items-center justify-center backdrop-blur-[2px]">
                             <CheckCircle2 className="w-8 h-8 text-emerald-400" />
@@ -208,7 +208,7 @@ export default function JpgToPngClient() {
                         <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest font-black text-slate-500 mb-3">
                           <span className="bg-white/5 px-2 py-0.5 rounded-sm">{formatSize(img.size)}</span>
                           <span className={img.status === "completed" ? "text-emerald-400" : img.status === "error" ? "text-rose-400" : "text-amber-400"}>
-                            {img.status === "completed" ? "✓ PNG Ready" : img.status === "error" ? "Error" : img.status}
+                            {img.status === "completed" ? "? PNG Ready" : img.status === "error" ? "Error" : img.status}
                           </span>
                         </div>
                         {img.status === "completed" ? (

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useRef } from "react";
 import { 
@@ -208,7 +208,7 @@ export default function ImageToPdfClient() {
 
                       <div className="relative w-24 h-24 rounded-2xl overflow-hidden bg-slate-900 ring-1 ring-white/10 shrink-0">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img 
+                        <img loading="lazy" decoding="async" 
                           src={img.preview} 
                           alt={img.name} 
                           className="w-full h-full object-cover" 
@@ -218,7 +218,7 @@ export default function ImageToPdfClient() {
                       <div className="flex-1 min-w-0">
                         <h4 className="text-slate-200 text-sm font-bold truncate mb-1">{img.name}</h4>
                         <div className="text-[10px] text-slate-500 font-medium font-mono uppercase tracking-widest">
-                            {(img.size / (1024*1024)).toFixed(2)} MB • PRIORITY: {images.indexOf(img) + 1}
+                            {(img.size / (1024*1024)).toFixed(2)} MB � PRIORITY: {images.indexOf(img) + 1}
                         </div>
                       </div>
 
@@ -383,7 +383,7 @@ export default function ImageToPdfClient() {
                 Our platform goes beyond simple conversion by providing granular control over page dimensions and layout. Choose between <span className="text-white font-bold">A4, Letter, or automatic</span> page sizing, and adjust margins to meet strict professional standards. Your final PDF will be high-fidelity and ready for immediate sharing.
               </p>
               <p>
-                Experience the difference of a <span className="text-white font-bold">private, secure, and ultra-fast</span> PDF management suite. No registration, no watermarks, and no data leaks—just the elite utility tools you need to succeed in a digital-first world.
+                Experience the difference of a <span className="text-white font-bold">private, secure, and ultra-fast</span> PDF management suite. No registration, no watermarks, and no data leaks�just the elite utility tools you need to succeed in a digital-first world.
               </p>
             </div>
           </div>

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useRef } from "react";
 import { 
@@ -241,7 +241,7 @@ export default function PngToJpgClient() {
                     >
                       <div className="relative w-24 h-24 rounded-2xl overflow-hidden bg-slate-900 ring-1 ring-white/10 shrink-0">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img 
+                        <img loading="lazy" decoding="async" 
                           src={img.preview} 
                           alt={img.name} 
                           className="w-full h-full object-cover" 
@@ -256,7 +256,7 @@ export default function PngToJpgClient() {
                       <div className="flex-1 min-w-0 pr-8">
                         <h4 className="text-slate-200 text-sm font-bold truncate mb-1">{img.name}</h4>
                         <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest font-black text-slate-500 mb-3">
-                            {(img.size / 1024).toFixed(0)} KB • {img.status.toUpperCase()}
+                            {(img.size / 1024).toFixed(0)} KB � {img.status.toUpperCase()}
                         </div>
                         
                         {img.status === "completed" ? (

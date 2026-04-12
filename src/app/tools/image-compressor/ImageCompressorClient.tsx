@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useRef } from "react";
 import { 
@@ -254,7 +254,7 @@ export default function ImageCompressorClient() {
                     >
                       <div className="relative w-20 h-20 rounded-2xl overflow-hidden bg-slate-900 ring-1 ring-white/10 shrink-0">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img 
+                        <img loading="lazy" decoding="async" 
                           src={img.preview} 
                           alt={img.name} 
                           className="w-full h-full object-cover" 
@@ -273,7 +273,7 @@ export default function ImageCompressorClient() {
                             <span className="text-slate-500">Original: {formatSize(img.originalSize)}</span>
                             {img.compressedSize && (
                                 <span className="text-cyan-400 flex items-center gap-1">
-                                    → New: {formatSize(img.compressedSize)} 
+                                    ? New: {formatSize(img.compressedSize)} 
                                     <span className="ml-1 px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300">
                                       -{((1 - (img.compressedSize / img.originalSize)) * 100).toFixed(0)}%
                                     </span>
