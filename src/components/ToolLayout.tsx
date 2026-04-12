@@ -51,61 +51,62 @@ export default function ToolLayout({
 
       <main className="flex-grow">
         {/* ── Tool Header ─────────────────────────────────────────── */}
-        <div className="border-b border-white/5 px-4 py-8">
+        <div className="border-b border-white/5 px-4 py-12">
           <div className="max-w-4xl mx-auto">
             <Link
               href="/"
-              className="text-gray-500 hover:text-white text-sm flex items-center gap-2 mb-6 transition-colors w-fit"
+              className="text-gray-500 hover:text-white text-sm flex items-center gap-2 mb-8 transition-colors w-fit group"
             >
-              ← Back to All Tools
+              <span className="group-hover:-translate-x-1 transition-transform duration-200 inline-block">←</span>
+              Back to All Tools
             </Link>
 
-            <div className="flex items-start gap-4">
+            <div className="flex items-start gap-5">
               <div
-                className={`w-12 h-12 ${styles.iconBg} rounded-xl flex items-center justify-center shrink-0`}
+                className={`w-14 h-14 ${styles.iconBg} rounded-2xl flex items-center justify-center shrink-0`}
               >
-                <Icon size={22} className={styles.iconText} strokeWidth={1.8} />
+                <Icon size={24} className={styles.iconText} strokeWidth={1.8} />
               </div>
 
               <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <h1 className="text-2xl font-bold text-white">{title}</h1>
+                <div className="flex items-center gap-3 mb-2">
+                  <h1 className="text-3xl font-bold text-white">{title}</h1>
                   {resolvedBadge && (
-                    <span className="text-xs font-semibold bg-[#7C3AED]/20 text-[#A78BFA] border border-[#7C3AED]/30 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                    <span className="text-xs font-semibold bg-[#7C3AED]/20 text-[#A78BFA] border border-[#7C3AED]/30 px-2.5 py-1 rounded-full uppercase tracking-wider">
                       {resolvedBadge}
                     </span>
                   )}
                 </div>
-                <p className="text-gray-400 text-sm">{description}</p>
+                <p className="text-gray-400 text-sm leading-relaxed max-w-xl">{description}</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* ── Tool UI Area ─────────────────────────────────────────── */}
-        <div className="max-w-4xl mx-auto px-4 py-10">
+        <div className="max-w-4xl mx-auto px-4 py-14">
           {children}
         </div>
 
         {/* ── Privacy Badge ────────────────────────────────────────── */}
-        <div className="max-w-4xl mx-auto px-4 py-6 border-t border-white/5">
-          <p className="text-xs text-gray-600 text-center">
-            🔒{" "}
-            <span className="text-gray-500">100% private.</span> All processing
-            happens in your browser. Your files are never uploaded to any server.
-          </p>
+        <div className="max-w-4xl mx-auto px-4 pt-10 pb-12 border-t border-white/5">
+          <div className="flex items-center justify-center gap-2.5 bg-white/[0.03] border border-white/[0.06] rounded-2xl px-6 py-4 max-w-lg mx-auto">
+            <span className="text-base">🔒</span>
+            <p className="text-xs text-gray-400 text-center leading-relaxed">
+              <span className="text-gray-300 font-medium">100% private.</span>{" "}
+              All processing happens in your browser. Your files are never uploaded to any server.
+            </p>
+          </div>
         </div>
 
         {/* ── Related Tools ─────────────────────────────────────────── */}
-        <div className="max-w-4xl mx-auto px-4 py-10 border-t border-white/5">
-          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-5">
+        <div className="max-w-4xl mx-auto px-4 pt-10 pb-20 border-t border-white/5">
+          <h3 className="text-sm font-bold text-gray-500 uppercase tracking-[0.2em] mb-8 flex items-center gap-3">
+            <span className="w-1 h-3 bg-[#7C3AED] rounded-full"></span>
             Related Tools
           </h3>
           <RelatedTools currentPath={pathname} isSidebar={false} />
         </div>
-
-        {/* Spacer for bottom of tool page */}
-        <div className="pb-12"></div>
       </main>
 
       <Footer />

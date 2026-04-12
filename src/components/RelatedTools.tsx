@@ -40,17 +40,17 @@ export default function RelatedTools({ currentPath }: RelatedToolsProps) {
   const finalTools = suggestedTools.slice(0, 4);
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       {finalTools.map((tool) => (
         <Link
           key={tool.href}
           href={tool.href}
-          className="bg-white/[0.03] border border-white/[0.08] rounded-xl p-4 hover:border-[#7C3AED]/40 hover:bg-white/[0.06] transition-all group"
+          className="bg-white/[0.03] border border-white/[0.08] rounded-2xl p-5 hover:border-[#7C3AED]/40 hover:bg-white/[0.06] transition-all duration-200 group"
         >
-          <p className="text-white text-sm font-medium group-hover:text-[#A78BFA] transition-colors">
+          <p className="text-white text-sm font-semibold group-hover:text-[#A78BFA] transition-colors mb-2">
             {tool.title}
           </p>
-          <p className="text-gray-600 text-xs mt-1 line-clamp-2">
+          <p className="text-gray-600 text-xs leading-relaxed line-clamp-2">
             {tool.description}
           </p>
         </Link>
