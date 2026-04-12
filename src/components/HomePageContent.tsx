@@ -11,7 +11,7 @@ export default function HomePageContent() {
     <main className="min-h-screen w-full">
 
       {/* ── Hero Section ─────────────────────────────────────────────────── */}
-      <section className="w-full bg-[#0A0A0A] text-center px-4 pt-14 pb-8">
+      <section className="w-full bg-[#0A0A0A] text-center px-4 pt-14 pb-12">
         <div className="max-w-5xl mx-auto w-full">
 
           <p className="text-xs font-bold tracking-[0.3em] text-gray-400 uppercase mb-5">
@@ -24,13 +24,13 @@ export default function HomePageContent() {
             <span className="text-white"> &amp; More</span>
           </h1>
 
-          <p className="text-gray-400 text-sm sm:text-base max-w-lg mx-auto text-center leading-relaxed mb-8">
+          <p className="text-gray-400 text-sm sm:text-base max-w-lg mx-auto text-center leading-relaxed mb-10">
             26+ powerful browser-based utilities for PDF, image, AI &amp; text tasks.
             No signup. No limits. 100% private.
           </p>
 
           {/* Search Bar */}
-          <div className="relative max-w-xl mx-auto w-full mb-8">
+          <div className="relative max-w-xl mx-auto w-full mb-12">
             <div className="relative flex items-center bg-white border-2 border-[#7C3AED]/30 hover:border-[#7C3AED]/60 focus-within:border-[#7C3AED] rounded-2xl pl-5 pr-4 py-4 shadow-lg shadow-[#7C3AED]/10 transition-all duration-200">
               <Search className="text-[#7C3AED] shrink-0" size={22} strokeWidth={2.5} aria-hidden="true" />
               <input
@@ -79,7 +79,7 @@ export default function HomePageContent() {
       <SearchableToolGrid searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
       {/* ── "More tools coming" CTA ──────────────────────────────────────── */}
-      <section className="w-full border-t border-white/5 mt-16 pt-16 pb-20 px-4">
+      <section className="w-full border-t border-white/5 mt-20 pt-16 pb-28 px-4">
         <div className="max-w-lg mx-auto text-center">
           <div className="w-12 h-12 bg-[#7C3AED]/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
             <span className="text-2xl">⚡</span>

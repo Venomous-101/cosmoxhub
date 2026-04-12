@@ -3,7 +3,7 @@ import { categories } from "@/lib/tools-data";
 import { pseoData } from "@/lib/pseo-data";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://CosmoxHub.com";
+  const baseUrl = "https://www.cosmoxhub.com";
 
   // Core static routes
   const staticRoutes = [
@@ -11,7 +11,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/about",
     "/privacy",
     "/terms",
-    "/claude-skills-creator",
   ];
 
   // Map all tools from our data library

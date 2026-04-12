@@ -12,7 +12,7 @@ const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space
 export const metadata = {
   title: {
     default: "CosmoxHub — Free Online Tools for Everyone",
-    template: "%s | CosmoxHub",
+    template: "%s",
   },
   description:
     "CosmoxHub offers 28+ free online tools: AI Image Upscaler, Background Remover, PDF Merger, PDF Compressor, QR Code Generator, HEIC Converter, Image Compressor and more. No signup, 100% private.",
@@ -53,11 +53,20 @@ export const metadata = {
     title: "CosmoxHub — 28+ Free Online Tools for Everyone",
     description:
       "28+ free online tools in one place. AI Image Upscaler, PDF Merger, Background Remover, QR Code Generator and more. No signup, no limits, lightning fast.",
+    images: [
+      {
+        url: "https://cosmoxhub.com/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "CosmoxHub — Free Online Tools",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "CosmoxHub — 28+ Free Online Tools for Everyone",
     description: "28+ free online tools in one place. No signup, no limits.",
+    images: ["https://cosmoxhub.com/og-image.png"],
   },
   robots: {
     index: true,
