@@ -3,6 +3,7 @@ import "./globals.css";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import HDUP from "@/components/HDUP";
 import PredictivePrefetcher from "@/components/PredictivePrefetcher";
+import { UserGreeting } from "@/components/UserGreeting";
 import React from "react";
 import { Analytics } from "@vercel/analytics/react";
 
@@ -10,13 +11,11 @@ const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
-  preload: true,
 });
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-space",
   display: "swap",
-  preload: true,
 });
 
 export const metadata = {
@@ -147,6 +146,7 @@ export default function RootLayout({
         <Analytics />
         <HDUP />
         <PredictivePrefetcher />
+        <UserGreeting />
         {children}
       </body>
     </html>
