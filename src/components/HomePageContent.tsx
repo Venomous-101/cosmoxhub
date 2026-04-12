@@ -17,12 +17,14 @@ export default function HomePageContent() {
             100% Free. No Email Required.
           </p>
 
-          {/* BUG 1 FIX: H1 never orphans "More" */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tight mb-4 text-center">
-            Free Online Tools —{' '}
-            <br className="hidden sm:block" />
-            <span className="text-[#7C3AED]">PDF, Image, AI</span>
-            <span className="text-white"> &amp; More</span>
+          {/* BUG 1 FIX: H1 — "PDF, Image, AI & More" always stays together */}
+          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tight mb-4 text-center">
+            Free Online Tools
+            <br />
+            <span className="whitespace-nowrap">
+              <span className="text-[#7C3AED]">PDF, Image, AI</span>
+              <span className="text-white"> &amp; More</span>
+            </span>
           </h1>
 
           {/* BUG 4 FIX: subtitle centered */}
