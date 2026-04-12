@@ -4,8 +4,12 @@ import Footer from "@/components/Footer";
 import HomePageContent from "@/components/HomePageContent";
 
 export const metadata: Metadata = {
-  title: "CosmoxHub — 28+ Free Online Tools | PDF, Image, AI & Text",
-  description: "Free online tools for everything. AI Image Upscaler, Background Remover, PDF Merger, QR Code Generator, Image Compressor, HEIC Converter and 22 more. No signup, 100% private.",
+  title: "Free Online Tools — PDF, Image, AI & More | CosmoxHub",
+  description: "26+ free browser-based tools for PDF, images, AI, and text. No signup, no limits, 100% private. Works instantly in your browser on any device.",
+  other: {
+    "application-name": "CosmoxHub",
+    "apple-mobile-web-app-title": "CosmoxHub",
+  },
 };
 
 export default function HomePage() {
