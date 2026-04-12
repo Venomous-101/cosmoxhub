@@ -11,8 +11,8 @@ export default function HomePageContent() {
     <main className="min-h-screen w-full">
 
       {/* ── Hero Section ─────────────────────────────────────────────────── */}
-      <section className="w-full text-center px-4 pt-14 pb-10">
-        <div className="max-w-5xl mx-auto w-full">
+      <section className="w-full px-4 pt-16 pb-14">
+        <div className="flex flex-col items-center w-full">
 
           <p className="text-xs font-bold tracking-[0.3em] text-gray-400 uppercase mb-5">
             100% Free. No Email Required.
@@ -27,14 +27,14 @@ export default function HomePageContent() {
             </span>
           </h1>
 
-          {/* BUG 2 FIX: subtitle explicitly centered */}
-          <p className="text-gray-400 text-base sm:text-lg max-w-xl mx-auto mb-8 leading-relaxed text-center">
+          {/* Subtitle — centered with breathing room */}
+          <p className="text-gray-400 text-base sm:text-lg max-w-lg text-center leading-relaxed mt-2 mb-10">
             26+ powerful browser-based utilities for PDF, image, AI &amp; text tasks.
             No signup. No limits. 100% private.
           </p>
 
           {/* Search Bar */}
-          <div className="relative max-w-xl mx-auto w-full mb-10">
+          <div className="relative w-full max-w-xl mb-12">
             <div className="relative flex items-center bg-white border-2 border-[#7C3AED]/30 hover:border-[#7C3AED]/60 focus-within:border-[#7C3AED] rounded-2xl pl-5 pr-4 py-4 shadow-lg shadow-[#7C3AED]/10 transition-all duration-200">
               <Search className="text-[#7C3AED] shrink-0" size={22} strokeWidth={2.5} aria-hidden="true" />
               <input
