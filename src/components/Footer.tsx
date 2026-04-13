@@ -93,21 +93,9 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* SEO Crawl Section — all tools listed with keyword-rich text */}
-        <div className="pt-16 border-t border-indigo-500/5 mb-20">
-          <h4 className="text-slate-400 text-[11px] font-bold tracking-[0.3em] uppercase mb-10 text-center bg-gradient-to-r from-transparent via-indigo-500/10 to-transparent py-3">
-            Explore All 28+ Free Online Tools
-          </h4>
-          <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-5 max-w-6xl mx-auto px-4">
-            {categories[4].tools.concat(categories.slice(0, 4).flatMap(c => c.tools)).map((tool) => (
-              <Link
-                key={tool.href}
-                href={tool.href}
-                className="text-slate-500 text-[13px] hover:text-indigo-400 transition-colors"
-              >
-                {anchorText[tool.href] ?? tool.title}
-              </Link>
-            ))}
+        {/* Legal & About Links */}
+        <div className="pt-10 mb-10 border-t border-indigo-500/5 mt-10 lg:mt-0">
+          <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-5 max-w-6xl mx-auto px-4 pt-10">
             <Link href="/about"   className="text-slate-400 text-[13px] hover:text-white transition-colors underline decoration-indigo-500/30">About CosmoxHub</Link>
             <Link href="/privacy" className="text-slate-400 text-[13px] hover:text-white transition-colors underline decoration-indigo-500/30">Privacy Policy</Link>
             <Link href="/terms"   className="text-slate-400 text-[13px] hover:text-white transition-colors underline decoration-indigo-500/30">Terms of Service</Link>
