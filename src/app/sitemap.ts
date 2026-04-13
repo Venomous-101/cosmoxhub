@@ -20,6 +20,7 @@ const TOOL_SLUGS = [
   // Utilities
   "whatsapp-link", "qr-generator", "youtube-thumbnail",
   "age-calculator", "password-generator", "invoice-generator",
+  "iq-test", "mind-forge",
 ];
 
 const BASE = "https://www.cosmoxhub.com";
