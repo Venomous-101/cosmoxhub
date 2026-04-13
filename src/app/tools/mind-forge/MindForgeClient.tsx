@@ -828,22 +828,22 @@ export default function MindForgeClient() {
     <div className="min-h-screen bg-[#0A0A0A] text-white">
 
       {/* ── NAV HEADER ─────────────────────────────────────────────────────────── */}
-      <div className="border-b border-white/5 px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          <Link href="/" className="text-gray-500 hover:text-white text-sm flex items-center gap-2 mb-6 transition-colors w-fit group">
+      <div className="border-b border-white/5 px-4 py-10">
+        <div className="max-w-7xl mx-auto">
+          <Link href="/" className="text-gray-500 hover:text-white text-sm flex items-center gap-2 mb-8 transition-colors w-fit group">
             <span className="group-hover:-translate-x-1 transition-transform duration-200 inline-block">←</span>
             Back to All Tools
           </Link>
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-[#7C3AED]/20 rounded-2xl flex items-center justify-center text-2xl shrink-0">🧠</div>
+          <div className="flex items-center gap-6">
+            <div className="w-16 h-16 bg-[#7C3AED]/20 rounded-2xl flex items-center justify-center text-3xl shrink-0 shadow-[0_0_30px_rgba(124,58,237,0.15)]">🧠</div>
             <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-2xl sm:text-3xl font-bold">MindForge</h1>
-                <span className="text-xs font-semibold bg-[#7C3AED]/20 text-[#A78BFA] border border-[#7C3AED]/30 px-2.5 py-1 rounded-full uppercase tracking-wider">
+              <div className="flex items-center gap-3 flex-wrap">
+                <h1 className="text-3xl sm:text-4xl font-black tracking-tight">MindForge</h1>
+                <span className="text-xs font-bold bg-[#7C3AED]/20 text-[#A78BFA] border border-[#7C3AED]/30 px-3 py-1.5 rounded-full uppercase tracking-wider shadow-inner">
                   Brain Training
                 </span>
               </div>
-              <p className="text-gray-400 text-sm mt-1 leading-relaxed max-w-xl">
+              <p className="text-gray-400 text-base mt-2 leading-relaxed max-w-2xl">
                 Science-backed cognitive training. 5 games targeting memory, focus, pattern recognition, processing speed & verbal fluency.
               </p>
             </div>
@@ -851,58 +851,68 @@ export default function MindForgeClient() {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-10">
+      <div className="w-full max-w-7xl mx-auto px-4 py-12">
 
         {/* ── HOME SCREEN ──────────────────────────────────────────────────────── */}
         {phase === "home" && (
-          <div className="space-y-10">
+          <div className="space-y-16">
 
             {/* Difficulty selector */}
-            <div className="flex items-center gap-3 flex-wrap">
-              <span className="text-xs text-gray-600 uppercase tracking-widest font-semibold">Difficulty:</span>
-              {(["easy", "medium", "hard"] as Difficulty[]).map(d => (
-                <button
-                  key={d}
-                  onClick={() => setDifficulty(d)}
-                  className={`px-5 py-2 rounded-xl text-xs font-bold capitalize transition-all
-                    ${difficulty === d
-                      ? "bg-[#7C3AED] text-white shadow-[0_0_16px_rgba(124,58,237,0.3)]"
-                      : "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/5"
-                    }`}
-                >
-                  {d}
-                </button>
-              ))}
+            <div className="flex items-center gap-4 flex-wrap bg-[#111111] p-4 rounded-2xl w-fit border border-white/[0.04]">
+              <span className="text-xs text-gray-500 uppercase tracking-widest font-bold ml-2">Difficulty:</span>
+              <div className="flex gap-2">
+                {(["easy", "medium", "hard"] as Difficulty[]).map(d => (
+                  <button
+                    key={d}
+                    onClick={() => setDifficulty(d)}
+                    className={`px-6 py-2.5 rounded-xl text-sm font-bold capitalize transition-all duration-200
+                      ${difficulty === d
+                        ? "bg-[#7C3AED] text-white shadow-[0_0_20px_rgba(124,58,237,0.4)] scale-105"
+                        : "bg-transparent text-gray-400 hover:bg-white/10 hover:text-white"
+                      }`}
+                  >
+                    {d}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Game cards */}
-            <div className="space-y-4">
-              <p className="text-xs text-gray-600 uppercase tracking-widest font-semibold">Choose a Game</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="space-y-6">
+              <div className="flex items-center gap-3">
+                <span className="w-1.5 h-6 bg-[#7C3AED] rounded-full"></span>
+                <h2 className="text-lg text-white font-bold tracking-wide">Choose a Cognitive Domain</h2>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
                 {GAMES.map(g => {
                   const best = scores.filter(s => s.gameId === g.id).sort((a, b) => b.score - a.score)[0];
                   return (
                     <button
                       key={g.id}
                       onClick={() => startGame(g.id)}
-                      className="group text-left bg-[#111111] border border-white/[0.06] rounded-2xl p-5
-                        hover:border-[#7C3AED]/30 hover:shadow-[0_0_24px_rgba(124,58,237,0.07)]
-                        transition-all duration-200"
+                      className="group flex flex-col text-left bg-[#111111] border border-white/[0.06] rounded-3xl p-6
+                        hover:border-[#7C3AED]/40 hover:shadow-[0_0_30px_rgba(124,58,237,0.1)] hover:-translate-y-1
+                        transition-all duration-300 relative overflow-hidden"
                     >
-                      <span className="text-4xl block mb-4">{g.icon}</span>
+                      {/* Gradient glow effect in background on hover */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/0 to-white/0 group-hover:from-white/5 transition-colors"></div>
 
-                      <h3 className="text-white font-bold mb-1 group-hover:text-[#A78BFA] transition-colors">
+                      <span className="text-5xl block mb-6 drop-shadow-lg">{g.icon}</span>
+
+                      <h3 className="text-xl text-white font-black mb-1 group-hover:text-[#A78BFA] transition-colors relative z-10">
                         {g.name}
                       </h3>
-                      <p className="text-xs font-semibold mb-2" style={{ color: g.hex }}>{g.cognitive}</p>
-                      <p className="text-xs text-gray-500 leading-relaxed mb-4">{g.desc}</p>
+                      <p className="text-xs font-bold mb-3 tracking-wide uppercase relative z-10" style={{ color: g.hex }}>{g.cognitive}</p>
+                      
+                      <p className="text-sm text-gray-400 leading-relaxed mb-6 flex-1 relative z-10">{g.desc}</p>
 
-                      <div className="flex items-center justify-between">
+                      <div className="w-full flex items-center justify-between pt-4 border-t border-white/5 relative z-10 mt-auto">
                         {best
-                          ? <span className="text-xs text-gray-600">Best: <span className="text-gray-400 font-bold">{best.score} pts</span></span>
-                          : <span className="text-xs text-gray-700">No plays yet</span>
+                          ? <span className="text-xs text-gray-500 font-medium tracking-wide">Best: <span className="text-white font-black ml-1">{best.score} pts</span></span>
+                          : <span className="text-xs text-gray-700 font-medium">No plays yet</span>
                         }
-                        <span className="text-xs text-[#7C3AED] opacity-0 group-hover:opacity-100 transition-opacity font-bold">Play →</span>
+                        <span className="text-sm text-[#7C3AED] opacity-0 group-hover:opacity-100 transition-opacity font-bold bg-[#7C3AED]/10 px-3 py-1 rounded-lg">Play →</span>
                       </div>
                     </button>
                   );
@@ -911,18 +921,22 @@ export default function MindForgeClient() {
             </div>
 
             {/* Neuroscience panel */}
-            <div className="border-t border-white/[0.06] pt-10 space-y-5">
-              <p className="text-xs text-gray-600 uppercase tracking-widest font-semibold">The Neuroscience Behind MindForge</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="border-t border-white/[0.06] pt-12 space-y-8">
+              <div className="flex items-center gap-3">
+                <span className="w-1.5 h-6 bg-[#10B981] rounded-full"></span>
+                <h2 className="text-lg text-white font-bold tracking-wide">The Neuroscience Behind MindForge</h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[
-                  { title: "Neuroplasticity",  body: "Your brain physically changes with training. New synaptic connections form within days of consistent practice. (Draganski et al., 2004)" },
-                  { title: "Working Memory",   body: "Working memory is a stronger predictor of academic & professional success than IQ alone in many studies. (Alloway & Alloway, 2010)" },
-                  { title: "Transfer Effect",  body: "Cognitive training transfers to real-world tasks. Reaction time training improves driving. Memory training accelerates learning speed." },
-                  { title: "Optimal Training", body: "5–15 minutes of daily focused cognitive training outperforms 1 hour of passive learning. Consistency beats intensity." },
+                  { title: "Neuroplasticity",  icon: "🧬", body: "Your brain physically changes with training. New synaptic connections form within days of consistent practice. (Draganski et al., 2004)" },
+                  { title: "Working Memory",   icon: "🧠", body: "Working memory is a stronger predictor of academic & professional success than IQ alone in many studies. (Alloway & Alloway, 2010)" },
+                  { title: "Transfer Effect",  icon: "🔄", body: "Cognitive training transfers to real-world tasks. Reaction time training improves driving. Memory training accelerates learning speed." },
+                  { title: "Optimal Training", icon: "⏱️", body: "5–15 minutes of daily focused cognitive training outperforms 1 hour of passive learning. Consistency beats intensity." },
                 ].map(card => (
-                  <div key={card.title} className="bg-[#111111] border border-white/[0.05] rounded-2xl p-5 space-y-2">
-                    <p className="text-white text-xs font-bold">{card.title}</p>
-                    <p className="text-gray-500 text-xs leading-relaxed">{card.body}</p>
+                  <div key={card.title} className="bg-gradient-to-b from-[#161616] to-[#0A0A0A] border border-white/[0.05] rounded-3xl p-6 shadow-xl">
+                    <div className="text-2xl mb-3">{card.icon}</div>
+                    <h4 className="text-white text-sm font-bold mb-2 tracking-wide">{card.title}</h4>
+                    <p className="text-gray-500 text-xs leading-relaxed font-medium">{card.body}</p>
                   </div>
                 ))}
               </div>
