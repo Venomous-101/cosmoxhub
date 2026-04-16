@@ -26,6 +26,7 @@ export default function GoogleAnalytics({ gaId }: { gaId: string }) {
 
     // Check if this browser is marked as owner
     const ownerFlag = localStorage.getItem("cosmox_owner");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsOwner(ownerFlag === "true");
   }, []);
 

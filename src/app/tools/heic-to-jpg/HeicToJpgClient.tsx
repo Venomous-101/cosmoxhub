@@ -34,6 +34,7 @@ export default function HeicToJpgClient() {
   const [targetFormat, setTargetFormat] = useState<"image/jpeg" | "image/png" | "image/webp">("image/jpeg");
   const [quality, setQuality] = useState(0.8);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
   const [heic2any, setHeic2any] = useState<any>(null);
 
   // Ad Intercept State
@@ -321,6 +322,7 @@ export default function HeicToJpgClient() {
                 <select 
                   value={targetFormat}
                   title="Select Output Format"
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   onChange={(e) => setTargetFormat(e.target.value as any)}
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white font-bold outline-none focus:border-rose-500/30 transition-all appearance-none cursor-pointer"
                 >

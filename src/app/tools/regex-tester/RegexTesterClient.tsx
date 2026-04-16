@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { Search, Trash2 } from 'lucide-react';
+import ToolLayout from '@/components/ToolLayout';
 
 export default function RegexTesterClient() {
   const [pattern, setPattern] = useState('[a-z]+');
@@ -10,7 +11,7 @@ export default function RegexTesterClient() {
 
   const result = useMemo(() => {
     let error = '';
-    let matches: { text: string; isMatch: boolean }[] = [];
+    const matches: { text: string; isMatch: boolean }[] = [];
     let matchCount = 0;
 
     if (!pattern) return { error, matches, matchCount };
@@ -59,6 +60,7 @@ export default function RegexTesterClient() {
           matches.push({ text: testString, isMatch: false });
         }
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       error = e.message;
     }
@@ -72,7 +74,13 @@ export default function RegexTesterClient() {
   };
 
   return (
-    <div className="space-y-6">
+    <ToolLayout
+      title="Regex Tester"
+      description="Test and debug regular expressions instantly with live match highlighting. Supports all flags (g, i, m, s). Free, browser-based, real-time."
+      icon={Search}
+      color="#7c3aed"
+    >
+      <div className="space-y-6">
       
       {/* Pattern & Flags */}
       <div className="flex flex-col sm:flex-row gap-4">
@@ -158,6 +166,7 @@ export default function RegexTesterClient() {
           Clear All
         </button>
       </div>
-    </div>
+      </div>
+    </ToolLayout>
   );
 }

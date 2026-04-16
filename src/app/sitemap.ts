@@ -11,8 +11,9 @@ const TOOL_SLUGS = [
   "lorem-ipsum", "text-to-pdf",
   // AI & Developer
   "ai-prompt-optimizer", "code-beautifier", "claude-skills-creator",
-  "json-formatter", "url-encoder", "image-to-base64",
-  "markdown-to-html", "text-diff", "regex-tester", "font-pairing",
+  "markdown-to-html", "text-diff", "regex-tester", "font-pairing", "text-to-word",
+  "csv-to-json", "text-case-pro", "emi-calculator", "aspect-ratio-calculator", "unit-converter",
+  "screen-tester", "contrast-checker",
   // Image Tools
   "image-compressor", "bg-remover", "png-to-jpg", "jpg-to-png",
   "heic-to-jpg", "webp-to-png", "image-resizer", "image-upscaler",
@@ -20,7 +21,7 @@ const TOOL_SLUGS = [
   // Utilities
   "whatsapp-link", "qr-generator", "youtube-thumbnail",
   "age-calculator", "password-generator", "invoice-generator",
-  "iq-test", "mind-forge",
+  "iq-test", "mind-forge", "signature-creator", "pomodoro-timer", "countdown-timer", "resume-builder",
 ];
 
 const BASE = "https://www.cosmoxhub.com";

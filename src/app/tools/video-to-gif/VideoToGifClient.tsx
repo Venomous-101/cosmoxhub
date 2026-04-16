@@ -217,7 +217,10 @@ export default function VideoToGifClient() {
           <div className="flex-grow bg-[#111111] border border-[#7C3AED]/20 rounded-xl h-48 sm:h-64 flex flex-col items-center justify-center relative overflow-hidden">
              <span className="absolute top-2 left-2 bg-[#7C3AED]/20 text-[#A78BFA] text-xs px-2 py-1 rounded-md z-10 border border-[#7C3AED]/40">Output GIF</span>
              {gifUrl ? (
-               <img loading="lazy" decoding="async" src={gifUrl} alt="Converted GIF" className="max-w-full max-h-full object-contain" />
+               <>
+                 <>{/* eslint-disable-next-line @next/next/no-img-element */}
+                 <img loading="lazy" decoding="async" src={gifUrl} alt="Converted GIF" className="max-w-full max-h-full object-contain" /></>
+               </>
              ) : (
                <div className="text-gray-500 italic flex items-center gap-2">
                  {isProcessing && <Loader2 className="w-4 h-4 animate-spin text-[#7C3AED]" />}

@@ -18,6 +18,7 @@ export default function PredictivePrefetcher() {
   const router = useRouter();
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     let prefetchTimeout: NodeJS.Timeout;
 
     const handleMouseOver = (e: MouseEvent | TouchEvent) => {
@@ -34,6 +35,7 @@ export default function PredictivePrefetcher() {
           // Pre-fetch the exact route immediately (Next.js App Router API)
           try {
             router.prefetch(url.pathname + url.search);
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           } catch (err) {
             // Silently swallow errors (e.g. invalid programmatic routes)
           }

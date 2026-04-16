@@ -77,7 +77,9 @@ export default function MergePdfClient() {
       const mergedPdfBytes = await mergedPdf.save();
       const blob = new Blob([mergedPdfBytes as unknown as BlobPart], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if (typeof window !== 'undefined' && typeof (window as any).call_locker === 'function') {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
         try { (window as any).call_locker(); } catch(e) {}
       }
       const link = document.createElement("a");
@@ -284,7 +286,7 @@ export default function MergePdfClient() {
                 Our interface is built for precision. You have full control over the sequence of your merged document, allowing you to reorder pages with a single click. The result is a high-fidelity unified PDF that maintains the original resolution and metadata of your source files.
               </p>
               <p>
-                Experience the difference between standard tools and elite performance. CosmoxHub's PDF Suite is optimized for speed, security, and simplicity. No registration, no hidden fees, and no watermarks—just pure, high-performance utility at your fingertips.
+                Experience the difference between standard tools and elite performance. CosmoxHub&apos;s PDF Suite is optimized for speed, security, and simplicity. No registration, no hidden fees, and no watermarks—just pure, high-performance utility at your fingertips.
               </p>
             </div>
           </div>

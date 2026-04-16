@@ -1,44 +1,28 @@
-import { Metadata } from 'next';
-import ColorPaletteClient from './ColorPaletteClient';
-import { categories } from '@/lib/tools-data';
-import ToolLayout from '@/components/ToolLayout';
+import { generateToolMetadata, generateWebAppJsonLd } from "@/lib/seo-helpers";
+import ColorPaletteClient from "./ColorPaletteClient";
 
-const tool = categories.find((c) => c.id === 'image-tools')?.tools.find((t) => t.href === '/tools/color-palette');
-
-export const metadata: Metadata = {
-  title: `${tool?.title} | CosmoxHub`,
-  description: tool?.description,
-  alternates: {
-    canonical: `https://cosmoxhub.com${tool?.href}`,
-  },
-};
+export const metadata = generateToolMetadata({
+  toolName: "Color Palette Generator",
+  slug: "color-palette",
+  description: "Generate beautiful, harmonious color palettes from any base color. Export hex, RGB, HSL codes instantly. Free color scheme creator for designers — no signup.",
+  keywords: ["color palette generator", "color scheme generator", "color palette from image", "hex color picker", "color combinations", "design colors", "color wheel"],
+});
 
 export default function ColorPalettePage() {
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'WebApplication',
-    name: tool?.title,
-    description: tool?.description,
-    applicationCategory: 'DesignApplication',
-    operatingSystem: 'Any',
-    url: `https://cosmoxhub.com${tool?.href}`,
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
-    },
-  };
+  const faqs = [
+    { question: "How do I generate a color palette?", answer: "Enter any hex color or pick one using the color picker, then choose your palette type (complementary, analogous, triadic, etc.). The palette generates instantly." },
+    { question: "Can I export the color codes?", answer: "Yes. You can copy hex, RGB, or HSL values for each color with a single click. Perfect for use in CSS, Figma, or any design tool." },
+    { question: "Is this tool free?", answer: "100% free, no account required. All palette generation happens in your browser." },
+    { question: "What color harmony types are supported?", answer: "Complementary, analogous, triadic, tetradic, split-complementary, and monochromatic schemes are all supported." },
+  ];
 
   return (
-    <ToolLayout
-      title={tool?.title || 'Color Palette Generator'}
-      description={tool?.description || 'Generate beautiful color palettes from any base color.'}
-    >
+    <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: generateWebAppJsonLd({ toolName: "Color Palette Generator", slug: "color-palette", description: "Generate beautiful, harmonious color palettes from any base color. Free, instant, browser-based.", faqs }) }}
       />
       <ColorPaletteClient />
-    </ToolLayout>
+    </>
   );
 }

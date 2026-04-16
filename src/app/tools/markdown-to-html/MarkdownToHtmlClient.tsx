@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Copy, Trash2, Eye, Code2 } from 'lucide-react';
 import { marked } from 'marked';
+import ToolLayout from '@/components/ToolLayout';
 
 export default function MarkdownToHtmlClient() {
   const [markdown, setMarkdown] = useState('# Hello World\n\nWrite some **Markdown** here!');
@@ -13,7 +14,9 @@ export default function MarkdownToHtmlClient() {
   useEffect(() => {
     try {
       const parsed = marked.parse(markdown);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setHtml(parsed as string);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       setHtml('<p>Error parsing markdown</p>');
     }
@@ -35,13 +38,21 @@ export default function MarkdownToHtmlClient() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full h-[500px]">
+    <ToolLayout
+      title="Markdown to HTML Converter"
+      description="Convert Markdown to clean HTML instantly. Preview the rendered output or copy raw HTML code. Free, browser-based, no data uploaded."
+      icon={Code2}
+      color="#7c3aed"
+    >
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full h-[500px]">
         
         {/* Editor Side */}
         <div className="space-y-3 flex flex-col h-full">
-          <label className="block text-sm font-medium text-gray-400">Markdown Input</label>
+          <label htmlFor="markdownInput" className="block text-sm font-medium text-gray-400">Markdown Input</label>
           <textarea
+            id="markdownInput"
+            title="Markdown Input"
             value={markdown}
             onChange={(e) => setMarkdown(e.target.value)}
             placeholder="Type your markdown here..."
@@ -52,7 +63,7 @@ export default function MarkdownToHtmlClient() {
         {/* Output Side */}
         <div className="space-y-3 flex flex-col h-full relative">
           <div className="flex justify-between items-end">
-            <label className="block text-sm font-medium text-gray-400">Output Result</label>
+            <label htmlFor="htmlOutput" className="block text-sm font-medium text-gray-400">Output Result</label>
             <div className="flex bg-[#111111] rounded-lg border border-white/8 overflow-hidden">
               <button
                 onClick={() => setViewMode('preview')}
@@ -77,6 +88,8 @@ export default function MarkdownToHtmlClient() {
               />
             ) : (
               <textarea
+                id="htmlOutput"
+                title="HTML Output"
                 readOnly
                 value={html}
                 className="w-full h-full bg-transparent text-[#A78BFA] p-4 focus:outline-none resize-none font-mono text-xs sm:text-sm"
@@ -119,6 +132,7 @@ export default function MarkdownToHtmlClient() {
           Clear
         </button>
       </div>
-    </div>
+      </div>
+    </ToolLayout>
   );
 }

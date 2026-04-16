@@ -46,7 +46,7 @@ export default function ReviewTestimonial({ toolName, ratingValue, ratingCount, 
           ))}
         </div>
         <p className="text-lg text-slate-300 italic">
-          "{reviewText}"
+          &quot;{reviewText}&quot;
         </p>
         <div className="mt-4">
           <p className="font-semibold text-white">{authorName}</p>

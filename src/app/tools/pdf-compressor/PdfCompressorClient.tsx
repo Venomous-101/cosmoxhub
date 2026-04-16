@@ -44,6 +44,7 @@ async function compressPdf(file: File, level: CompressionLevel): Promise<Blob> {
     objectsPerTick: level === "high" ? 50 : 100,
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return new Blob([saved.buffer] as any, { type: "application/pdf" });
 }
 
@@ -372,7 +373,7 @@ export default function PdfCompressorClient() {
         {/* Dynamic SEO Content Section */}
         <div className="mt-16 p-8 md:p-12 bg-[#050510]/60 backdrop-blur-2xl border-t border-white/5 rounded-[2.5rem] prose prose-invert prose-violet max-w-none shadow-2xl">
           <p className="text-slate-300 leading-relaxed text-lg mb-6">
-            Need to <strong>compress PDF files on mobile or desktop</strong> without risking your document's privacy? CosmoxHub offers the market's only fully localized, edge-computing PDF Size Reducer. Unlike other free tools that upload your sensitive data to cloud servers, our compressor processes your files directly within your browser utilizing advanced WebAssembly.
+            Need to <strong>compress PDF files on mobile or desktop</strong> without risking your document&apos;s privacy? CosmoxHub offers the market&apos;s only fully localized, edge-computing PDF Size Reducer. Unlike other free tools that upload your sensitive data to cloud servers, our compressor processes your files directly within your browser utilizing advanced WebAssembly.
           </p>
           <p className="text-slate-300 leading-relaxed text-lg">
             Whether you need to bypass a 5MB email attachment limit or upload a lightweight portfolio to a job portal, CosmoxHub strips out redundant metadata and optimizes data streams while preserving crisp text and sharp image fidelity. Stop paying for expensive desktop software—reduce your PDF size securely, instantly, and 100% free.

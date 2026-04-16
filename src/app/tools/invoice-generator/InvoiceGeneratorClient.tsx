@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { Copy, Trash2, Receipt } from 'lucide-react';
+import ToolLayout from '@/components/ToolLayout';
 
 export default function InvoiceGeneratorClient() {
   const [prefix, setPrefix] = useState('INV-');
@@ -43,7 +44,13 @@ export default function InvoiceGeneratorClient() {
   };
 
   return (
-    <div className="space-y-6">
+    <ToolLayout
+      title="Invoice Number Generator"
+      description="Generate sequential, custom-formatted invoice numbers in bulk. Set prefix, suffix, padding, and quantity. Copy all in one click. Free, browser-based."
+      icon={Receipt}
+      color="#7c3aed"
+    >
+      <div className="space-y-6">
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
         
@@ -55,8 +62,10 @@ export default function InvoiceGeneratorClient() {
            
            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                 <label className="block text-xs font-medium text-gray-400">Prefix</label>
+                 <label htmlFor="prefixId" className="block text-xs font-medium text-gray-400">Prefix</label>
                  <input 
+                   id="prefixId"
+                   title="Prefix"
                    type="text" 
                    value={prefix}
                    onChange={(e) => setPrefix(e.target.value)}
@@ -65,8 +74,10 @@ export default function InvoiceGeneratorClient() {
                  />
               </div>
               <div className="space-y-2">
-                 <label className="block text-xs font-medium text-gray-400">Suffix</label>
+                 <label htmlFor="suffixId" className="block text-xs font-medium text-gray-400">Suffix</label>
                  <input 
+                   id="suffixId"
+                   title="Suffix"
                    type="text" 
                    value={suffix}
                    onChange={(e) => setSuffix(e.target.value)}
@@ -78,8 +89,10 @@ export default function InvoiceGeneratorClient() {
 
            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                 <label className="block text-xs font-medium text-gray-400">Start Number</label>
+                 <label htmlFor="startNum" className="block text-xs font-medium text-gray-400">Start Number</label>
                  <input 
+                   id="startNum"
+                   title="Start Number"
                    type="number" 
                    value={startNumber}
                    onChange={(e) => setStartNumber(Number(e.target.value) || 0)}
@@ -87,8 +100,10 @@ export default function InvoiceGeneratorClient() {
                  />
               </div>
               <div className="space-y-2">
-                 <label className="block text-xs font-medium text-gray-400">Zero Padding</label>
+                 <label htmlFor="zeroPad" className="block text-xs font-medium text-gray-400">Zero Padding</label>
                  <input 
+                   id="zeroPad"
+                   title="Zero Padding"
                    type="number" 
                    min="1" max="10"
                    value={padding}
@@ -99,8 +114,10 @@ export default function InvoiceGeneratorClient() {
            </div>
 
            <div className="space-y-2 border-t border-white/8 pt-4">
-              <label className="block text-xs font-medium text-gray-400">Total Quantity to Generate (Max 10k)</label>
+              <label htmlFor="quantity" className="block text-xs font-medium text-gray-400">Total Quantity to Generate (Max 10k)</label>
               <input 
+                id="quantity"
+                title="Total Quantity"
                 type="number" 
                 min="1" max="10000"
                 value={quantity}
@@ -120,11 +137,13 @@ export default function InvoiceGeneratorClient() {
         {/* Right: Output Array */}
         <div className="space-y-3 flex flex-col h-[400px] md:h-auto overflow-hidden">
           <div className="flex justify-between items-end">
-            <label className="block text-sm font-medium text-gray-400">Generated Numbers</label>
+            <label htmlFor="generated" className="block text-sm font-medium text-gray-400">Generated Numbers</label>
             <span className="text-xs text-gray-500">{Math.min(quantity, 10000)} items</span>
           </div>
           <div className="relative flex-grow">
             <textarea
+              id="generated"
+              title="Generated Invoices"
               readOnly
               value={generatedInvoices}
               className="w-full h-full bg-[#111111] text-[#A78BFA] border border-white/8 rounded-xl p-4 focus:outline-none font-mono text-sm resize-none"
@@ -161,6 +180,7 @@ export default function InvoiceGeneratorClient() {
         </button>
       </div>
 
-    </div>
+      </div>
+    </ToolLayout>
   );
 }

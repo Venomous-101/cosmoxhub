@@ -256,7 +256,7 @@ export default function PromptOptimizerClient() {
           <div className="grid md:grid-cols-2 gap-10 text-slate-400 text-sm leading-relaxed font-medium">
             <div className="space-y-4">
               <p>
-                Unlocking the full potential of Large Language Models requires more than just simple instructions—it requires a <span className="text-white font-bold">secure AI prompt optimizer</span>. CosmoxHub's <span className="text-purple-500 font-bold underline">free online utility tool</span> provides a professional-grade prompt engineering suite that ensures your data remains 100% private. By using <span className="text-white font-bold">local processing</span>, we guarantee that your proprietary ideas are never leaked.
+                Unlocking the full potential of Large Language Models requires more than just simple instructions—it requires a <span className="text-white font-bold">secure AI prompt optimizer</span>. CosmoxHub&apos;s <span className="text-purple-500 font-bold underline">free online utility tool</span> provides a professional-grade prompt engineering suite that ensures your data remains 100% private. By using <span className="text-white font-bold">local processing</span>, we guarantee that your proprietary ideas are never leaked.
               </p>
               <p>
                 Our platform is recognized as the <span className="text-white font-bold">fastest prompt engineering tool</span> for professionals. By integrating advanced frameworks directly into your browser, we provide instant optimization for <span className="text-white font-bold">ChatGPT, Claude, and Gemini</span>. This allows you to generate high-fidelity outputs without the trial-and-error often associated with AI interaction.
@@ -264,10 +264,10 @@ export default function PromptOptimizerClient() {
             </div>
             <div className="space-y-4">
               <p>
-                Whether you're developing code, writing marketing copy, or conducting complex research, our multi-framework engine (RTF, RISEN, COSTAR) provides the structural integrity needed for elite results. Each optimized prompt is tailored to the specific reasoning patterns of modern frontier models, ensuring maximum accuracy and relevance.
+                Whether you&apos;re developing code, writing marketing copy, or conducting complex research, our multi-framework engine (RTF, RISEN, COSTAR) provides the structural integrity needed for elite results. Each optimized prompt is tailored to the specific reasoning patterns of modern frontier models, ensuring maximum accuracy and relevance.
               </p>
               <p>
-                Join the ranks of elite prompt engineers who choose CosmoxHub for their <span className="text-white font-bold">private, secure, and professional</span> AI workflows. Enhance your productivity and secure your competitive advantage with the world's most advanced browser-side prompt optimizer.
+                Join the ranks of elite prompt engineers who choose CosmoxHub for their <span className="text-white font-bold">private, secure, and professional</span> AI workflows. Enhance your productivity and secure your competitive advantage with the world&apos;s most advanced browser-side prompt optimizer.
               </p>
             </div>
           </div>

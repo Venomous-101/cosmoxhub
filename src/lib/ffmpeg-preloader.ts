@@ -33,7 +33,6 @@ export function preloadFFmpegWasm(): void {
   // The response goes into the browser's HTTP cache automatically.
   WASM_URLS.forEach((url) => {
     fetch(url, {
-      // @ts-ignore — 'low' is valid in modern browsers
       priority: "low",
       // cache: 'force-cache' uses existing cache if available, else fetches
       cache: "force-cache",

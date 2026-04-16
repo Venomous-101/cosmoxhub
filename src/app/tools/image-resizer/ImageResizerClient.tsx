@@ -263,6 +263,7 @@ export default function ImageResizerClient() {
                       <motion.div key={img.id} layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
                         className="group relative bg-[#0a0a1a]/80 backdrop-blur-xl border border-white/5 rounded-3xl p-4 flex gap-4 items-center hover:border-emerald-500/30 transition-all shadow-xl">
                         <div className="relative w-24 h-24 rounded-2xl overflow-hidden bg-slate-900 ring-1 ring-white/10 group-hover:ring-emerald-500/30 transition-all shrink-0">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img loading="lazy" decoding="async" src={img.resultUrl || img.preview} alt={img.name} className="w-full h-full object-cover" />
                           {img.status === "completed" && (
                             <div className="absolute inset-0 bg-emerald-500/20 flex items-center justify-center backdrop-blur-[2px]">

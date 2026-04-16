@@ -7,6 +7,7 @@ import {
   CheckCircle2, 
   Settings, 
   Zap, 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Sparkles, 
   Phone, 
   QrCode,
@@ -261,10 +262,10 @@ export default function WhatsAppLinkClient() {
 
           <div className="p-8 bg-[#0a0a1f]/40 border border-white/5 rounded-[2.5rem] prose prose-invert max-w-none">
             <p className="text-slate-400 leading-relaxed italic">
-              Transform the way your customers connect with you. Our **WhatsApp Link Generator - Free Online Utility Tool** allows you to skip the manual 'add contact' step and move straight to the conversation. By creating a direct 'Click-to-Chat' link with a custom pre-filled message, you remove friction from your sales funnel, customer support, or personal networking. Simply enter your country code, phone number, and greeting, and your shortened wa.me link is ready to be shared on Instagram, Facebook, or your website.
+              Transform the way your customers connect with you. Our **WhatsApp Link Generator - Free Online Utility Tool** allows you to skip the manual &apos;add contact&apos; step and move straight to the conversation. By creating a direct &apos;Click-to-Chat&apos; link with a custom pre-filled message, you remove friction from your sales funnel, customer support, or personal networking. Simply enter your country code, phone number, and greeting, and your shortened wa.me link is ready to be shared on Instagram, Facebook, or your website.
             </p>
             <p className="text-slate-400 leading-relaxed mt-4">
-              At CosmoxHub, we believe in efficiency without compromise. Our **WhatsApp Link Generator** is optimized for high-speed performance and mobile responsiveness. Whether you are a business owner needing a 'Contact Us' button or an individual simplifying your digital identity, our tool provides the most reliable way to create professional communication links. Like all CosmoxHub utilities, your data is processed instantly without being logged, ensuring your marketing strategy remains both effective and private.
+              At CosmoxHub, we believe in efficiency without compromise. Our **WhatsApp Link Generator** is optimized for high-speed performance and mobile responsiveness. Whether you are a business owner needing a &apos;Contact Us&apos; button or an individual simplifying your digital identity, our tool provides the most reliable way to create professional communication links. Like all CosmoxHub utilities, your data is processed instantly without being logged, ensuring your marketing strategy remains both effective and private.
             </p>
           </div>
         </div>

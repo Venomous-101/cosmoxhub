@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { Palette, Copy, CheckCircle2 } from 'lucide-react';
+import ToolLayout from '@/components/ToolLayout';
 
 // Color conversion helpers
 function hexToHSL(hex: string) {
@@ -113,20 +114,30 @@ export default function ColorPaletteClient() {
   };
 
   return (
-    <div className="space-y-8">
+    <ToolLayout
+      title="Color Palette Generator"
+      description="Generate harmonious color palettes (monochromatic, analogous, complementary, triadic) from any base color. Free, instant, browser-only."
+      icon={Palette}
+      color="#7c3aed"
+    >
+      <div className="space-y-8">
       
       {/* Controls */}
       <div className="flex flex-col sm:flex-row gap-6 p-6 bg-[#111111] border border-white/8 rounded-xl items-center justify-between">
         <div className="space-y-2 w-full sm:w-auto flex-grow">
-          <label className="block text-sm font-medium text-gray-400">Base Color</label>
+          <label htmlFor="baseColorText" className="block text-sm font-medium text-gray-400">Base Color</label>
           <div className="flex items-center gap-4">
             <input
+              id="baseColorPicker"
+              title="Choose Base Color Picker"
               type="color"
               value={baseColor}
               onChange={handleColorChange}
               className="w-14 h-14 rounded cursor-pointer bg-transparent outline-none p-0 border-0"
             />
             <input
+              id="baseColorText"
+              title="Base Color Hex Value"
               type="text"
               value={baseColor}
               onChange={handleColorChange}
@@ -170,8 +181,8 @@ export default function ColorPaletteClient() {
               className="flex flex-col group cursor-pointer"
             >
               <div 
-                className="w-full h-32 sm:h-48 rounded-t-xl transition-transform transform origin-bottom group-hover:scale-[1.02] shadow-xl border border-white/5"
-                style={{ backgroundColor: hex }}
+                className="w-full h-32 sm:h-48 rounded-t-xl transition-transform transform origin-bottom group-hover:scale-[1.02] shadow-xl border border-white/5 bg-[var(--palette-bg)]"
+                style={{ '--palette-bg': hex } as React.CSSProperties}
               />
               <div className="bg-[#111111] p-4 rounded-b-xl border border-white/8 border-t-0 flex justify-between items-center group-hover:bg-[#141414] transition-colors">
                 <span className="font-mono text-white text-sm sm:text-base">{hex}</span>
@@ -187,6 +198,7 @@ export default function ColorPaletteClient() {
         <p className="text-sm text-gray-500 text-center mt-4">Click any color card to copy its HEX code.</p>
       </div>
 
-    </div>
+      </div>
+    </ToolLayout>
   );
 }

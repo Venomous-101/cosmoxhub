@@ -393,6 +393,7 @@ export default function IQTestClient() {
   // ── Main question timer ─────────────────────────────────────────────────────
   useEffect(() => {
     if (phase !== "testing" || !q || memState === "showing" || revealed) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTimeLeft(q.timeLimit);
     startRef.current = Date.now();
     timerRef.current = setInterval(() => {
@@ -416,6 +417,7 @@ export default function IQTestClient() {
   useEffect(() => {
     if (phase !== "testing" || !q || q.domain !== "memory" || !q.memoryContent) return;
     const dur = q.memoryDuration ?? 7000;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMemState("showing");
     setMemCountdown(Math.ceil(dur / 1000));
     const cd = setInterval(() => setMemCountdown(p => Math.max(0, p - 1)), 1000);

@@ -15,7 +15,7 @@ export default function RelatedTools({ currentPath }: RelatedToolsProps) {
   );
 
   // Get tools from same category first
-  let suggestedTools: Tool[] = currentCategory
+  const suggestedTools: Tool[] = currentCategory
     ? currentCategory.tools.filter((tool) => tool.href !== currentPath)
     : [];
 

@@ -250,7 +250,7 @@ export default function JsonFormatterClient() {
           <div className="grid md:grid-cols-2 gap-10 text-slate-400 text-sm leading-relaxed font-medium">
             <div className="space-y-4">
               <p>
-                In the world of modern software architecture, JSON is the lifeblood of data exchange. CosmoxHub's <span className="text-white font-bold">secure JSON formatter</span> provides an elite workspace for developers who demand both speed and total privacy. As a <span className="text-blue-500 font-bold underline">free online utility tool</span>, we provide professional-grade validation and beautification without the risks associated with server-side parsers.
+                In the world of modern software architecture, JSON is the lifeblood of data exchange. CosmoxHub&apos;s <span className="text-white font-bold">secure JSON formatter</span> provides an elite workspace for developers who demand both speed and total privacy. As a <span className="text-blue-500 font-bold underline">free online utility tool</span>, we provide professional-grade validation and beautification without the risks associated with server-side parsers.
               </p>
               <p>
                 Recognized as the <span className="text-white font-bold">fastest JSON validator</span> online, our platform utilizes browser-side logic to provide real-time feedback. By prioritizing <span className="text-white font-bold">local processing</span>, we guarantee that your sensitive configurations and proprietary data payloads remain in your control at all times.
@@ -258,10 +258,10 @@ export default function JsonFormatterClient() {
             </div>
             <div className="space-y-4">
               <p>
-                Whether you're debugging an API response, cleaning up a configuration file, or minifying a payload for production deployment, our suite offers deterministic reformatting rules. The interface features a high-fidelity editor with error detection, ensuring that only valid, perfectly formed JSON leaves your lab.
+                Whether you&apos;re debugging an API response, cleaning up a configuration file, or minifying a payload for production deployment, our suite offers deterministic reformatting rules. The interface features a high-fidelity editor with error detection, ensuring that only valid, perfectly formed JSON leaves your lab.
               </p>
               <p>
-                Join the ranks of elite developers who choose CosmoxHub for their <span className="text-white font-bold">private, secure, and professional</span> JSON workflows. Enhance your technical precision and secure your data integrity with the world's most advanced browser-side JSON workspace.
+                Join the ranks of elite developers who choose CosmoxHub for their <span className="text-white font-bold">private, secure, and professional</span> JSON workflows. Enhance your technical precision and secure your data integrity with the world&apos;s most advanced browser-side JSON workspace.
               </p>
             </div>
           </div>

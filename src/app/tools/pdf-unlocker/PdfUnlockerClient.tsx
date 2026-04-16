@@ -217,7 +217,7 @@ export default function PdfUnlockerClient() {
                 Handling sensitive documents requires a <span className="text-white font-bold">secure PDF password remover</span> that you can trust. CosmoxHub provides a <span className="text-red-500 font-bold underline">free online utility tool</span> that prioritizes your data integrity above all else. By utilizing advanced <span className="text-white font-bold">local processing</span> technology, we allow you to <span className="text-white font-bold">unlock PDF files</span> without ever uploading them to a remote server.
               </p>
               <p>
-                This "Zero-Server" approach is the <span className="text-white font-bold">fastest and most private</span> way to manage your encrypted content. In an era where data privacy is paramount, using a browser-side decryptor ensures that your corporate contracts, financial statements, and personal records remain strictly on your own device.
+                This &quot;Zero-Server&quot; approach is the <span className="text-white font-bold">fastest and most private</span> way to manage your encrypted content. In an era where data privacy is paramount, using a browser-side decryptor ensures that your corporate contracts, financial statements, and personal records remain strictly on your own device.
               </p>
             </div>
             <div className="space-y-4">

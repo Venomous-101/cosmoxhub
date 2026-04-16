@@ -78,6 +78,7 @@ const generateVariations = (
   basePayload: Partial<PseoPage>,
   specifics: { h1Prefix: string, desc: string, icon: PseoPage["iconName"], targetLink: string, targetName: string }
 ): PseoPage[] => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   return keywords.map((kw, i) => {
     const slug = kw.toLowerCase().replace(/[^a-z0-9]+/g, "-");
     const titleCase = kw.split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");

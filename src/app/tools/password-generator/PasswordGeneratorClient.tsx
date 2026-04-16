@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { 
   ShieldCheck, RefreshCcw, Copy, CheckCircle2, Zap, Fingerprint, History,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Settings, Lock, ShieldAlert, Sparkles, Trash2, Info, HelpCircle
 } from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
@@ -333,7 +334,7 @@ export default function PasswordGeneratorClient() {
               Securing your digital life starts with a strong foundation. Our **Password Generator - Free Online Utility Tool** is engineered to provide high-entropy, unbreakable strings that protect your most sensitive accounts. Whether you need a simple 12-character combination for a new social media profile or a complex 64-character sequence for enterprise-level security, CosmoxHub gives you full control over length, symbols, numbers, and casing.
             </p>
             <p className="text-slate-400 leading-relaxed mt-4">
-              Safety is at the core of our **Password Generator**. Unlike many online generators that might log your credentials or send them across the web, CosmoxHub's algorithm runs entirely on your local machine. Your passwords are never stored, never transmitted, and never seen by anyone else. It is the ultimate free online tool for individuals and businesses who refuse to compromise on cybersecurity. Generate, copy, and protect your digital assets with absolute confidence.
+              Safety is at the core of our **Password Generator**. Unlike many online generators that might log your credentials or send them across the web, CosmoxHub&apos;s algorithm runs entirely on your local machine. Your passwords are never stored, never transmitted, and never seen by anyone else. It is the ultimate free online tool for individuals and businesses who refuse to compromise on cybersecurity. Generate, copy, and protect your digital assets with absolute confidence.
             </p>
           </div>
         </div>

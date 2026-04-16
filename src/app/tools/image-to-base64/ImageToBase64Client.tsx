@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { Upload, Copy, Trash2, Image as ImageIcon, FileCode } from 'lucide-react';
+import ToolLayout from '@/components/ToolLayout';
 
 export default function ImageToBase64Client() {
   const [base64, setBase64] = useState('');
@@ -57,8 +58,14 @@ export default function ImageToBase64Client() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+    <ToolLayout
+      title="Image to Base64 Converter"
+      description="Convert any image (PNG, JPG, WebP, SVG, GIF) to a Base64 encoded string instantly. Copy the result or use the data URI directly in HTML/CSS. 100% private, browser-based."
+      icon={FileCode}
+      color="#7c3aed"
+    >
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
         <div className="space-y-3">
           <label className="block text-sm font-medium text-gray-400">Upload Image</label>
           
@@ -67,6 +74,7 @@ export default function ImageToBase64Client() {
             className="w-full h-64 sm:h-80 bg-[#111111] hover:bg-[#141414] border-2 border-dashed border-white/10 hover:border-[#7C3AED]/50 rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all p-4 text-center group relative overflow-hidden"
           >
             <input 
+              title="Upload Image"
               type="file" 
               ref={fileInputRef} 
               onChange={handleFileUpload} 
@@ -75,6 +83,7 @@ export default function ImageToBase64Client() {
             />
             {previewUrl ? (
               <>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img loading="lazy" decoding="async" src={previewUrl} alt="Preview" className="w-full h-full object-contain absolute inset-0 p-4 opacity-50 group-hover:opacity-30 transition-opacity" />
                 <div className="relative z-10 flex flex-col items-center p-4 bg-[#0A0A0A]/80 rounded-lg backdrop-blur-sm border border-white/8">
                   <ImageIcon className="w-8 h-8 text-[#A78BFA] mb-2" />
@@ -96,10 +105,12 @@ export default function ImageToBase64Client() {
 
         <div className="space-y-3">
           <div className="flex justify-between items-end">
-            <label className="block text-sm font-medium text-gray-400">Base64 Output</label>
+            <label htmlFor="b64out" className="block text-sm font-medium text-gray-400">Base64 Output</label>
             {base64 && (
-              <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300">
+              <label htmlFor="includePrefix" className="flex items-center gap-2 cursor-pointer text-sm text-gray-300">
                 <input 
+                  id="includePrefix"
+                  title="Include Prefix"
                   type="checkbox" 
                   checked={includePrefix} 
                   onChange={(e) => setIncludePrefix(e.target.checked)}
@@ -112,6 +123,8 @@ export default function ImageToBase64Client() {
           
           <div className="relative h-64 sm:h-80">
             <textarea
+              id="b64out"
+              title="Base64 Output"
               readOnly
               value={getOutputText()}
               placeholder="Base64 string will appear here..."
@@ -154,6 +167,7 @@ export default function ImageToBase64Client() {
           </button>
         </div>
       )}
-    </div>
+      </div>
+    </ToolLayout>
   );
 }

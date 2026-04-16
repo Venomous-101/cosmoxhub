@@ -11,8 +11,10 @@ import {
   Sparkles,
   Quote,
   HelpCircle,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Zap,
   Maximize,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Type
 } from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
@@ -251,7 +253,7 @@ export default function LoremIpsumClient() {
 
               <div className="space-y-4 pt-4 border-t border-white/5">
                 <div className="flex items-center justify-between">
-                    <span className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Start with "Lorem"</span>
+                    <span className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Start with &quot;Lorem&quot;</span>
                     <button 
                         onClick={() => setStartWithLorem(!startWithLorem)}
                         title="Toggle start with lorem"

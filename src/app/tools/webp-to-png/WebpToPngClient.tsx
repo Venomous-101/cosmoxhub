@@ -125,6 +125,7 @@ export default function WebpToPngClient() {
         status: "completed",
         convertedUrl: result
       } : i));
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setImages(prev => prev.map(i => i.id === img.id ? { ...i, status: "error" } : i));
     }
@@ -141,7 +142,9 @@ export default function WebpToPngClient() {
   };
 
   const downloadAll = () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (typeof window !== 'undefined' && typeof (window as any).call_locker === 'function') {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
       try { (window as any).call_locker(); } catch(e) {}
     }
     images.forEach((img) => {
@@ -239,7 +242,9 @@ export default function WebpToPngClient() {
                         {img.status === "completed" ? (
                           <button
                             onClick={() => {
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
                               if (typeof window !== 'undefined' && typeof (window as any).call_locker === 'function') {
+                                // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
                                 try { (window as any).call_locker(); } catch(e) {}
                               }
                               const link = document.createElement("a");

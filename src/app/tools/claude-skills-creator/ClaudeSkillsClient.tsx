@@ -1,6 +1,7 @@
 ﻿"use client";
 import { useState } from "react";
 import {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Brain, Download, Copy, Check, Settings, Sparkles,
   Zap, FileCode2
 } from "lucide-react";
@@ -274,10 +275,10 @@ ${instructionLines}
           <div className="grid md:grid-cols-2 gap-10 text-slate-400 text-sm leading-relaxed font-medium">
             <div className="space-y-4">
               <p>
-                As AI becomes more integrated into professional workflows, the need for specialized, role-defined assistants is paramount. CosmoxHub's <span className="text-white font-bold">secure AI agent builder</span> provides the ultimate lab for engineering high-fidelity SKILLS.md files. This <span className="text-purple-500 font-bold underline">free online utility tool</span> empowers developers to define personas with surgical precision.
+                As AI becomes more integrated into professional workflows, the need for specialized, role-defined assistants is paramount. CosmoxHub&apos;s <span className="text-white font-bold">secure AI agent builder</span> provides the ultimate lab for engineering high-fidelity SKILLS.md files. This <span className="text-purple-500 font-bold underline">free online utility tool</span> empowers developers to define personas with surgical precision.
               </p>
               <p>
-                We are proud to offer the <span className="text-white font-bold">fastest SKILLS.md generator</span> for the modern AI ecosystem. By prioritizing <span className="text-white font-bold">local processing</span>, we ensure that your agent's core capabilities and proprietary guardrails are never exposed to external servers, maintaining 100% privacy for your AI architecture.
+                We are proud to offer the <span className="text-white font-bold">fastest SKILLS.md generator</span> for the modern AI ecosystem. By prioritizing <span className="text-white font-bold">local processing</span>, we ensure that your agent&apos;s core capabilities and proprietary guardrails are never exposed to external servers, maintaining 100% privacy for your AI architecture.
               </p>
             </div>
             <div className="space-y-4">

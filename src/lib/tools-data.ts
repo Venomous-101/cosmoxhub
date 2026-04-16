@@ -3,6 +3,7 @@ import {
   Type, CaseSensitive, RemoveFormatting, AlignLeft,
   Image, FileDown, Maximize2,
   MessageSquare, QrCode,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   CalendarDays,
   KeyRound,
   Brain,
@@ -17,7 +18,8 @@ import {
   Minimize,
   FileArchive,
   LucideIcon,
-  Link, FileCode, GitCompare, Search, Palette, Star, Film, ImageIcon, Receipt
+  Link, FileCode, GitCompare, Search, Palette, Star, Film, ImageIcon, Receipt, Pen, Timer, Clock, FileJson,
+  Monitor, Calculator, Box, Ruler, FileUser
 } from "lucide-react";
 
 export interface Tool {
@@ -80,6 +82,9 @@ export const categories: Category[] = [
       { title: "Text Diff Checker", description: "Compare two texts and highlight differences.", href: "/tools/text-diff", icon: GitCompare, badge: "New" },
       { title: "Regex Tester", description: "Test and debug regular expressions with live highlighting.", href: "/tools/regex-tester", icon: Search, badge: "Elite" },
       { title: "Font Pairing Tool", description: "Find perfect Google Font combinations with live preview.", href: "/tools/font-pairing", icon: Type, badge: "New" },
+      { title: "Text to Word", description: "Convert text to Word (.docx) file. Rich editor included. Download instantly.", href: "/tools/text-to-word", icon: FileText, badge: "New" },
+      { title: "CSV to JSON", description: "Convert CSV datasets into valid structured JSON format.", href: "/tools/csv-to-json", icon: FileJson, badge: "New" },
+      { title: "Text Case Pro", description: "Advanced case transformations (camelCase, snake_case) for developers.", href: "/tools/text-case-pro", icon: CaseSensitive, badge: "New" },
     ],
   },
   {
@@ -100,6 +105,8 @@ export const categories: Category[] = [
       { title: "Favicon Generator", description: "Create favicons from text, emoji, or image.", href: "/tools/favicon-generator", icon: Star, badge: "New" },
       { title: "Video to GIF", description: "Convert video to GIF in your browser. No upload.", href: "/tools/video-to-gif", icon: Film, badge: "New" },
       { title: "SVG to PNG", description: "Convert SVG files to PNG at any resolution.", href: "/tools/svg-to-png", icon: ImageIcon, badge: "New" },
+      { title: "Contrast Checker", description: "Verify WCAG accessibility color contrast ratios.", href: "/tools/contrast-checker", icon: Palette, badge: "Accessibility" },
+      { title: "Screen Tester", description: "Diagnostic tool to detect dead or stuck pixels.", href: "/tools/screen-tester", icon: Monitor, badge: "Useful" },
     ],
   },
   {
@@ -111,11 +118,18 @@ export const categories: Category[] = [
       { title: "WhatsApp Link", description: "Create a WhatsApp chat link without saving the number.", href: "/tools/whatsapp-link", icon: MessageSquare, badge: "Useful" },
       { title: "QR Generator", description: "Generate a QR code for any URL, text, WiFi or contact.", href: "/tools/qr-generator", icon: QrCode, badge: "Popular" },
       { title: "YouTube Thumbnail", description: "Download HD thumbnails from any YouTube video.", href: "/tools/youtube-thumbnail", icon: Video, badge: "New" },
-      { title: "Age Calculator", description: "Calculate exact age in years, months, days and hours.", href: "/tools/age-calculator", icon: CalendarDays },
+      { title: "Age Calculator", description: "Calculate your exact age and time elapsed between dates.", href: "/tools/age-calculator", icon: Clock },
+      { title: "EMI Calculator", description: "Calculate loan installments and interest instantly.", href: "/tools/emi-calculator", icon: Calculator, badge: "New" },
+      { title: "Aspect Ratio", description: "Maintain proportions between width and height for media.", href: "/tools/aspect-ratio-calculator", icon: Box, badge: "New" },
+      { title: "Unit Converter", description: "Convert between metric and imperial units for length, weight, etc.", href: "/tools/unit-converter", icon: Ruler, badge: "New" },
       { title: "Password Generator", description: "Generate strong, secure, random passwords instantly.", href: "/tools/password-generator", icon: KeyRound },
       { title: "Invoice Number Generator", description: "Generate sequential invoice numbers in bulk.", href: "/tools/invoice-generator", icon: Receipt, badge: "New" },
       { title: "IQ Test", description: "Multi-domain cognitive assessment: patterns, logic, memory, speed & more. 100% private.", href: "/tools/iq-test", icon: Brain, badge: "Elite" },
       { title: "MindForge", description: "Train memory, focus, pattern recognition and reaction speed. Science-backed cognitive games.", href: "/tools/mind-forge", icon: Brain, badge: "New" },
+      { title: "Signature Creator", description: "Draw, type, or upload your digital signature. Download PNG or SVG.", href: "/tools/signature-creator", icon: Pen, badge: "Elite" },
+      { title: "Pomodoro Timer", description: "Boost your productivity with timed focus and breaks.", href: "/tools/pomodoro-timer", icon: Clock },
+      { title: "Countdown Timer", description: "Create precise countdowns for events and launches.", href: "/tools/countdown-timer", icon: Timer },
+      { title: "Resume Builder Pro", description: "Elite resume and CV builder with ATS-optimized templates and PDF export.", href: "/tools/resume-builder", icon: FileUser, badge: "Elite" },
     ],
   },
 ];

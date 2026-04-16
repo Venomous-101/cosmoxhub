@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Copy, Shuffle, ChevronLeft, ChevronRight, ExternalLink, Type, Check } from 'lucide-react';
+import ToolLayout from '@/components/ToolLayout';
 
 interface FontPairing {
   heading: string;
@@ -144,6 +145,7 @@ export default function FontPairingClient() {
     }
 
     link.href = buildGoogleFontUrl(currentPairing);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeIndex]);
 
   const go = (dir: number) => {
@@ -167,8 +169,27 @@ export default function FontPairingClient() {
   };
 
   return (
-    <div className="space-y-6">
-
+    <ToolLayout
+      title="Font Pairing Tool"
+      description="Explore 12 curated, expert Google Font pairings. Preview live, copy CSS import code, and find the perfect typography combination for your next project."
+      icon={Type}
+      color="#7c3aed"
+    >
+      <div className="space-y-6">
+        <style>{`
+          .dynamic-body {
+            font-family: '${currentPairing.body}', sans-serif;
+          }
+          .dynamic-heading {
+            font-family: '${currentPairing.heading}', serif;
+            font-size: ${fontSize}px;
+            font-weight: ${currentPairing.headingWeight};
+            line-height: 1.2;
+          }
+          .dynamic-heading-mini {
+            font-family: '${currentPairing.heading}', serif;
+          }
+        `}</style>
       {/* Header Controls */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-[#111111] p-4 sm:p-5 rounded-xl border border-white/8">
         <div className="flex items-center gap-3">
@@ -179,13 +200,13 @@ export default function FontPairingClient() {
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => go(-1)} className="p-2 bg-[#0A0A0A] hover:bg-[#1A1A1A] border border-white/8 text-gray-400 hover:text-white rounded-lg transition-colors">
+          <button title="Previous Pairing" onClick={() => go(-1)} className="p-2 bg-[#0A0A0A] hover:bg-[#1A1A1A] border border-white/8 text-gray-400 hover:text-white rounded-lg transition-colors">
             <ChevronLeft className="w-4 h-4" />
           </button>
-          <button onClick={shuffle} className="flex items-center gap-2 px-4 py-2 bg-[#0A0A0A] hover:bg-[#1A1A1A] border border-white/8 text-gray-400 hover:text-white rounded-lg text-sm transition-colors">
+          <button title="Shuffle Pairing" onClick={shuffle} className="flex items-center gap-2 px-4 py-2 bg-[#0A0A0A] hover:bg-[#1A1A1A] border border-white/8 text-gray-400 hover:text-white rounded-lg text-sm transition-colors">
             <Shuffle className="w-4 h-4" /> Shuffle
           </button>
-          <button onClick={() => go(1)} className="p-2 bg-[#0A0A0A] hover:bg-[#1A1A1A] border border-white/8 text-gray-400 hover:text-white rounded-lg transition-colors">
+          <button title="Next Pairing" onClick={() => go(1)} className="p-2 bg-[#0A0A0A] hover:bg-[#1A1A1A] border border-white/8 text-gray-400 hover:text-white rounded-lg transition-colors">
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>
@@ -197,22 +218,15 @@ export default function FontPairingClient() {
         {/* Left: Live Preview Canvas */}
         <div className="bg-[#111111] rounded-xl border border-white/8 p-6 sm:p-8 flex flex-col gap-6 min-h-[420px]">
           <div
-            className="flex-1 space-y-5 transition-all duration-500"
-            style={{ fontFamily: `'${currentPairing.body}', sans-serif` }}
+            className="flex-1 space-y-5 transition-all duration-500 dynamic-body"
           >
             <p
-              className="text-white leading-tight break-words"
-              style={{
-                fontFamily: `'${currentPairing.heading}', serif`,
-                fontSize: `${fontSize}px`,
-                fontWeight: currentPairing.headingWeight,
-                lineHeight: 1.2,
-              }}
+              className="text-white leading-tight break-words dynamic-heading"
             >
               {previewText}
             </p>
-            <p className="text-gray-400 text-base leading-relaxed" style={{ fontFamily: `'${currentPairing.body}', sans-serif` }}>
-              Typography is the art and technique of arranging type to make written language legible, readable, and appealing. The right font pairing creates visual harmony and communicates your brand's personality instantly.
+            <p className="text-gray-400 text-base leading-relaxed dynamic-body">
+              Typography is the art and technique of arranging type to make written language legible, readable, and appealing. The right font pairing creates visual harmony and communicates your brand&apos;s personality instantly.
             </p>
             <div className="flex gap-3 text-sm">
               <span className="px-3 py-1.5 bg-[#0A0A0A] border border-white/8 text-[#A78BFA] rounded-lg font-mono">{currentPairing.heading}</span>
@@ -225,7 +239,7 @@ export default function FontPairingClient() {
               <span>Heading Size</span>
               <span>{fontSize}px</span>
             </div>
-            <input type="range" min="24" max="80" step="2" value={fontSize} onChange={(e) => setFontSize(Number(e.target.value))} className="w-full accent-[#7C3AED]" />
+            <input title="Heading Size" type="range" min="24" max="80" step="2" value={fontSize} onChange={(e) => setFontSize(Number(e.target.value))} className="w-full accent-[#7C3AED]" />
           </div>
         </div>
 
@@ -239,12 +253,12 @@ export default function FontPairingClient() {
             <div className="grid grid-cols-2 gap-3">
               <div className="bg-[#0A0A0A] rounded-lg p-3 space-y-1">
                 <p className="text-xs text-gray-500">Heading Font</p>
-                <p className="text-white text-sm font-medium" style={{ fontFamily: `'${currentPairing.heading}', serif` }}>{currentPairing.heading}</p>
+                <p className="text-white text-sm font-medium dynamic-heading-mini">{currentPairing.heading}</p>
                 <p className="text-gray-600 text-xs">Weight: {currentPairing.headingWeight}</p>
               </div>
               <div className="bg-[#0A0A0A] rounded-lg p-3 space-y-1">
                 <p className="text-xs text-gray-500">Body Font</p>
-                <p className="text-white text-sm font-medium" style={{ fontFamily: `'${currentPairing.body}', sans-serif` }}>{currentPairing.body}</p>
+                <p className="text-white text-sm font-medium dynamic-body">{currentPairing.body}</p>
                 <p className="text-gray-600 text-xs">Weight: 400, 600</p>
               </div>
             </div>
@@ -280,8 +294,10 @@ export default function FontPairingClient() {
 
       {/* Custom Preview Text */}
       <div className="bg-[#111111] p-5 rounded-xl border border-white/8 space-y-3">
-        <label className="block text-sm font-medium text-gray-400">Customize Preview Text</label>
+        <label htmlFor="previewText" className="block text-sm font-medium text-gray-400">Customize Preview Text</label>
         <input
+          id="previewText"
+          title="Customize Preview Text"
           type="text"
           value={previewText}
           onChange={(e) => setPreviewText(e.target.value)}
@@ -314,6 +330,7 @@ export default function FontPairingClient() {
         </div>
       </div>
 
-    </div>
+      </div>
+    </ToolLayout>
   );
 }

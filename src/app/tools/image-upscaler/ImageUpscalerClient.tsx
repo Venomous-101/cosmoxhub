@@ -841,6 +841,7 @@ export default function ImageUpscalerClient() {
                     }`}
                   >
                     <div className="w-20 h-20 rounded-2xl overflow-hidden bg-white/5 shrink-0 relative">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={f.status === "completed" && f.result ? f.result : f.preview}
                         alt={f.file.name}

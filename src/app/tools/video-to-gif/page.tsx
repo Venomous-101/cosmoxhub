@@ -1,49 +1,29 @@
-import { Metadata } from 'next';
-import VideoToGifClient from './VideoToGifClient';
-import { categories } from '@/lib/tools-data';
-import ToolLayout from '@/components/ToolLayout';
+import { generateToolMetadata, generateWebAppJsonLd } from "@/lib/seo-helpers";
+import VideoToGifClient from "./VideoToGifClient";
 
-const tool = categories.find((c) => c.id === 'image-tools')?.tools.find((t) => t.href === '/tools/video-to-gif');
-
-export const metadata: Metadata = {
-  title: `Video to GIF Converter — Free Online Tool | CosmoxHub`,
-  description: tool?.description,
-  alternates: {
-    canonical: `https://www.cosmoxhub.com/tools/video-to-gif`,
-  },
-  other: {
-    // Hint browser to prefetch FFmpeg WASM on page load (complements hover preload)
-    "link-prefetch-ffmpeg-core": "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js",
-    "link-prefetch-ffmpeg-wasm": "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.wasm",
-  },
-};
+export const metadata = generateToolMetadata({
+  toolName: "Video to GIF Converter",
+  slug: "video-to-gif",
+  description: "Convert MP4, WebM, or MOV video clips to animated GIF files directly in your browser. No upload required. Set custom start/end, FPS, and size. Free, private, fast.",
+  keywords: ["video to gif", "convert mp4 to gif", "video to gif converter", "make gif from video", "mp4 to gif online", "free gif maker", "gif converter"],
+  // Keep the prefetch hints from the original page
+});
 
 export default function VideoToGifPage() {
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'WebApplication',
-    name: tool?.title,
-    description: tool?.description,
-    applicationCategory: 'MultimediaApplication',
-    operatingSystem: 'Any',
-    url: `https://cosmoxhub.com${tool?.href}`,
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
-    },
-  };
+  const faqs = [
+    { question: "What video formats are supported?", answer: "MP4, WebM, MOV, and most other web-compatible video formats are supported. The conversion uses FFmpeg WebAssembly running entirely in your browser." },
+    { question: "Is the video uploaded to a server?", answer: "No. FFmpeg runs entirely inside your browser (WebAssembly). Your video file never leaves your device." },
+    { question: "Can I trim the video before converting?", answer: "Yes. Set the start and end timestamps to extract only the specific clip you want to convert to GIF." },
+    { question: "How do I reduce the GIF file size?", answer: "Lower the FPS (frames per second) or reduce the output resolution. These two settings have the biggest impact on final file size." },
+  ];
 
   return (
-    <ToolLayout
-      title={tool?.title || 'Video to GIF'}
-      description={tool?.description || 'Convert video to GIF in your browser. No upload.'}
-    >
+    <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: generateWebAppJsonLd({ toolName: "Video to GIF Converter", slug: "video-to-gif", description: "Convert any video to animated GIF in your browser. No upload, free, fast.", faqs }) }}
       />
       <VideoToGifClient />
-    </ToolLayout>
+    </>
   );
 }

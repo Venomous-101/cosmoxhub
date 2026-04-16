@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Type, Smile, Upload, Download, Archive } from 'lucide-react';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
+import ToolLayout from '@/components/ToolLayout';
 
 type TabMode = 'text' | 'emoji' | 'image';
 
@@ -26,6 +27,7 @@ export default function FaviconGeneratorClient() {
   // Draw on Canvas when settings change
   useEffect(() => {
     drawPreview();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, text, bgColor, textColor, borderRadius, fontSize, imageSrc]);
 
   const drawPreview = () => {
@@ -135,7 +137,13 @@ export default function FaviconGeneratorClient() {
   };
 
   return (
-    <div className="space-y-6">
+    <ToolLayout
+      title="Favicon Generator"
+      description="Create custom favicons from text, emoji, or an uploaded image. Download in all standard sizes including .ico. Free, browser-based, instant."
+      icon={Archive}
+      color="#7c3aed"
+    >
+      <div className="space-y-6">
       
       {/* Tab Switcher */}
       <div className="flex bg-[#111111] border border-white/8 rounded-xl p-1 w-full max-w-sm mx-auto">
@@ -171,6 +179,7 @@ export default function FaviconGeneratorClient() {
                 className="w-full h-32 bg-[#0A0A0A] hover:bg-[#1A1A1A] border-2 border-dashed border-white/10 hover:border-[#7C3AED]/50 rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all p-4 text-center group"
               >
                 <input 
+                  title="Upload Image"
                   type="file" 
                   ref={fileInputRef} 
                   onChange={handleImageUpload} 
@@ -185,10 +194,12 @@ export default function FaviconGeneratorClient() {
           ) : (
             <>
               <div className="space-y-3">
-                <label className="block text-sm font-medium text-gray-400">
+                <label htmlFor="iconText" className="block text-sm font-medium text-gray-400">
                   {mode === 'emoji' ? 'Select Emoji' : 'Letter (1 char max recommended)'}
                 </label>
                 <input
+                  id="iconText"
+                  title="Icon Text or Emoji"
                   type="text"
                   maxLength={2}
                   value={text}
@@ -200,15 +211,18 @@ export default function FaviconGeneratorClient() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="block text-xs font-medium text-gray-400">Background</label>
+                  <label htmlFor="bgColortext" className="block text-xs font-medium text-gray-400">Background</label>
                   <div className="flex border border-white/8 rounded-lg overflow-hidden h-10 focus-within:ring-1 focus-within:ring-[#7C3AED]/40">
                     <input
+                      title="Background Color Selector"
                       type="color"
                       value={bgColor}
                       onChange={(e) => setBgColor(e.target.value)}
                       className="w-10 h-full p-0 border-0 cursor-pointer"
                     />
                     <input
+                      id="bgColortext"
+                      title="Background Color Value"
                       type="text"
                       value={bgColor}
                       onChange={(e) => setBgColor(e.target.value)}
@@ -218,15 +232,18 @@ export default function FaviconGeneratorClient() {
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="block text-xs font-medium text-gray-400">Text Color</label>
+                  <label htmlFor="textColortext" className="block text-xs font-medium text-gray-400">Text Color</label>
                   <div className="flex border border-white/8 rounded-lg overflow-hidden h-10 focus-within:ring-1 focus-within:ring-[#7C3AED]/40">
                     <input
+                      title="Text Color Selector"
                       type="color"
                       value={textColor}
                       onChange={(e) => setTextColor(e.target.value)}
                       className="w-10 h-full p-0 border-0 cursor-pointer"
                     />
                     <input
+                      id="textColortext"
+                      title="Text Color Value"
                       type="text"
                       value={textColor}
                       onChange={(e) => setTextColor(e.target.value)}
@@ -243,6 +260,7 @@ export default function FaviconGeneratorClient() {
                     <span>{borderRadius}%</span>
                   </div>
                   <input
+                    title="Roundness Percentage"
                     type="range"
                     min="0"
                     max="100"
@@ -258,6 +276,7 @@ export default function FaviconGeneratorClient() {
                     <span>{fontSize}%</span>
                   </div>
                   <input
+                    title="Icon or Text Size Percentage"
                     type="range"
                     min="10"
                     max="100"
@@ -311,6 +330,7 @@ export default function FaviconGeneratorClient() {
         </div>
 
       </div>
-    </div>
+      </div>
+    </ToolLayout>
   );
 }

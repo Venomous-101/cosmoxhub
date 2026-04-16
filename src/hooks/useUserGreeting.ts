@@ -17,6 +17,7 @@ export function useUserGreeting() {
     const newVisitCount = storedVisits + 1;
 
     localStorage.setItem(VISIT_KEY, String(newVisitCount));
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setVisitCount(newVisitCount);
 
     if (storedName) {

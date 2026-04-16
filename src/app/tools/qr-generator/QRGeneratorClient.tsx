@@ -196,6 +196,7 @@ export default function QRGeneratorClient() {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (_err) {
         // Silent fallback
       }

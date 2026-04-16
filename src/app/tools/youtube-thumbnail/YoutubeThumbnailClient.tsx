@@ -6,8 +6,10 @@ import {
   Download, 
   Trash2, 
   Link as LinkIcon, 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Settings, 
   Zap, 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Sparkles, 
   Image as ImageIcon,
   Maximize,
@@ -180,6 +182,7 @@ export default function YoutubeThumbnailClient() {
                             className="bg-[#0a0a1a]/80 backdrop-blur-xl border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl group/card ring-1 ring-white/5"
                         >
                             <div className="aspect-video relative overflow-hidden bg-black/40">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img loading="lazy" decoding="async" 
                                     src={`https://img.youtube.com/vi/${videoId}/${res.id}.jpg`}
                                     alt={res.label}
@@ -224,7 +227,7 @@ export default function YoutubeThumbnailClient() {
 
         <div className="p-8 bg-[#0a0a1f]/40 border border-white/5 rounded-[2.5rem] prose prose-invert max-w-none">
           <p className="text-slate-400 leading-relaxed italic">
-            Visual storytelling starts with the right cover. Our **YouTube Thumbnail Downloader - Free Online Utility Tool** is designed for creators, marketers, and researchers who need high-resolution assets from any video on the platform. Whether you are analyzing competitors' design trends, creating a blog post feature image, or just need a high-quality still for your collection, CosmoxHub provides a one-click solution. Simply paste the YouTube URL, and our engine instantly fetches all available resolutions, from standard definitions to 1080p 'Max Res' thumbnails.
+            Visual storytelling starts with the right cover. Our **YouTube Thumbnail Downloader - Free Online Utility Tool** is designed for creators, marketers, and researchers who need high-resolution assets from any video on the platform. Whether you are analyzing competitors&apos; design trends, creating a blog post feature image, or just need a high-quality still for your collection, CosmoxHub provides a one-click solution. Simply paste the YouTube URL, and our engine instantly fetches all available resolutions, from standard definitions to 1080p &apos;Max Res&apos; thumbnails.
           </p>
           <p className="text-slate-400 leading-relaxed mt-4">
             Simplicity and speed are the hallmarks of our **YouTube Thumbnail Downloader**. There are no accounts to create and no software to install. By leveraging the official YouTube image API, we ensure that you always get the most accurate and high-quality frames available. It is the perfect free online tool for anyone looking to streamline their creative workflow. Like all tools at CosmoxHub, this downloader is optimized for both desktop and mobile, ensuring you can grab the visuals you need, whenever and wherever you need them.

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import Link from "next/link";
+import ToolLayout from '@/components/ToolLayout';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // AUDIO ENGINE — Web Audio API (zero packages)
@@ -132,6 +132,7 @@ function MemoryMatrix({
   useEffect(() => {
     if (startedRef.current) return;
     startedRef.current = true;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     startRound(generateSequence());
   }, [generateSequence, startRound]);
 
@@ -214,6 +215,8 @@ function MemoryMatrix({
               key={i}
               onClick={() => handleCellClick(i)}
               disabled={memPhase === "show"}
+              aria-label={`Grid Cell ${i}`}
+              title={`Grid Cell ${i}`}
               className={`${cellBase} rounded-2xl transition-all duration-150 border
                 ${isHighlighted
                   ? "bg-[#7C3AED] border-[#7C3AED] shadow-[0_0_20px_rgba(124,58,237,0.6)] scale-110"
@@ -677,18 +680,22 @@ function WordWeave({
       </div>
 
       <form onSubmit={handleSubmit} className="w-full flex gap-2">
+        <label htmlFor="word-input" className="sr-only">Type a word</label>
         <input
+          id="word-input"
           ref={inputRef}
           value={input}
           onChange={e => setInput(e.target.value)}
           disabled={!active}
           placeholder="Type a word and press Enter…"
+          title="Type a word and press Enter"
           className="flex-1 bg-[#111111] border border-white/10 rounded-xl px-4 py-3
             text-white placeholder-gray-700 focus:outline-none focus:border-[#7C3AED]/50
             text-sm transition-colors"
         />
         <button
           type="submit"
+          title="Submit word"
           disabled={!active}
           className="bg-[#7C3AED] hover:bg-violet-600 text-white font-bold px-5 py-3
             rounded-xl transition-colors disabled:opacity-40"
@@ -780,6 +787,7 @@ export default function MindForgeClient() {
   const [scores,       setScores]       = useState<Score[]>([]);
   const [audio,        setAudio]        = useState<AudioEngine>(null);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { setScores(loadScores()); }, []);
 
   const initAudio = (): AudioEngine => {
@@ -825,33 +833,12 @@ export default function MindForgeClient() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-white">
-
-      {/* ── NAV HEADER ─────────────────────────────────────────────────────────── */}
-      <div className="border-b border-white/5 px-4 py-10">
-        <div className="max-w-7xl mx-auto">
-          <Link href="/" className="text-gray-500 hover:text-white text-sm flex items-center gap-2 mb-8 transition-colors w-fit group">
-            <span className="group-hover:-translate-x-1 transition-transform duration-200 inline-block">←</span>
-            Back to All Tools
-          </Link>
-          <div className="flex items-center gap-6">
-            <div className="w-16 h-16 bg-[#7C3AED]/20 rounded-2xl flex items-center justify-center text-3xl shrink-0 shadow-[0_0_30px_rgba(124,58,237,0.15)]">🧠</div>
-            <div>
-              <div className="flex items-center gap-3 flex-wrap">
-                <h1 className="text-3xl sm:text-4xl font-black tracking-tight">MindForge</h1>
-                <span className="text-xs font-bold bg-[#7C3AED]/20 text-[#A78BFA] border border-[#7C3AED]/30 px-3 py-1.5 rounded-full uppercase tracking-wider shadow-inner">
-                  Brain Training
-                </span>
-              </div>
-              <p className="text-gray-400 text-base mt-2 leading-relaxed max-w-2xl">
-                Science-backed cognitive training. 5 games targeting memory, focus, pattern recognition, processing speed & verbal fluency.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="w-full max-w-7xl mx-auto px-4 py-12">
+    <ToolLayout
+      title="MindForge Brain Training"
+      description="5 science-backed cognitive games targeting memory, focus, pattern recognition, processing speed & verbal fluency. Track your progress and train daily."
+      color="#7c3aed"
+    >
+      <div className="w-full">
 
         {/* ── HOME SCREEN ──────────────────────────────────────────────────────── */}
         {phase === "home" && (
@@ -1033,6 +1020,6 @@ export default function MindForgeClient() {
         })()}
 
       </div>
-    </div>
+    </ToolLayout>
   );
 }

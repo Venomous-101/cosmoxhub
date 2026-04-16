@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
-import { Upload, Download, Copy, Trash2, Image as ImageIcon } from 'lucide-react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { Upload, Download, Trash2, Image as ImageIcon } from 'lucide-react';
 import { saveAs } from 'file-saver';
+import ToolLayout from '@/components/ToolLayout';
 
 export default function SvgToPngClient() {
   const [svgContent, setSvgContent] = useState<string>('');
@@ -15,13 +16,37 @@ export default function SvgToPngClient() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  const renderSvgToCanvas = useCallback(() => {
+    if (!canvasRef.current || !svgContent) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    canvas.width = width;
+    canvas.height = height;
+    ctx.clearRect(0, 0, width, height);
+
+    const img = new Image();
+    const svgBlob = new Blob([svgContent], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(svgBlob);
+
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, width, height);
+      setPngDataUrl(canvas.toDataURL('image/png'));
+      URL.revokeObjectURL(url);
+    };
+    img.src = url;
+  }, [svgContent, width, height]);
+
   useEffect(() => {
     if (svgContent) {
       renderSvgToCanvas();
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPngDataUrl(null);
     }
-  }, [svgContent, width, height]);
+  }, [svgContent, renderSvgToCanvas]);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -69,29 +94,6 @@ export default function SvgToPngClient() {
     setHeight(Math.round(newWidth / aspectRatio));
   };
 
-  const renderSvgToCanvas = () => {
-    if (!canvasRef.current || !svgContent) return;
-
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    canvas.width = width;
-    canvas.height = height;
-    ctx.clearRect(0, 0, width, height);
-
-    const img = new Image();
-    const svgBlob = new Blob([svgContent], { type: 'image/svg+xml;charset=utf-8' });
-    const url = URL.createObjectURL(svgBlob);
-
-    img.onload = () => {
-      ctx.drawImage(img, 0, 0, width, height);
-      setPngDataUrl(canvas.toDataURL('image/png'));
-      URL.revokeObjectURL(url);
-    };
-    img.src = url;
-  };
-
   const downloadPng = () => {
     if (!pngDataUrl) return;
     saveAs(pngDataUrl, `${filename}.png`);
@@ -105,7 +107,13 @@ export default function SvgToPngClient() {
   };
 
   return (
-    <div className="space-y-6">
+    <ToolLayout
+      title="SVG to PNG Converter"
+      description="Convert SVG files to high-resolution PNG images instantly. Upload or paste SVG code, set custom output dimensions, and download. Free, browser-based."
+      icon={ImageIcon}
+      color="#7c3aed"
+    >
+      <div className="space-y-6">
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
         
@@ -113,12 +121,14 @@ export default function SvgToPngClient() {
         <div className="space-y-6 flex flex-col bg-[#111111] p-6 rounded-xl border border-white/8">
           
           <div className="space-y-3">
-            <label className="block text-sm font-medium text-gray-400">Upload SVG File</label>
+            <label htmlFor="svg-file-upload" className="block text-sm font-medium text-gray-400">Upload SVG File</label>
             <div 
               onClick={() => fileInputRef.current?.click()}
               className="w-full h-40 bg-[#0A0A0A] hover:bg-[#1A1A1A] border-2 border-dashed border-white/10 hover:border-[#7C3AED]/50 rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all p-4 text-center group"
             >
               <input 
+                id="svg-file-upload"
+                title="Upload SVG file"
                 type="file" 
                 ref={fileInputRef} 
                 onChange={handleFileUpload} 
@@ -131,8 +141,10 @@ export default function SvgToPngClient() {
           </div>
 
           <div className="space-y-3">
-             <label className="block text-sm font-medium text-gray-400">Or Paste SVG Code</label>
+             <label htmlFor="svg-code-input" className="block text-sm font-medium text-gray-400">Or Paste SVG Code</label>
              <textarea
+               id="svg-code-input"
+               title="Paste SVG code"
                value={svgContent}
                onChange={(e) => setSvgContent(e.target.value)}
                placeholder="<svg>...</svg>"
@@ -144,10 +156,12 @@ export default function SvgToPngClient() {
             <div className="space-y-4 pt-4 border-t border-white/8">
               <div className="space-y-2">
                 <div className="flex justify-between text-sm text-gray-400">
-                  <span>Output Width</span>
+                  <label htmlFor="output-width-slider">Output Width</label>
                   <span>{width}px</span>
                 </div>
                 <input 
+                  id="output-width-slider"
+                  title="Output Width"
                   type="range" min="16" max="4096" step="1" 
                   value={width} 
                   onChange={(e) => handleWidthChange(Number(e.target.value))}
@@ -169,7 +183,8 @@ export default function SvgToPngClient() {
            <div className="flex-1 min-h-[300px] w-full bg-[#0A0A0A] border-2 border-dashed border-white/5 rounded-xl flex items-center justify-center overflow-hidden relative">
              <canvas ref={canvasRef} className="hidden" />
              {pngDataUrl ? (
-               <img loading="lazy" decoding="async" src={pngDataUrl} alt="Preview" className="max-w-full max-h-full object-contain p-4" />
+               <>{/* eslint-disable-next-line @next/next/no-img-element */}
+               <img loading="lazy" decoding="async" src={pngDataUrl} alt="Preview" className="max-w-full max-h-full object-contain p-4" /></>
              ) : (
                <div className="flex flex-col items-center justify-center text-gray-500">
                  <ImageIcon className="w-8 h-8 mb-2 opacity-50" />
@@ -208,6 +223,7 @@ export default function SvgToPngClient() {
         </button>
       </div>
 
-    </div>
+      </div>
+    </ToolLayout>
   );
 }

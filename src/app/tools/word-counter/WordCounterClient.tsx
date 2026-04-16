@@ -194,7 +194,7 @@ export default function WordCounterClient() {
               Precision in writing starts with understanding your constraints. Our **Word Counter - Free Online Utility Tool** is the definitive resource for authors, students, and SEO professionals who need granular control over their content. Whether you are drafting a social media post with strict character limits, an academic essay requiring a specific word count, or professional copy where reading time is critical, CosmoxHub provides instantaneous, multi-dimensional text analysis.
             </p>
             <p className="text-slate-400 leading-relaxed mt-4">
-              The **Word Counter** at CosmoxHub goes beyond simple counting. It offers a sophisticated breakdown of your text's structure, including sentence density, paragraph counts, and estimated speaking speeds. Designed with a privacy-first architecture, all text remains locally in your browser; we never store or transmit your drafts. It is the ultimate free online tool for anyone looking to refine their writing process, optimize content for search engines, and ensure every word carries its weight.
+              The **Word Counter** at CosmoxHub goes beyond simple counting. It offers a sophisticated breakdown of your text&apos;s structure, including sentence density, paragraph counts, and estimated speaking speeds. Designed with a privacy-first architecture, all text remains locally in your browser; we never store or transmit your drafts. It is the ultimate free online tool for anyone looking to refine their writing process, optimize content for search engines, and ensure every word carries its weight.
             </p>
           </div>
         </div>

@@ -15,6 +15,7 @@ export default function SpiderWebLinks() {
     // Select 12 random pages from the massive data index on client-side to prevent hydration mismatch 
     // but ensure standard bots running JS get caught in the mesh.
     const shuffled = [...pseoData].sort(() => 0.5 - Math.random());
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLinks(shuffled.slice(0, 12));
   }, []);
 

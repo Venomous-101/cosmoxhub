@@ -84,7 +84,9 @@ export default function SplitPdfClient() {
       const newPdfBytes = await newPdf.save();
       const blob = new Blob([newPdfBytes as unknown as BlobPart], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if (typeof window !== 'undefined' && typeof (window as any).call_locker === 'function') {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
         try { (window as any).call_locker(); } catch(e) {}
       }
       const link = document.createElement("a");
@@ -265,7 +267,7 @@ export default function SplitPdfClient() {
           <div className="grid md:grid-cols-2 gap-10 text-slate-400 text-sm leading-relaxed font-medium">
             <div className="space-y-4">
               <p>
-                When it comes to handling sensitive intellectual property or personal data, a <span className="text-white font-bold">secure PDF splitter</span> is a non-negotiable tool. CosmoxHub's <span className="text-pink-500 font-bold underline">free online utility tool</span> is built on a "Zero-Server" architecture. This means when you <span className="text-white font-bold">extract PDF pages</span>, the entire operation happens locally on your computer. Your files are never uploaded, stored, or reviewed by anyone—not even us.
+                When it comes to handling sensitive intellectual property or personal data, a <span className="text-white font-bold">secure PDF splitter</span> is a non-negotiable tool. CosmoxHub&apos;s <span className="text-pink-500 font-bold underline">free online utility tool</span> is built on a &quot;Zero-Server&quot; architecture. This means when you <span className="text-white font-bold">extract PDF pages</span>, the entire operation happens locally on your computer. Your files are never uploaded, stored, or reviewed by anyone—not even us.
               </p>
               <p>
                 Our platform is recognized as one of the <span className="text-white font-bold">fastest PDF extraction tools</span> available. By bypassing the traditional upload/download cycle required by other sites, we provide instant results, making it the ideal choice for professionals who value both time and <span className="text-white font-bold">local processing</span> security.
@@ -273,7 +275,7 @@ export default function SplitPdfClient() {
             </div>
             <div className="space-y-4">
               <p>
-                Whether you're separating a single chapter from an ebook, removing irrelevant pages from a report, or splitting a multi-page contract into individual sections, our precision range-based extraction handles it all with byte-level accuracy. The output maintains the exact quality and resolution of the original document.
+                Whether you&apos;re separating a single chapter from an ebook, removing irrelevant pages from a report, or splitting a multi-page contract into individual sections, our precision range-based extraction handles it all with byte-level accuracy. The output maintains the exact quality and resolution of the original document.
               </p>
               <p>
                 At CosmoxHub, we believe that elite tools should be accessible to everyone. Experience a <span className="text-white font-bold">private, secure, and ultra-fast</span> PDF management experience without the need for registration or expensive software subscriptions.
