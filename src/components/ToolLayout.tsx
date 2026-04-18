@@ -18,17 +18,17 @@ interface ToolLayoutProps {
   children: React.ReactNode;
 }
 
-const colorMap: Record<string, { iconBg: string; iconText: string }> = {
-  "#ef4444": { iconBg: "bg-red-500/20",     iconText: "text-red-400" },
-  "#f59e0b": { iconBg: "bg-amber-500/20",   iconText: "text-amber-400" },
-  "#10b981": { iconBg: "bg-emerald-500/20", iconText: "text-emerald-400" },
-  "#06b6d4": { iconBg: "bg-cyan-500/20",    iconText: "text-cyan-400" },
-  "#3b82f6": { iconBg: "bg-blue-500/20",    iconText: "text-blue-400" },
-  "#6366f1": { iconBg: "bg-indigo-500/20",  iconText: "text-indigo-400" },
-  "#8b5cf6": { iconBg: "bg-violet-500/20",  iconText: "text-violet-400" },
-  "#ec4899": { iconBg: "bg-pink-500/20",    iconText: "text-pink-400" },
-  "#0ea5e9": { iconBg: "bg-sky-500/20",     iconText: "text-sky-400" },
-  default:   { iconBg: "bg-[#7C3AED]/20",   iconText: "text-[#A78BFA]" },
+const colorMap: Record<string, { iconBg: string; iconText: string; iconShadow: string }> = {
+  "#ef4444": { iconBg: "bg-red-500/20",     iconText: "text-red-400",    iconShadow: "shadow-[0_8px_24px_#ef444425]" },
+  "#f59e0b": { iconBg: "bg-amber-500/20",   iconText: "text-amber-400",  iconShadow: "shadow-[0_8px_24px_#f59e0b25]" },
+  "#10b981": { iconBg: "bg-emerald-500/20", iconText: "text-emerald-400",iconShadow: "shadow-[0_8px_24px_#10b98125]" },
+  "#06b6d4": { iconBg: "bg-cyan-500/20",    iconText: "text-cyan-400",   iconShadow: "shadow-[0_8px_24px_#06b6d425]" },
+  "#3b82f6": { iconBg: "bg-blue-500/20",    iconText: "text-blue-400",   iconShadow: "shadow-[0_8px_24px_#3b82f625]" },
+  "#6366f1": { iconBg: "bg-indigo-500/20",  iconText: "text-indigo-400", iconShadow: "shadow-[0_8px_24px_#6366f125]" },
+  "#8b5cf6": { iconBg: "bg-violet-500/20",  iconText: "text-violet-400", iconShadow: "shadow-[0_8px_24px_#8b5cf625]" },
+  "#ec4899": { iconBg: "bg-pink-500/20",    iconText: "text-pink-400",   iconShadow: "shadow-[0_8px_24px_#ec489925]" },
+  "#0ea5e9": { iconBg: "bg-sky-500/20",     iconText: "text-sky-400",    iconShadow: "shadow-[0_8px_24px_#0ea5e925]" },
+  default:   { iconBg: "bg-[#7C3AED]/20",   iconText: "text-[#A78BFA]",  iconShadow: "shadow-[0_8px_24px_#7C3AED25]" },
 };
 
 export default function ToolLayout({
@@ -65,8 +65,7 @@ export default function ToolLayout({
 
             <div className="flex items-start gap-5">
               <div
-                className={`animate-scale-in w-14 h-14 ${styles.iconBg} rounded-2xl flex items-center justify-center shrink-0 shadow-lg`}
-                style={{ boxShadow: `0 8px 24px ${color}25` }}
+                className={`animate-scale-in w-14 h-14 ${styles.iconBg} ${styles.iconShadow} rounded-2xl flex items-center justify-center shrink-0`}
               >
                 <Icon size={24} className={styles.iconText} strokeWidth={1.8} />
               </div>

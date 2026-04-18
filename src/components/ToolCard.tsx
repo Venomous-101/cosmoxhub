@@ -21,17 +21,19 @@ const colorMap: Record<string, {
   hoverShadow: string;
   hoverBtn: string;
   hoverBtnText: string;
+  cardGlow: string;
+  iconGlow: string;
 }> = {
-  "#ef4444": { radial: "from-red-500/40",    iconBg: "bg-red-500/15",    iconBorder: "border-red-500/30",    badgeBg: "bg-red-500/20",    badgeText: "text-red-400",    hoverBorder: "hover:border-red-500/40",    hoverShadow: "hover:shadow-red-500/10",    hoverBtn: "group-hover:bg-red-500/10 group-hover:border-red-500/30",    hoverBtnText: "group-hover:text-red-400" },
-  "#f59e0b": { radial: "from-amber-500/40",  iconBg: "bg-amber-500/15",  iconBorder: "border-amber-500/30",  badgeBg: "bg-amber-500/20",  badgeText: "text-amber-400",  hoverBorder: "hover:border-amber-500/40",  hoverShadow: "hover:shadow-amber-500/10",  hoverBtn: "group-hover:bg-amber-500/10 group-hover:border-amber-500/30",  hoverBtnText: "group-hover:text-amber-400" },
-  "#10b981": { radial: "from-emerald-500/40",iconBg: "bg-emerald-500/15",iconBorder: "border-emerald-500/30",badgeBg: "bg-emerald-500/20",badgeText: "text-emerald-400",hoverBorder: "hover:border-emerald-500/40",hoverShadow: "hover:shadow-emerald-500/10",hoverBtn: "group-hover:bg-emerald-500/10 group-hover:border-emerald-500/30",hoverBtnText: "group-hover:text-emerald-400" },
-  "#06b6d4": { radial: "from-cyan-500/40",   iconBg: "bg-cyan-500/15",   iconBorder: "border-cyan-500/30",   badgeBg: "bg-cyan-500/20",   badgeText: "text-cyan-400",   hoverBorder: "hover:border-cyan-500/40",   hoverShadow: "hover:shadow-cyan-500/10",   hoverBtn: "group-hover:bg-cyan-500/10 group-hover:border-cyan-500/30",   hoverBtnText: "group-hover:text-cyan-400" },
-  "#3b82f6": { radial: "from-blue-500/40",   iconBg: "bg-blue-500/15",   iconBorder: "border-blue-500/30",   badgeBg: "bg-blue-500/20",   badgeText: "text-blue-400",   hoverBorder: "hover:border-blue-500/40",   hoverShadow: "hover:shadow-blue-500/10",   hoverBtn: "group-hover:bg-blue-500/10 group-hover:border-blue-500/30",   hoverBtnText: "group-hover:text-blue-400" },
-  "#6366f1": { radial: "from-indigo-500/40", iconBg: "bg-indigo-500/15", iconBorder: "border-indigo-500/30", badgeBg: "bg-indigo-500/20", badgeText: "text-indigo-400", hoverBorder: "hover:border-indigo-500/40", hoverShadow: "hover:shadow-indigo-500/10", hoverBtn: "group-hover:bg-indigo-500/10 group-hover:border-indigo-500/30", hoverBtnText: "group-hover:text-indigo-400" },
-  "#8b5cf6": { radial: "from-violet-500/40", iconBg: "bg-violet-500/15", iconBorder: "border-violet-500/30", badgeBg: "bg-violet-500/20", badgeText: "text-violet-400", hoverBorder: "hover:border-violet-500/40", hoverShadow: "hover:shadow-violet-500/10", hoverBtn: "group-hover:bg-violet-500/10 group-hover:border-violet-500/30", hoverBtnText: "group-hover:text-violet-400" },
-  "#ec4899": { radial: "from-pink-500/40",   iconBg: "bg-pink-500/15",   iconBorder: "border-pink-500/30",   badgeBg: "bg-pink-500/20",   badgeText: "text-pink-400",   hoverBorder: "hover:border-pink-500/40",   hoverShadow: "hover:shadow-pink-500/10",   hoverBtn: "group-hover:bg-pink-500/10 group-hover:border-pink-500/30",   hoverBtnText: "group-hover:text-pink-400" },
-  "#0ea5e9": { radial: "from-sky-500/40",    iconBg: "bg-sky-500/15",    iconBorder: "border-sky-500/30",    badgeBg: "bg-sky-500/20",    badgeText: "text-sky-400",    hoverBorder: "hover:border-sky-500/40",    hoverShadow: "hover:shadow-sky-500/10",    hoverBtn: "group-hover:bg-sky-500/10 group-hover:border-sky-500/30",    hoverBtnText: "group-hover:text-sky-400" },
-  "default":  { radial: "from-violet-500/40",iconBg: "bg-violet-500/15", iconBorder: "border-violet-500/30", badgeBg: "bg-violet-500/20", badgeText: "text-violet-400", hoverBorder: "hover:border-[#7C3AED]/40",  hoverShadow: "hover:shadow-[#7C3AED]/10",  hoverBtn: "group-hover:bg-[#7C3AED]/10 group-hover:border-[#7C3AED]/30",  hoverBtnText: "group-hover:text-[#A78BFA]" },
+  "#ef4444": { radial: "from-red-500/40",    iconBg: "bg-red-500/15",    iconBorder: "border-red-500/30",    badgeBg: "bg-red-500/20",    badgeText: "text-red-400",    hoverBorder: "hover:border-red-500/40",    hoverShadow: "hover:shadow-red-500/10",    hoverBtn: "group-hover:bg-red-500/10 group-hover:border-red-500/30",    hoverBtnText: "group-hover:text-red-400", cardGlow: "[box-shadow:inset_0_0_0_1px_#ef444422]", iconGlow: "group-hover:[box-shadow:0_0_12px_#ef444440]" },
+  "#f59e0b": { radial: "from-amber-500/40",  iconBg: "bg-amber-500/15",  iconBorder: "border-amber-500/30",  badgeBg: "bg-amber-500/20",  badgeText: "text-amber-400",  hoverBorder: "hover:border-amber-500/40",  hoverShadow: "hover:shadow-amber-500/10",  hoverBtn: "group-hover:bg-amber-500/10 group-hover:border-amber-500/30",  hoverBtnText: "group-hover:text-amber-400", cardGlow: "[box-shadow:inset_0_0_0_1px_#f59e0b22]", iconGlow: "group-hover:[box-shadow:0_0_12px_#f59e0b40]" },
+  "#10b981": { radial: "from-emerald-500/40",iconBg: "bg-emerald-500/15",iconBorder: "border-emerald-500/30",badgeBg: "bg-emerald-500/20",badgeText: "text-emerald-400",hoverBorder: "hover:border-emerald-500/40",hoverShadow: "hover:shadow-emerald-500/10",hoverBtn: "group-hover:bg-emerald-500/10 group-hover:border-emerald-500/30",hoverBtnText: "group-hover:text-emerald-400", cardGlow: "[box-shadow:inset_0_0_0_1px_#10b98122]", iconGlow: "group-hover:[box-shadow:0_0_12px_#10b98140]" },
+  "#06b6d4": { radial: "from-cyan-500/40",   iconBg: "bg-cyan-500/15",   iconBorder: "border-cyan-500/30",   badgeBg: "bg-cyan-500/20",   badgeText: "text-cyan-400",   hoverBorder: "hover:border-cyan-500/40",   hoverShadow: "hover:shadow-cyan-500/10",   hoverBtn: "group-hover:bg-cyan-500/10 group-hover:border-cyan-500/30",   hoverBtnText: "group-hover:text-cyan-400", cardGlow: "[box-shadow:inset_0_0_0_1px_#06b6d422]", iconGlow: "group-hover:[box-shadow:0_0_12px_#06b6d440]" },
+  "#3b82f6": { radial: "from-blue-500/40",   iconBg: "bg-blue-500/15",   iconBorder: "border-blue-500/30",   badgeBg: "bg-blue-500/20",   badgeText: "text-blue-400",   hoverBorder: "hover:border-blue-500/40",   hoverShadow: "hover:shadow-blue-500/10",   hoverBtn: "group-hover:bg-blue-500/10 group-hover:border-blue-500/30",   hoverBtnText: "group-hover:text-blue-400", cardGlow: "[box-shadow:inset_0_0_0_1px_#3b82f622]", iconGlow: "group-hover:[box-shadow:0_0_12px_#3b82f640]" },
+  "#6366f1": { radial: "from-indigo-500/40", iconBg: "bg-indigo-500/15", iconBorder: "border-indigo-500/30", badgeBg: "bg-indigo-500/20", badgeText: "text-indigo-400", hoverBorder: "hover:border-indigo-500/40", hoverShadow: "hover:shadow-indigo-500/10", hoverBtn: "group-hover:bg-indigo-500/10 group-hover:border-indigo-500/30", hoverBtnText: "group-hover:text-indigo-400", cardGlow: "[box-shadow:inset_0_0_0_1px_#6366f122]", iconGlow: "group-hover:[box-shadow:0_0_12px_#6366f140]" },
+  "#8b5cf6": { radial: "from-violet-500/40", iconBg: "bg-violet-500/15", iconBorder: "border-violet-500/30", badgeBg: "bg-violet-500/20", badgeText: "text-violet-400", hoverBorder: "hover:border-violet-500/40", hoverShadow: "hover:shadow-violet-500/10", hoverBtn: "group-hover:bg-violet-500/10 group-hover:border-violet-500/30", hoverBtnText: "group-hover:text-violet-400", cardGlow: "[box-shadow:inset_0_0_0_1px_#8b5cf622]", iconGlow: "group-hover:[box-shadow:0_0_12px_#8b5cf640]" },
+  "#ec4899": { radial: "from-pink-500/40",   iconBg: "bg-pink-500/15",   iconBorder: "border-pink-500/30",   badgeBg: "bg-pink-500/20",   badgeText: "text-pink-400",   hoverBorder: "hover:border-pink-500/40",   hoverShadow: "hover:shadow-pink-500/10",   hoverBtn: "group-hover:bg-pink-500/10 group-hover:border-pink-500/30",   hoverBtnText: "group-hover:text-pink-400", cardGlow: "[box-shadow:inset_0_0_0_1px_#ec489922]", iconGlow: "group-hover:[box-shadow:0_0_12px_#ec489940]" },
+  "#0ea5e9": { radial: "from-sky-500/40",    iconBg: "bg-sky-500/15",    iconBorder: "border-sky-500/30",    badgeBg: "bg-sky-500/20",    badgeText: "text-sky-400",    hoverBorder: "hover:border-sky-500/40",    hoverShadow: "hover:shadow-sky-500/10",    hoverBtn: "group-hover:bg-sky-500/10 group-hover:border-sky-500/30",    hoverBtnText: "group-hover:text-sky-400", cardGlow: "[box-shadow:inset_0_0_0_1px_#0ea5e922]", iconGlow: "group-hover:[box-shadow:0_0_12px_#0ea5e940]" },
+  "default":  { radial: "from-violet-500/40",iconBg: "bg-violet-500/15", iconBorder: "border-violet-500/30", badgeBg: "bg-violet-500/20", badgeText: "text-violet-400", hoverBorder: "hover:border-[#7C3AED]/40",  hoverShadow: "hover:shadow-[#7C3AED]/10",  hoverBtn: "group-hover:bg-[#7C3AED]/10 group-hover:border-[#7C3AED]/30",  hoverBtnText: "group-hover:text-[#A78BFA]", cardGlow: "[box-shadow:inset_0_0_0_1px_#7C3AED22]", iconGlow: "group-hover:[box-shadow:0_0_12px_#7C3AED40]" },
 };
 
 // Stagger delay mapping (capped at 8 for perf)
@@ -61,9 +63,7 @@ export default function ToolCard({
       `}
     >
       {/* Card-edge glow on hover */}
-      <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-        style={{ boxShadow: `inset 0 0 0 1px ${color}22` }}
-      />
+      <div className={`absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 pointer-events-none ${styles.cardGlow}`} />
 
       {/* Corner glow orb */}
       <div
@@ -76,7 +76,7 @@ export default function ToolCard({
       >
         <Icon size={22} color={color} strokeWidth={2} />
         {/* Icon inner glow */}
-        <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ boxShadow: `0 0 12px ${color}40` }} />
+        <div className={`absolute inset-0 rounded-xl opacity-0 transition-opacity duration-300 ${styles.iconGlow}`} />
       </div>
 
       <div className="flex-1 relative z-10">

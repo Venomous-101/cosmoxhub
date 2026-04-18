@@ -46,8 +46,8 @@ export default function HomePageContent() {
       <section className="w-full px-4 pt-16 pb-14 relative overflow-hidden">
 
         {/* Ambient floating orbs */}
-        <div className="absolute -top-20 left-1/4 w-72 h-72 rounded-full bg-[#7C3AED]/6 blur-3xl pointer-events-none animate-float" style={{ animationDelay: '0s' }} />
-        <div className="absolute top-10 right-1/5 w-48 h-48 rounded-full bg-indigo-500/5 blur-2xl pointer-events-none animate-float" style={{ animationDelay: '1.5s' }} />
+        <div className="absolute -top-20 left-1/4 w-72 h-72 rounded-full bg-[#7C3AED]/6 blur-3xl pointer-events-none animate-float [animation-delay:0s]" />
+        <div className="absolute top-10 right-1/5 w-48 h-48 rounded-full bg-indigo-500/5 blur-2xl pointer-events-none animate-float [animation-delay:1.5s]" />
 
         <div className="flex flex-col items-center w-full relative z-10">
 

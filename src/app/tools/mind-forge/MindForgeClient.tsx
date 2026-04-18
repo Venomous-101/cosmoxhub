@@ -274,9 +274,6 @@ function FocusFlow({
   useEffect(() => { currentRef.current = current; }, [current]);
 
   useEffect(() => {
-    let intervalId: ReturnType<typeof setInterval>;
-    let timerId:    ReturnType<typeof setInterval>;
-
     const showShape = () => {
       const isTarget = Math.random() < 0.35;
       const shape    = isTarget
@@ -287,8 +284,8 @@ function FocusFlow({
       setTimeout(() => setCurrent(""), speed - 80);
     };
 
-    intervalId = setInterval(showShape, speed);
-    timerId    = setInterval(() => {
+    const intervalId = setInterval(showShape, speed);
+    const timerId    = setInterval(() => {
       setTimeLeft(t => {
         if (t <= 1) {
           clearInterval(intervalId);
@@ -413,7 +410,11 @@ function PatternProphet({
     const numOpt    = Number(opt);
     const isCorrect = numOpt === current.answer;
     setSelected(numOpt);
-    isCorrect ? audio?.success() : audio?.error();
+    if (isCorrect) {
+      audio?.success();
+    } else {
+      audio?.error();
+    }
 
     const pts = isCorrect ? (showHint ? 5 : 10) : 0;
     if (isCorrect) { setScore(s => s + pts); setCorrect(c => c + 1); }

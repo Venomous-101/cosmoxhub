@@ -305,8 +305,7 @@ export default function ResumeBuilderClient() {
                 initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}
                 className="space-y-8"
               >
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                {data.experience.map((exp, index) => (
+                {data.experience.map((exp) => (
                   <div key={exp.id} className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-2xl relative group">
                     <button 
                       aria-label="Remove experience"
