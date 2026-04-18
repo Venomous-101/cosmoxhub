@@ -1,12 +1,82 @@
 <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="cosmox_grad" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#6366f1" />
-      <stop offset="1" stop-color="#8b5cf6" />
-    </linearGradient>
+    <!-- Dark background -->
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1a0a2e"/>
+      <stop offset="100%" stop-color="#050510"/>
+    </radialGradient>
+    <!-- Purple glow filter for bat -->
+    <filter id="purpleGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <!-- Outer ring glow -->
+    <filter id="ringGlow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
-  <rect width="512" height="512" rx="120" fill="url(#cosmox_grad)" />
-  <g transform="translate(128, 128) scale(10.66666)">
-    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Background rounded square -->
+  <rect width="512" height="512" rx="110" fill="url(#bgGlow)"/>
+
+  <!-- Subtle outer glow ring -->
+  <rect width="512" height="512" rx="110" fill="none" stroke="#7C3AED" stroke-width="6" opacity="0.4" filter="url(#ringGlow)"/>
+
+  <!-- Batman bat silhouette — centered, scaled to fill nicely -->
+  <!-- Classic bat shape using a clean path, centered at 256,256 -->
+  <g filter="url(#purpleGlow)">
+    <path
+      d="
+        M256 170
+        C256 170 230 155 200 160
+        C170 165 148 180 138 195
+        C128 210 130 225 138 230
+        C118 222 100 218 88 225
+        C76 232 78 248 88 258
+        C98 268 120 268 140 262
+        C132 272 128 285 132 296
+        C136 307 148 312 158 308
+        C168 304 174 292 172 280
+        C192 290 220 298 256 298
+        C292 298 320 290 340 280
+        C338 292 344 304 354 308
+        C364 312 376 307 380 296
+        C384 285 380 272 372 262
+        C392 268 414 268 424 258
+        C434 248 436 232 424 225
+        C412 218 394 222 374 230
+        C382 225 384 210 374 195
+        C364 180 342 165 312 160
+        C282 155 256 170 256 170Z
+      "
+      fill="#7C3AED"
+      opacity="0.95"
+    />
+    <!-- Body/head of bat — dark cutout for depth -->
+    <ellipse cx="256" cy="255" rx="26" ry="20" fill="#1a0a2e" opacity="0.8"/>
+    <!-- Ear points -->
+    <polygon points="210,162 196,130 222,155" fill="#7C3AED" opacity="0.95"/>
+    <polygon points="302,162 316,130 290,155" fill="#7C3AED" opacity="0.95"/>
   </g>
+
+  <!-- Inner glow highlight on bat -->
+  <path
+    d="
+      M256 185
+      C256 185 238 174 218 178
+      C198 182 182 193 175 204
+      C192 198 212 195 232 196
+      C244 196 252 192 256 185Z
+    "
+    fill="white"
+    opacity="0.08"
+  />
 </svg>
