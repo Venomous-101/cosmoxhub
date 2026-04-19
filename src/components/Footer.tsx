@@ -15,6 +15,7 @@ const anchorText: Record<string, string> = {
   "/tools/whitespace-remover": "Whitespace Remover",
   "/tools/lorem-ipsum":      "Lorem Ipsum Generator",
   "/tools/text-to-pdf":      "Text to PDF Free",
+  "/tools/api-tester":       "Test API Online Free",
   "/tools/ai-prompt-optimizer": "AI Prompt Optimizer",
   "/tools/code-beautifier":  "Code Beautifier Online",
   "/tools/claude-skills-creator": "AI Agent Creator",

@@ -72,6 +72,7 @@ export const categories: Category[] = [
     description: "Next-gen tools for the modern workforce. 100% Secure.",
     color: "#8b5cf6",
     tools: [
+      { title: "API Tester Playground", description: "Test REST APIs and Webhooks instantly. Full HTTP support without Postman.", href: "/tools/api-tester", icon: Code2, badge: "Elite" },
       { title: "AI Prompt Optimizer", description: "Turn simple ideas into 10x better professional AI prompts.", href: "/tools/ai-prompt-optimizer", icon: Sparkles, badge: "Elite" },
       { title: "Code Beautifier 2.0", description: "Format and clean JSON, JS, CSS, and HTML instantly.", href: "/tools/code-beautifier", icon: Code2, badge: "New" },
       { title: "AI Agent Creator", description: "Generate professional skills.md files for AI agents.", href: "/tools/claude-skills-creator", icon: Brain, badge: "New" },

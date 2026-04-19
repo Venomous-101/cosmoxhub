@@ -14,7 +14,7 @@ const TOOL_SLUGS = [
   "ai-prompt-optimizer", "code-beautifier", "claude-skills-creator",
   "markdown-to-html", "text-diff", "regex-tester", "font-pairing", "text-to-word",
   "csv-to-json", "text-case-pro", "emi-calculator", "aspect-ratio-calculator", "unit-converter",
-  "screen-tester", "contrast-checker",
+  "screen-tester", "contrast-checker", "api-tester",
   // Image Tools
   "image-compressor", "bg-remover", "png-to-jpg", "jpg-to-png",
   "heic-to-jpg", "webp-to-png", "image-resizer", "image-upscaler",
