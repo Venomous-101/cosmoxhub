@@ -5,8 +5,10 @@ import ReactMarkdown from 'react-markdown';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
+export const dynamicParams = false;
+
 interface Props {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
@@ -15,8 +17,9 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const post = blogPosts.find((p) => p.slug === params.slug);
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const { slug } = await props.params;
+  const post = blogPosts.find((p) => p.slug === slug);
   if (!post) return { title: 'Not Found' };
 
   return {
@@ -31,8 +34,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function BlogPostPage({ params }: Props) {
-  const post = blogPosts.find((p) => p.slug === params.slug);
+export default async function BlogPostPage(props: Props) {
+  const { slug } = await props.params;
+  const post = blogPosts.find((p) => p.slug === slug);
 
   if (!post) {
     notFound();
