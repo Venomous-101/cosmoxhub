@@ -14,6 +14,62 @@ import { Ann, Tool, pathD, hexToRgb01 } from "./types";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 
+function DraggableAnnotation({ 
+  ann, scale, tool, selectedAnnId, setSelectedAnnId, updateAnn, deleteAnn, saveHistory, annotations 
+}: { 
+  ann: Ann; scale: number; tool: string; selectedAnnId: string | null; 
+  setSelectedAnnId: (id: string | null) => void; 
+  updateAnn: (id: string, updates: Partial<Ann>, skipHistory?: boolean) => void;
+  deleteAnn: (id: string) => void;
+  saveHistory: (newAnns: Ann[]) => void;
+  annotations: Ann[];
+}) {
+  const nodeRef = useRef<HTMLDivElement>(null);
+  return (
+    <Draggable
+      nodeRef={nodeRef}
+      position={{ x: (ann.x || 0) * scale, y: (ann.y || 0) * scale }}
+      onStop={(_, data) => updateAnn(ann.id, { x: data.x / scale, y: data.y / scale })}
+      disabled={tool !== "select"}
+      bounds="parent"
+    >
+      <div
+        ref={nodeRef}
+        onMouseDown={(e) => { if(tool === "select") { e.stopPropagation(); setSelectedAnnId(ann.id); } }}
+        onTouchStart={(e) => { if(tool === "select") { e.stopPropagation(); setSelectedAnnId(ann.id); } }}
+        className={`absolute z-20 ${tool === "select" ? "cursor-move" : "pointer-events-none"} ${selectedAnnId === ann.id ? "ring-2 ring-indigo-500 rounded" : ""}`}
+      >
+        {ann.type === "text" ? (
+          <div style={{ fontSize: `${(ann.fontSize || 16) * scale}px`, color: ann.color, whiteSpace: "pre", padding: "2px" }}>
+            {selectedAnnId === ann.id ? (
+              <textarea
+                autoFocus
+                value={ann.text}
+                onChange={e => updateAnn(ann.id, { text: e.target.value }, true)}
+                onBlur={() => saveHistory([...annotations])}
+                className="bg-transparent outline-none resize-none overflow-hidden m-0 p-0 block"
+                style={{ color: ann.color, minWidth: `${100 * scale}px`, height: `${(ann.fontSize||16) * 1.5 * scale}px`, lineHeight: 1.2 }}
+              />
+            ) : (
+              <span style={{ lineHeight: 1.2, display: "block" }}>{ann.text}</span>
+            )}
+          </div>
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={ann.imgSrc} alt="" style={{ width: `${(ann.w || 0) * scale}px`, height: `${(ann.h || 0) * scale}px`, objectFit: "contain" }} draggable={false} />
+        )}
+        
+        {/* Delete button for selected item */}
+        {selectedAnnId === ann.id && tool === "select" && (
+          <button onClick={(e) => { e.stopPropagation(); deleteAnn(ann.id); }} className="absolute -top-3 -right-3 bg-red-500 text-white p-1 rounded-full shadow-lg hover:bg-red-600 pointer-events-auto">
+            <Trash2 size={12} />
+          </button>
+        )}
+      </div>
+    </Draggable>
+  );
+}
+
 export default function PDFEditorClient() {
   const [file, setFile] = useState<File | null>(null);
   const [pdfDocProxy, setPdfDocProxy] = useState<pdfjsLib.PDFDocumentProxy | null>(null);
@@ -172,15 +228,27 @@ export default function PDFEditorClient() {
     if (!imgFile) return;
     const reader = new FileReader();
     reader.onload = (ev) => {
-      const ann: Ann = {
-        id: Date.now().toString(),
-        page: currentPage,
-        type: "image",
-        x: 60 / scale, y: 60 / scale, w: 160, h: 100, // Store normalized coordinates and dims
-        imgSrc: ev.target?.result as string,
+      const src = ev.target?.result as string;
+      const img = new Image();
+      img.onload = () => {
+        const maxDim = 200;
+        let w = img.width;
+        let h = img.height;
+        if (w > maxDim || h > maxDim) {
+          if (w > h) { h = (h/w)*maxDim; w = maxDim; }
+          else { w = (w/h)*maxDim; h = maxDim; }
+        }
+        const ann: Ann = {
+          id: Date.now().toString(),
+          page: currentPage,
+          type: "image",
+          x: 60 / scale, y: 60 / scale, w, h, 
+          imgSrc: src,
+        };
+        saveHistory([...annotations, ann]);
+        setSelectedAnnId(ann.id);
       };
-      saveHistory([...annotations, ann]);
-      setSelectedAnnId(ann.id);
+      img.src = src;
     };
     reader.readAsDataURL(imgFile);
     e.target.value = "";
@@ -405,9 +473,18 @@ export default function PDFEditorClient() {
   const insertSignature = () => {
     if (signStrokes.length === 0) return;
     const canvas = document.createElement("canvas");
-    canvas.width = 400; canvas.height = 200;
+    const rect = signCanvasRef.current?.getBoundingClientRect();
+    const width = rect?.width || 400;
+    const height = rect?.height || 200;
+    
+    // Support High-DPI displays
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = width * dpr; 
+    canvas.height = height * dpr;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+    
+    ctx.scale(dpr, dpr);
     ctx.lineWidth = 3;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
@@ -421,11 +498,15 @@ export default function PDFEditorClient() {
       }
       ctx.stroke();
     });
+
+    let w = width; let h = height;
+    if (w > 200) { h = (h/w)*200; w = 200; }
+
     const ann: Ann = {
       id: Date.now().toString(),
       page: currentPage,
       type: "image",
-      x: 60 / scale, y: 60 / scale, w: 200, h: 100,
+      x: 60 / scale, y: 60 / scale, w, h,
       imgSrc: canvas.toDataURL("image/png"),
     };
     saveHistory([...annotations, ann]);
@@ -590,6 +671,22 @@ export default function PDFEditorClient() {
                   <input type="range" min="8" max="72" value={selectedAnn.fontSize} onChange={e => updateAnn(selectedAnn.id, { fontSize: Number(e.target.value) })} className="w-full accent-indigo-500" />
                 </div>
               )}
+
+              {selectedAnn?.type === "image" && (
+                <div>
+                  <label className="text-xs text-slate-400 mb-1 flex justify-between">
+                    <span>Image Size</span> <span>{Math.round(selectedAnn.w || 100)}px</span>
+                  </label>
+                  <input type="range" min="50" max="800" value={selectedAnn.w || 200} 
+                    onChange={e => {
+                      const newW = Number(e.target.value);
+                      const aspect = (selectedAnn.h || 1) / (selectedAnn.w || 1);
+                      updateAnn(selectedAnn.id, { w: newW, h: newW * aspect });
+                    }} 
+                    className="w-full accent-indigo-500" 
+                  />
+                </div>
+              )}
             </div>
           )}
         </aside>
@@ -649,46 +746,18 @@ export default function PDFEditorClient() {
 
             {/* Draggable Overlays (Text / Images) */}
             {pageAnns.filter(a => a.type === "text" || a.type === "image").map(ann => (
-              <Draggable
-                key={ann.id}
-                position={{ x: (ann.x || 0) * scale, y: (ann.y || 0) * scale }}
-                onStop={(_, data) => updateAnn(ann.id, { x: data.x / scale, y: data.y / scale })}
-                disabled={tool !== "select"}
-                bounds="parent"
-              >
-                <div
-                  onMouseDown={(e) => { if(tool === "select") { e.stopPropagation(); setSelectedAnnId(ann.id); } }}
-                  onTouchStart={(e) => { if(tool === "select") { e.stopPropagation(); setSelectedAnnId(ann.id); } }}
-                  className={`absolute z-20 ${tool === "select" ? "cursor-move" : "pointer-events-none"} ${selectedAnnId === ann.id ? "ring-2 ring-indigo-500 rounded" : ""}`}
-                >
-                  {ann.type === "text" ? (
-                    <div style={{ fontSize: `${(ann.fontSize || 16) * scale}px`, color: ann.color, whiteSpace: "pre", padding: "2px" }}>
-                      {selectedAnnId === ann.id ? (
-                        <textarea
-                          autoFocus
-                          value={ann.text}
-                          onChange={e => updateAnn(ann.id, { text: e.target.value }, true)}
-                          onBlur={() => saveHistory([...annotations])}
-                          className="bg-transparent outline-none resize-none overflow-hidden m-0 p-0 block"
-                          style={{ color: ann.color, minWidth: `${100 * scale}px`, height: `${(ann.fontSize||16) * 1.5 * scale}px`, lineHeight: 1.2 }}
-                        />
-                      ) : (
-                        <span style={{ lineHeight: 1.2, display: "block" }}>{ann.text}</span>
-                      )}
-                    </div>
-                  ) : (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={ann.imgSrc} alt="" style={{ width: `${(ann.w || 0) * scale}px`, height: `${(ann.h || 0) * scale}px`, objectFit: "contain" }} draggable={false} />
-                  )}
-                  
-                  {/* Delete button for selected item */}
-                  {selectedAnnId === ann.id && tool === "select" && (
-                    <button onClick={(e) => { e.stopPropagation(); deleteAnn(ann.id); }} className="absolute -top-3 -right-3 bg-red-500 text-white p-1 rounded-full shadow-lg hover:bg-red-600 pointer-events-auto">
-                      <Trash2 size={12} />
-                    </button>
-                  )}
-                </div>
-              </Draggable>
+              <DraggableAnnotation 
+                key={ann.id} 
+                ann={ann} 
+                scale={scale} 
+                tool={tool} 
+                selectedAnnId={selectedAnnId} 
+                setSelectedAnnId={setSelectedAnnId} 
+                updateAnn={updateAnn} 
+                deleteAnn={deleteAnn} 
+                saveHistory={saveHistory} 
+                annotations={annotations} 
+              />
             ))}
           </div>
         </main>
