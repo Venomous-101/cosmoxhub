@@ -376,7 +376,7 @@ export default function PDFEditorClient() {
     }
     
     if (newTool === "text") {
-      const rect = canvasRef.current?.getBoundingClientRect();
+      const rect = canvasRefs.current[currentPage - 1]?.getBoundingClientRect();
       const cx = rect ? (window.innerWidth / 2 - rect.left) / scale : 100;
       const cy = rect ? (window.innerHeight / 2 - rect.top) / scale : 100;
       const ann: Ann = { id: Date.now().toString(), page: currentPage, type: "text", x: cx - 50, y: cy - 20, text: "", fontSize: 24, color: currentColor };
