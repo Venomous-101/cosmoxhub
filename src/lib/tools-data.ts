@@ -45,6 +45,7 @@ export const categories: Category[] = [
     description: "Process PDFs instantly in your browser. No upload required.",
     color: "#ef4444",
     tools: [
+      { title: "PDF Editor Pro", description: "Edit, annotate, add text, sign, and draw on PDFs directly in your browser.", href: "/tools/pdf-editor", icon: Pen, badge: "Elite" },
       { title: "Merge PDF", description: "Combine multiple PDF files into one document in seconds.", href: "/tools/merge-pdf", icon: FileStack, badge: "Popular" },
       { title: "Split PDF", description: "Extract specific pages from a PDF or split into multiple files.", href: "/tools/split-pdf", icon: Scissors },
       { title: "PDF Compressor", description: "Reduce PDF file size instantly. Bulk compress multiple PDFs at once.", href: "/tools/pdf-compressor", icon: FileArchive, badge: "New" },
