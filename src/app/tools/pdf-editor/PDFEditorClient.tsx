@@ -298,7 +298,23 @@ export default function PDFEditorClient() {
   };
 
   const handleToolSelect = (newTool: Tool | "sign") => {
-    if (newTool === "sign" && !activeSignatureDataUrl) setIsSignModalOpen(true);
+    if (newTool === "sign") {
+      if (!activeSignatureDataUrl) setIsSignModalOpen(true);
+      
+      // Easter Egg
+      try {
+        const msg = new SpeechSynthesisUtterance("Ahhh. Softly you human, I am a machine!");
+        msg.pitch = 1.5;
+        msg.rate = 0.9;
+        window.speechSynthesis.speak(msg);
+        
+        const toast = document.createElement("div");
+        toast.className = "fixed bottom-20 left-1/2 -translate-x-1/2 bg-pink-500 text-white px-6 py-3 rounded-full font-bold shadow-2xl z-[9999] animate-bounce pointer-events-none border-2 border-pink-400";
+        toast.innerText = "🤖 AHH! SOFTLY U HUMAN, I AM A MACHINE!";
+        document.body.appendChild(toast);
+        setTimeout(() => { toast.style.opacity = "0"; toast.style.transition = "opacity 0.5s"; setTimeout(() => toast.remove(), 500); }, 2500);
+      } catch (e) {}
+    }
     
     if (newTool === "text") {
       const rect = canvasRef.current?.getBoundingClientRect();
