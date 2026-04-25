@@ -125,7 +125,7 @@ export default function PDFEditorClient() {
   const [selectedAnnId, setSelectedAnnId] = useState<string | null>(null);
   
   const copiedAnnRef = useRef<Ann | null>(null);
-  const [canvasDim, setCanvasDim] = useState({ width: 0, height: 0 });
+  const [canvasDim] = useState({ width: 0, height: 0 }); // kept for compat, unused
 
   const [currentColor, setCurrentColor] = useState("#000000");
   const [currentStrokeW, setCurrentStrokeW] = useState(3);
@@ -169,9 +169,11 @@ export default function PDFEditorClient() {
     return 0.5;
   });
 
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRefs = useRef<(HTMLCanvasElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
-  const renderTaskRef = useRef<pdfjsLib.RenderTask | null>(null);
+  const pageRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const renderTaskRefs = useRef<(pdfjsLib.RenderTask | null)[]>([]);
+  const [pageDims, setPageDims] = useState<{width: number, height: number}[]>([]);
 
   // --- Keyboard Shortcuts ---
   useEffect(() => {
@@ -252,26 +254,31 @@ export default function PDFEditorClient() {
     loadPdf();
   }, [file]);
 
+  // Render all pages when PDF or scale changes
   useEffect(() => {
-    if (!pdfDocProxy || !canvasRef.current) return;
-    const renderPage = async () => {
-      try {
-        if (renderTaskRef.current) renderTaskRef.current.cancel();
-        const page = await pdfDocProxy.getPage(currentPage);
-        const viewport = page.getViewport({ scale });
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        const context = canvas.getContext("2d");
-        if (!context) return;
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-        setCanvasDim({ width: viewport.width, height: viewport.height });
-        renderTaskRef.current = page.render({ canvasContext: context, viewport } as any);
-        await renderTaskRef.current.promise;
-      } catch (err) {}
+    if (!pdfDocProxy || numPages === 0) return;
+    const renderAll = async () => {
+      const dims: {width: number, height: number}[] = [];
+      for (let i = 1; i <= numPages; i++) {
+        try {
+          if (renderTaskRefs.current[i-1]) renderTaskRefs.current[i-1]?.cancel();
+          const page = await pdfDocProxy.getPage(i);
+          const viewport = page.getViewport({ scale });
+          const canvas = canvasRefs.current[i-1];
+          if (!canvas) { dims.push({width: viewport.width, height: viewport.height}); continue; }
+          const context = canvas.getContext("2d");
+          if (!context) { dims.push({width: viewport.width, height: viewport.height}); continue; }
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+          dims.push({width: viewport.width, height: viewport.height});
+          renderTaskRefs.current[i-1] = page.render({ canvasContext: context, viewport } as any);
+          await renderTaskRefs.current[i-1]!.promise;
+        } catch (err) {}
+      }
+      setPageDims(dims);
     };
-    renderPage();
-  }, [pdfDocProxy, currentPage, scale]);
+    renderAll();
+  }, [pdfDocProxy, numPages, scale]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -383,53 +390,57 @@ export default function PDFEditorClient() {
     setSelectedAnnId(null);
   };
 
-  const handleCanvasClick = (e: React.MouseEvent | React.TouchEvent) => {
+  const handleCanvasClick = (e: React.MouseEvent | React.TouchEvent, pageNum?: number) => {
     if (tool === "select") return;
-    const pos = getPointerPos(e);
+    const pNum = pageNum ?? currentPage;
+    const pos = getPointerPos(e, pNum);
 
     if (tool === "text") {
-      const ann: Ann = { id: Date.now().toString(), page: currentPage, type: "text", x: pos.x, y: pos.y, text: "", fontSize: 16, color: currentColor };
+      const ann: Ann = { id: Date.now().toString(), page: pNum, type: "text", x: pos.x, y: pos.y, text: "", fontSize: 16, color: currentColor };
       saveHistory([...annotations, ann]);
       setTool("select"); setTimeout(() => setSelectedAnnId(ann.id), 50);
     } 
     else if (tool === "date") {
       const dateStr = new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
-      const ann: Ann = { id: Date.now().toString(), page: currentPage, type: "text", x: pos.x, y: pos.y, text: dateStr, fontSize: 16, color: currentColor };
+      const ann: Ann = { id: Date.now().toString(), page: pNum, type: "text", x: pos.x, y: pos.y, text: dateStr, fontSize: 16, color: currentColor };
       saveHistory([...annotations, ann]);
       setTool("select"); setSelectedAnnId(ann.id);
     }
     else if (tool === "sign" && activeSignatureDataUrl) {
       const w = 150; const h = w * activeSignatureAspect;
-      const ann: Ann = { id: Date.now().toString(), page: currentPage, type: "image", x: pos.x - w/2, y: pos.y - h/2, w, h, imgSrc: activeSignatureDataUrl };
+      const ann: Ann = { id: Date.now().toString(), page: pNum, type: "image", x: pos.x - w/2, y: pos.y - h/2, w, h, imgSrc: activeSignatureDataUrl };
       saveHistory([...annotations, ann]);
       setTool("select"); setSelectedAnnId(ann.id);
     }
   };
 
-  const getPointerPos = (e: React.MouseEvent | React.TouchEvent) => {
-    if (!canvasRef.current) return { x: 0, y: 0 };
-    const rect = canvasRef.current.getBoundingClientRect();
+  const getPointerPos = (e: React.MouseEvent | React.TouchEvent, pageNum?: number) => {
+    const idx = (pageNum ?? currentPage) - 1;
+    const canvas = canvasRefs.current[idx];
+    if (!canvas) return { x: 0, y: 0 };
+    const rect = canvas.getBoundingClientRect();
     let cx = 0, cy = 0;
     if ("touches" in e) { cx = e.touches[0].clientX; cy = e.touches[0].clientY; } 
     else { cx = (e as React.MouseEvent).clientX; cy = (e as React.MouseEvent).clientY; }
     return { x: (cx - rect.left) / scale, y: (cy - rect.top) / scale };
   };
 
-  const onPointerDown = (e: React.MouseEvent | React.TouchEvent) => {
+  const onPointerDown = (e: React.MouseEvent | React.TouchEvent, pageNum?: number) => {
+    const pNum = pageNum ?? currentPage;
     if (tool === "select") {
-      if (e.target === containerRef.current || e.target === canvasRef.current || (e.target as HTMLElement).tagName === "svg") setSelectedAnnId(null);
+      if ((e.target as HTMLElement).tagName === "CANVAS" || (e.target as HTMLElement).tagName === "svg") setSelectedAnnId(null);
       return;
     }
-    if (tool === "text" || tool === "sign" || tool === "date") { handleCanvasClick(e); return; }
+    if (tool === "text" || tool === "sign" || tool === "date") { handleCanvasClick(e, pNum); return; }
     setSelectedAnnId(null); setIsDrawing(true);
-    const pos = getPointerPos(e);
+    const pos = getPointerPos(e, pNum);
     if (tool === "pen" || tool === "highlight") setCurrentStroke([pos]);
-    else setDrawStart(pos); setDrawCurrent(pos);
+    else { setDrawStart(pos); setDrawCurrent(pos); }
   };
 
   const onPointerMove = (e: React.MouseEvent | React.TouchEvent) => {
     if (!isDrawing) return;
-    const pos = getPointerPos(e);
+    const pos = getPointerPos(e, currentPage);
     if (tool === "pen" || tool === "highlight") setCurrentStroke(prev => [...prev, pos]);
     else setDrawCurrent(pos);
   };
@@ -718,9 +729,12 @@ export default function PDFEditorClient() {
           <div className="w-48 bg-[#0F1420] border-r border-slate-800 overflow-y-auto p-3 space-y-2 flex-shrink-0 flex flex-col items-center">
             <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 w-full">Pages</h3>
             {Array.from({ length: numPages }).map((_, i) => (
-              <button 
-                key={i} 
-                onClick={() => setCurrentPage(i+1)} 
+              <button
+                key={i}
+                onClick={() => {
+                  setCurrentPage(i+1);
+                  pageRefs.current[i]?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
                 className={`w-full aspect-[1/1.4] rounded-lg border-2 transition-all flex items-center justify-center text-lg font-bold ${currentPage === i+1 ? "bg-indigo-600/20 border-indigo-500 text-indigo-400" : "bg-slate-800 border-transparent text-slate-500 hover:bg-slate-700 hover:text-slate-300"}`}
               >
                 {i+1}
@@ -729,34 +743,67 @@ export default function PDFEditorClient() {
           </div>
         )}
 
-        <main ref={containerRef} className="flex-1 overflow-auto bg-[#0B0F19] p-4 md:p-10 text-center">
-          <div className={`inline-block relative bg-white shadow-[0_0_40px_rgba(0,0,0,0.5)] transition-shadow duration-300 text-left align-top ${tool !== "select" ? "cursor-crosshair" : ""}`} style={{ width: canvasDim.width || "auto", height: canvasDim.height || "auto", verticalAlign: "top" }} onMouseDown={onPointerDown} onMouseMove={onPointerMove} onMouseUp={onPointerUp} onMouseLeave={onPointerUp} onTouchStart={onPointerDown} onTouchMove={onPointerMove} onTouchEnd={onPointerUp}>
-            <canvas ref={canvasRef} className="block pointer-events-none" />
+        <main ref={containerRef} className="flex-1 overflow-auto bg-[#0B0F19] py-8 text-center">
+          <div className="inline-block text-left align-top space-y-6">
+            {Array.from({ length: numPages }).map((_, idx) => {
+              const pNum = idx + 1;
+              const dim = pageDims[idx] || { width: 0, height: 0 };
+              const pageAnns = annotations.filter(a => a.page === pNum);
+              const isActivePage = currentPage === pNum;
 
-            <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 10 }}>
-              <g style={{ transform: `scale(${scale})`, transformOrigin: "0 0" }}>
-                {pageAnns.map(ann => {
-                  if ((ann.type === "pen" || ann.type === "highlight") && ann.strokes) return <g key={ann.id}>{ann.strokes.map((stroke, i) => <path key={i} d={pathD(stroke)} fill="none" stroke={ann.color} strokeWidth={ann.strokeW} strokeLinecap="round" strokeLinejoin="round" opacity={ann.opacity} />)}</g>;
-                  if (ann.type === "rect" && ann.x !== undefined) return <rect key={ann.id} x={ann.x} y={ann.y} width={ann.w} height={ann.h} fill="none" stroke={ann.color} strokeWidth={ann.strokeW} opacity={ann.opacity} />;
-                  if (ann.type === "whiteout" && ann.x !== undefined) return <rect key={ann.id} x={ann.x} y={ann.y} width={ann.w} height={ann.h} fill="#ffffff" stroke="none" opacity={ann.opacity} />;
-                  if (ann.type === "ellipse" && ann.x !== undefined && ann.w) return <ellipse key={ann.id} cx={ann.x + ann.w/2} cy={(ann.y||0) + (ann.h||0)/2} rx={ann.w/2} ry={(ann.h||0)/2} fill="none" stroke={ann.color} strokeWidth={ann.strokeW} opacity={ann.opacity} />;
-                  if ((ann.type === "arrow" || ann.type === "line") && ann.x !== undefined && ann.x2 !== undefined) {
-                    if (ann.type === "line") return <line key={ann.id} x1={ann.x} y1={ann.y} x2={ann.x2} y2={ann.y2} stroke={ann.color} strokeWidth={ann.strokeW} />;
-                    return <path key={ann.id} d={getArrowPath(ann.x, ann.y||0, ann.x2, ann.y2||0)} fill="none" stroke={ann.color} strokeWidth={ann.strokeW} strokeLinecap="round" strokeLinejoin="round" />;
-                  }
-                  return null;
-                })}
+              return (
+                <div
+                  key={pNum}
+                  ref={el => { pageRefs.current[idx] = el; }}
+                  className="relative"
+                  onMouseEnter={() => setCurrentPage(pNum)}
+                >
+                  {/* Page label */}
+                  <div className={`absolute -top-6 left-0 text-xs font-bold px-2 py-0.5 rounded transition-colors ${isActivePage ? "text-indigo-400" : "text-slate-600"}`}>
+                    Page {pNum}
+                  </div>
 
-                {isDrawing && currentStroke.length > 0 && (tool === "pen" || tool === "highlight") && <path d={pathD(currentStroke)} fill="none" stroke={tool === "highlight" ? "#ffff00" : currentColor} strokeWidth={tool === "highlight" ? 15 : currentStrokeW} strokeLinecap="round" strokeLinejoin="round" opacity={tool === "highlight" ? 0.4 : 1} />}
-                {isDrawing && drawStart && drawCurrent && tool === "rect" && <rect x={Math.min(drawStart.x, drawCurrent.x)} y={Math.min(drawStart.y, drawCurrent.y)} width={Math.abs(drawCurrent.x - drawStart.x)} height={Math.abs(drawCurrent.y - drawStart.y)} fill="none" stroke={currentColor} strokeWidth={currentStrokeW} />}
-                {isDrawing && drawStart && drawCurrent && tool === "whiteout" && <rect x={Math.min(drawStart.x, drawCurrent.x)} y={Math.min(drawStart.y, drawCurrent.y)} width={Math.abs(drawCurrent.x - drawStart.x)} height={Math.abs(drawCurrent.y - drawStart.y)} fill="#ffffff" stroke="#ccc" strokeWidth={1} strokeDasharray="4" />}
-                {isDrawing && drawStart && drawCurrent && tool === "ellipse" && <ellipse cx={Math.min(drawStart.x, drawCurrent.x) + Math.abs(drawCurrent.x - drawStart.x)/2} cy={Math.min(drawStart.y, drawCurrent.y) + Math.abs(drawCurrent.y - drawStart.y)/2} rx={Math.abs(drawCurrent.x - drawStart.x)/2} ry={Math.abs(drawCurrent.y - drawStart.y)/2} fill="none" stroke={currentColor} strokeWidth={currentStrokeW} />}
-                {isDrawing && drawStart && drawCurrent && tool === "line" && <line x1={drawStart.x} y1={drawStart.y} x2={drawCurrent.x} y2={drawCurrent.y} stroke={currentColor} strokeWidth={currentStrokeW} />}
-                {isDrawing && drawStart && drawCurrent && tool === "arrow" && <path d={getArrowPath(drawStart.x, drawStart.y, drawCurrent.x, drawCurrent.y)} fill="none" stroke={currentColor} strokeWidth={currentStrokeW} strokeLinecap="round" strokeLinejoin="round" />}
-              </g>
-            </svg>
+                  <div
+                    className={`relative bg-white shadow-[0_0_30px_rgba(0,0,0,0.4)] transition-all duration-200 ${tool !== "select" ? "cursor-crosshair" : ""} ${isActivePage ? "ring-2 ring-indigo-500/30" : ""}`}
+                    style={{ width: dim.width || "auto", height: dim.height || "auto" }}
+                    onMouseDown={e => { setCurrentPage(pNum); onPointerDown(e, pNum); }}
+                    onMouseMove={e => onPointerMove(e)}
+                    onMouseUp={onPointerUp}
+                    onMouseLeave={onPointerUp}
+                    onTouchStart={e => { setCurrentPage(pNum); onPointerDown(e, pNum); }}
+                    onTouchMove={onPointerMove}
+                    onTouchEnd={onPointerUp}
+                  >
+                    <canvas ref={el => { canvasRefs.current[idx] = el; }} className="block pointer-events-none" />
 
-            {pageAnns.filter(a => a.type === "text" || a.type === "image").map(ann => <DraggableAnnotation key={ann.id} ann={ann} scale={scale} tool={tool} selectedAnnId={selectedAnnId} setSelectedAnnId={setSelectedAnnId} updateAnn={updateAnn} deleteAnn={deleteAnn} saveHistory={saveHistory} annotations={annotations} />)}
+                    <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 10 }}>
+                      <g style={{ transform: `scale(${scale})`, transformOrigin: "0 0" }}>
+                        {pageAnns.map(ann => {
+                          if ((ann.type === "pen" || ann.type === "highlight") && ann.strokes) return <g key={ann.id}>{ann.strokes.map((stroke, i) => <path key={i} d={pathD(stroke)} fill="none" stroke={ann.color} strokeWidth={ann.strokeW} strokeLinecap="round" strokeLinejoin="round" opacity={ann.opacity} />)}</g>;
+                          if (ann.type === "rect" && ann.x !== undefined) return <rect key={ann.id} x={ann.x} y={ann.y} width={ann.w} height={ann.h} fill="none" stroke={ann.color} strokeWidth={ann.strokeW} opacity={ann.opacity} />;
+                          if (ann.type === "whiteout" && ann.x !== undefined) return <rect key={ann.id} x={ann.x} y={ann.y} width={ann.w} height={ann.h} fill="#ffffff" stroke="none" opacity={ann.opacity} />;
+                          if (ann.type === "ellipse" && ann.x !== undefined && ann.w) return <ellipse key={ann.id} cx={ann.x + ann.w/2} cy={(ann.y||0) + (ann.h||0)/2} rx={ann.w/2} ry={(ann.h||0)/2} fill="none" stroke={ann.color} strokeWidth={ann.strokeW} opacity={ann.opacity} />;
+                          if ((ann.type === "arrow" || ann.type === "line") && ann.x !== undefined && ann.x2 !== undefined) {
+                            if (ann.type === "line") return <line key={ann.id} x1={ann.x} y1={ann.y} x2={ann.x2} y2={ann.y2} stroke={ann.color} strokeWidth={ann.strokeW} />;
+                            return <path key={ann.id} d={getArrowPath(ann.x, ann.y||0, ann.x2, ann.y2||0)} fill="none" stroke={ann.color} strokeWidth={ann.strokeW} strokeLinecap="round" strokeLinejoin="round" />;
+                          }
+                          return null;
+                        })}
+                        {/* Live drawing preview only on active page */}
+                        {isActivePage && isDrawing && currentStroke.length > 0 && (tool === "pen" || tool === "highlight") && <path d={pathD(currentStroke)} fill="none" stroke={tool === "highlight" ? highlightColor : currentColor} strokeWidth={tool === "highlight" ? 16 : currentStrokeW} strokeLinecap="round" strokeLinejoin="round" opacity={tool === "highlight" ? 0.35 : 1} />}
+                        {isActivePage && isDrawing && drawStart && drawCurrent && tool === "rect" && <rect x={Math.min(drawStart.x, drawCurrent.x)} y={Math.min(drawStart.y, drawCurrent.y)} width={Math.abs(drawCurrent.x - drawStart.x)} height={Math.abs(drawCurrent.y - drawStart.y)} fill="none" stroke={currentColor} strokeWidth={currentStrokeW} />}
+                        {isActivePage && isDrawing && drawStart && drawCurrent && tool === "whiteout" && <rect x={Math.min(drawStart.x, drawCurrent.x)} y={Math.min(drawStart.y, drawCurrent.y)} width={Math.abs(drawCurrent.x - drawStart.x)} height={Math.abs(drawCurrent.y - drawStart.y)} fill="#ffffff" stroke="#ccc" strokeWidth={1} strokeDasharray="4" />}
+                        {isActivePage && isDrawing && drawStart && drawCurrent && tool === "ellipse" && <ellipse cx={Math.min(drawStart.x, drawCurrent.x) + Math.abs(drawCurrent.x - drawStart.x)/2} cy={Math.min(drawStart.y, drawCurrent.y) + Math.abs(drawCurrent.y - drawStart.y)/2} rx={Math.abs(drawCurrent.x - drawStart.x)/2} ry={Math.abs(drawCurrent.y - drawStart.y)/2} fill="none" stroke={currentColor} strokeWidth={currentStrokeW} />}
+                        {isActivePage && isDrawing && drawStart && drawCurrent && tool === "line" && <line x1={drawStart.x} y1={drawStart.y} x2={drawCurrent.x} y2={drawCurrent.y} stroke={currentColor} strokeWidth={currentStrokeW} />}
+                        {isActivePage && isDrawing && drawStart && drawCurrent && tool === "arrow" && <path d={getArrowPath(drawStart.x, drawStart.y, drawCurrent.x, drawCurrent.y)} fill="none" stroke={currentColor} strokeWidth={currentStrokeW} strokeLinecap="round" strokeLinejoin="round" />}
+                      </g>
+                    </svg>
+
+                    {pageAnns.filter(a => a.type === "text" || a.type === "image").map(ann => <DraggableAnnotation key={ann.id} ann={ann} scale={scale} tool={tool} selectedAnnId={selectedAnnId} setSelectedAnnId={setSelectedAnnId} updateAnn={updateAnn} deleteAnn={deleteAnn} saveHistory={saveHistory} annotations={annotations} />)}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </main>
       </div>
