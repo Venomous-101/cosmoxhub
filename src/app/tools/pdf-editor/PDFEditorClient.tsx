@@ -136,8 +136,20 @@ export default function PDFEditorClient() {
   const [drawCurrent, setDrawCurrent] = useState<{x: number, y: number} | null>(null);
 
   const [isProcessing, setIsProcessing] = useState(false);
+  const [exportProgress, setExportProgress] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [isDraggingFile, setIsDraggingFile] = useState(false);
+  const [toast, setToast] = useState("");
+  const [isWatermarkOpen, setIsWatermarkOpen] = useState(false);
+  const [watermarkText, setWatermarkText] = useState("CONFIDENTIAL");
+  const [watermarkOpacity, setWatermarkOpacity] = useState(0.25);
+  const [highlightColor, setHighlightColor] = useState("#ffff00");
+  const [zoomMenuOpen, setZoomMenuOpen] = useState(false);
+
+  const showToast = (msg: string, duration = 2500) => {
+    setToast(msg);
+    setTimeout(() => setToast(""), duration);
+  };
 
   // Signature State
   const [isSignModalOpen, setIsSignModalOpen] = useState(false);
@@ -148,8 +160,14 @@ export default function PDFEditorClient() {
   const [isSignDrawing, setIsSignDrawing] = useState(false);
   const [typedSignature, setTypedSignature] = useState("");
   const [signFont, setSignFont] = useState("var(--font-caveat)");
-  const [activeSignatureDataUrl, setActiveSignatureDataUrl] = useState<string | null>(null);
-  const [activeSignatureAspect, setActiveSignatureAspect] = useState(0.5);
+  const [activeSignatureDataUrl, setActiveSignatureDataUrl] = useState<string | null>(() => {
+    if (typeof window !== "undefined") return localStorage.getItem("pdf_editor_sig") || null;
+    return null;
+  });
+  const [activeSignatureAspect, setActiveSignatureAspect] = useState<number>(() => {
+    if (typeof window !== "undefined") return parseFloat(localStorage.getItem("pdf_editor_sig_aspect") || "0.5");
+    return 0.5;
+  });
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -265,36 +283,52 @@ export default function PDFEditorClient() {
   // --- Auto Actions (Stamps, Watermark) ---
   const insertStamp = (text: string, color: string) => {
     const c = document.createElement("canvas");
-    c.width = 400; c.height = 100;
+    c.width = 500; c.height = 140;
     const ctx = c.getContext("2d");
     if (!ctx) return;
-    ctx.strokeStyle = color; ctx.lineWidth = 10;
-    ctx.strokeRect(10, 10, 380, 80);
-    ctx.fillStyle = color; ctx.font = "bold 60px Inter"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillText(text, 200, 55);
+    ctx.translate(250, 70); ctx.rotate(-0.15);
+    ctx.strokeStyle = color; ctx.lineWidth = 8;
+    ctx.globalAlpha = 0.85;
+    const rw = 460, rh = 100;
+    const rx = -rw/2, ry = -rh/2, r = 12;
+    ctx.beginPath();
+    ctx.moveTo(rx+r, ry); ctx.lineTo(rx+rw-r, ry);
+    ctx.quadraticCurveTo(rx+rw, ry, rx+rw, ry+r);
+    ctx.lineTo(rx+rw, ry+rh-r);
+    ctx.quadraticCurveTo(rx+rw, ry+rh, rx+rw-r, ry+rh);
+    ctx.lineTo(rx+r, ry+rh); ctx.quadraticCurveTo(rx, ry+rh, rx, ry+rh-r);
+    ctx.lineTo(rx, ry+r); ctx.quadraticCurveTo(rx, ry, rx+r, ry);
+    ctx.closePath(); ctx.stroke();
+    ctx.fillStyle = color; ctx.font = "bold 68px Arial"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.letterSpacing = "6px";
+    ctx.fillText(text, 0, 2);
     const ann: Ann = {
       id: Date.now().toString(), page: currentPage, type: "image",
-      x: canvasDim.width/scale/2 - 200, y: canvasDim.height/scale/2 - 50, w: 200, h: 50,
+      x: canvasDim.width/scale/2 - 150, y: canvasDim.height/scale/2 - 40, w: 300, h: 84,
       imgSrc: c.toDataURL()
     };
     saveHistory([...annotations, ann]);
+    showToast(`${text} stamp added`);
   };
 
   const insertWatermark = () => {
-    const text = prompt("Enter watermark text:", "CONFIDENTIAL") || "CONFIDENTIAL";
     const c = document.createElement("canvas");
     c.width = 1000; c.height = 1000;
     const ctx = c.getContext("2d");
     if (!ctx) return;
     ctx.translate(500, 500); ctx.rotate(-Math.PI / 4);
-    ctx.fillStyle = "rgba(200, 200, 200, 0.4)"; ctx.font = "bold 100px Inter"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillText(text, 0, 0);
+    const alpha = watermarkOpacity;
+    ctx.fillStyle = `rgba(120,120,120,${alpha})`;
+    ctx.font = "bold 100px Arial"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText(watermarkText || "CONFIDENTIAL", 0, 0);
     const ann: Ann = {
       id: Date.now().toString(), page: currentPage, type: "image",
       x: canvasDim.width/scale/2 - 500, y: canvasDim.height/scale/2 - 500, w: 1000, h: 1000,
       imgSrc: c.toDataURL()
     };
     saveHistory([...annotations, ann]);
+    setIsWatermarkOpen(false);
+    showToast("Watermark applied");
   };
 
   const handleToolSelect = (newTool: Tool | "sign") => {
@@ -404,7 +438,7 @@ export default function PDFEditorClient() {
     if (!isDrawing) return;
     setIsDrawing(false);
     if ((tool === "pen" || tool === "highlight") && currentStroke.length > 1) {
-      saveHistory([...annotations, { id: Date.now().toString(), page: currentPage, type: tool, strokes: [currentStroke], color: tool==="highlight"?"#ffff00":currentColor, strokeW: tool==="highlight"?15:currentStrokeW, opacity: tool==="highlight"?0.4:1 }]);
+      saveHistory([...annotations, { id: Date.now().toString(), page: currentPage, type: tool, strokes: [currentStroke], color: tool==="highlight"?highlightColor:currentColor, strokeW: tool==="highlight"?16:currentStrokeW, opacity: tool==="highlight"?0.35:1 }]);
     } else if (drawStart && drawCurrent) {
       if (tool === "arrow" || tool === "line") {
         saveHistory([...annotations, { id: Date.now().toString(), page: currentPage, type: tool, x: drawStart.x, y: drawStart.y, x2: drawCurrent.x, y2: drawCurrent.y, color: currentColor, strokeW: currentStrokeW }]);
@@ -429,9 +463,11 @@ export default function PDFEditorClient() {
   };
 
   const exportPdf = async () => {
+    setExportProgress("");
     if (!file || !pdfDocProxy) return;
     setIsProcessing(true);
     try {
+      setExportProgress("Preparing document…");
       const arrayBuffer = await file.arrayBuffer();
       const pdfDoc = await PDFDocument.load(arrayBuffer);
       const pages = pdfDoc.getPages();
@@ -439,6 +475,7 @@ export default function PDFEditorClient() {
       for (let pNum = 1; pNum <= numPages; pNum++) {
         const pageAnns = annotations.filter(a => a.page === pNum);
         if (!pageAnns.length) continue;
+        setExportProgress(`Flattening page ${pNum} of ${numPages}…`);
         const pdfjsPage = await pdfDocProxy.getPage(pNum);
         const viewport = pdfjsPage.getViewport({ scale: 1 });
         const pageHeight = viewport.height;
@@ -485,9 +522,11 @@ export default function PDFEditorClient() {
           }
         }
       }
+      setExportProgress("Saving…");
       const pdfBytes = await pdfDoc.save();
       saveAs(new Blob([pdfBytes.buffer as ArrayBuffer], { type: "application/pdf" }), `edited_${file.name}`);
-    } catch (err) { setErrorMsg("Export failed."); } finally { setIsProcessing(false); }
+      showToast("✅ PDF exported successfully!");
+    } catch (err) { showToast("❌ Export failed. Please try again."); } finally { setIsProcessing(false); setExportProgress(""); }
   };
 
   const getArrowPath = (x1: number, y1: number, x2: number, y2: number) => {
@@ -550,10 +589,20 @@ export default function PDFEditorClient() {
           <div className="flex items-center gap-1 sm:gap-2 bg-slate-900/50 rounded-xl p-1 border border-slate-700/50">
             <button onClick={undo} disabled={historyStep <= 0} className="p-1.5 sm:p-2 disabled:opacity-30 hover:bg-slate-700 rounded-lg text-slate-300" title="Undo (Ctrl+Z)"><Undo size={16} /></button>
             <button onClick={redo} disabled={historyStep >= history.length - 1} className="p-1.5 sm:p-2 disabled:opacity-30 hover:bg-slate-700 rounded-lg text-slate-300" title="Redo (Ctrl+Y)"><Redo size={16} /></button>
+            <span className="text-xs text-slate-600 font-mono">{historyStep}/{history.length - 1}</span>
             <div className="w-px h-5 bg-slate-700 mx-1" />
-            <button onClick={() => setScale(s => Math.max(0.5, s - 0.2))} className="p-1.5 sm:p-2 hover:bg-slate-700 rounded-lg text-slate-300"><ZoomOut size={16} /></button>
-            <span className="text-xs font-mono w-10 sm:w-12 text-center text-slate-300">{Math.round(scale * 100)}%</span>
-            <button onClick={() => setScale(s => Math.min(3, s + 0.2))} className="p-1.5 sm:p-2 hover:bg-slate-700 rounded-lg text-slate-300"><ZoomIn size={16} /></button>
+            <button onClick={() => setScale(s => Math.max(0.5, Math.round((s - 0.1)*10)/10))} className="p-1.5 sm:p-2 hover:bg-slate-700 rounded-lg text-slate-300"><ZoomOut size={16} /></button>
+            <div className="relative">
+              <button onClick={() => setZoomMenuOpen(o => !o)} className="text-xs font-mono w-12 text-center text-slate-300 hover:text-white hover:bg-slate-700 rounded px-1 py-0.5">{Math.round(scale * 100)}%</button>
+              {zoomMenuOpen && (
+                <div className="absolute top-8 left-1/2 -translate-x-1/2 bg-slate-800 border border-slate-700 rounded-xl shadow-2xl z-50 overflow-hidden min-w-[90px]">
+                  {[50,75,100,125,150,200].map(z => (
+                    <button key={z} onClick={() => { setScale(z/100); setZoomMenuOpen(false); }} className={`w-full px-4 py-2 text-xs text-left hover:bg-slate-700 transition-colors ${Math.round(scale*100)===z ? "text-indigo-400 font-bold" : "text-slate-300"}`}>{z}%</button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <button onClick={() => setScale(s => Math.min(3, Math.round((s + 0.1)*10)/10))} className="p-1.5 sm:p-2 hover:bg-slate-700 rounded-lg text-slate-300"><ZoomIn size={16} /></button>
             <div className="w-px h-5 bg-slate-700 mx-1" />
             <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage <= 1} className="p-1.5 sm:p-2 hover:bg-slate-700 disabled:opacity-30 rounded-lg text-slate-300"><ChevronLeft size={16} /></button>
             <span className="text-xs font-mono w-14 sm:w-16 text-center text-slate-300">Pg {currentPage}/{numPages}</span>
@@ -561,7 +610,7 @@ export default function PDFEditorClient() {
           </div>
 
           <button onClick={exportPdf} disabled={isProcessing} className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-bold px-4 py-2 rounded-xl transition-all shadow-lg shadow-indigo-500/20">
-            <Download size={16} /> <span className="hidden sm:inline">{isProcessing ? "Exporting..." : "Export PDF"}</span>
+            <Download size={16} /> <span className="hidden sm:inline">{exportProgress || (isProcessing ? "Exporting..." : "Export PDF")}</span>
           </button>
         </div>
 
@@ -600,9 +649,10 @@ export default function PDFEditorClient() {
 
           <div className="w-px h-6 bg-slate-700 mx-1" />
           
-          <button onClick={() => insertStamp("APPROVED", "#22c55e")} className="flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all text-sm font-medium text-green-400 hover:bg-slate-800 border border-transparent"><Stamp size={16} /><span className="hidden xl:inline">Approve</span></button>
-          <button onClick={() => insertStamp("REJECTED", "#ef4444")} className="flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all text-sm font-medium text-red-400 hover:bg-slate-800 border border-transparent"><Stamp size={16} /><span className="hidden xl:inline">Reject</span></button>
-          <button onClick={insertWatermark} className="flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all text-sm font-medium text-blue-400 hover:bg-slate-800 border border-transparent"><Droplet size={16} /><span className="hidden xl:inline">Watermark</span></button>
+          <button onClick={() => insertStamp("APPROVED", "#16a34a")} className="flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all text-sm font-medium text-green-400 hover:bg-slate-800 border border-transparent"><Stamp size={16} /><span className="hidden xl:inline">Approved</span></button>
+          <button onClick={() => insertStamp("REJECTED", "#dc2626")} className="flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all text-sm font-medium text-red-400 hover:bg-slate-800 border border-transparent"><Stamp size={16} /><span className="hidden xl:inline">Rejected</span></button>
+          <button onClick={() => insertStamp("DRAFT", "#d97706")} className="flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all text-sm font-medium text-amber-400 hover:bg-slate-800 border border-transparent"><Stamp size={16} /><span className="hidden xl:inline">Draft</span></button>
+          <button onClick={() => setIsWatermarkOpen(o => !o)} className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all text-sm font-medium border ${isWatermarkOpen ? "bg-blue-500/20 text-blue-400 border-blue-500/30" : "text-blue-400 hover:bg-slate-800 border-transparent"}`}><Droplet size={16} /><span className="hidden xl:inline">Watermark</span></button>
 
           <div className="w-px h-6 bg-slate-700 mx-1" />
 
@@ -627,11 +677,40 @@ export default function PDFEditorClient() {
             </>
           )}
 
+          {tool === "highlight" && (
+            <>
+              <div className="w-px h-6 bg-slate-700 mx-1" />
+              {["#ffff00","#bbf7d0","#bfdbfe","#fecaca","#f9a8d4"].map(c => (
+                <button key={c} onClick={() => setHighlightColor(c)} className={`w-5 h-5 rounded-full border-2 ${highlightColor===c?"border-white scale-125":"border-transparent"} transition-all`} style={{background:c}} />
+              ))}
+            </>
+          )}
+
           {(tool === "pen" || tool === "arrow" || tool === "line" || tool === "rect" || tool === "ellipse") && (
             <input type="range" min="1" max="15" value={currentStrokeW} onChange={e => setCurrentStrokeW(Number(e.target.value))} className="w-20 accent-indigo-500" title="Stroke Width" />
           )}
+
+          {/* Watermark Panel */}
+          {isWatermarkOpen && (
+            <div className="absolute top-full left-0 right-0 bg-[#0F1420] border-t border-slate-700 px-6 py-3 flex items-center gap-4 shadow-lg z-40">
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Watermark</span>
+              <input value={watermarkText} onChange={e => setWatermarkText(e.target.value)} placeholder="Text..." className="bg-slate-800 text-white text-sm px-3 py-1.5 rounded-lg border border-slate-700 outline-none focus:border-indigo-500 w-48" />
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-slate-500">Opacity</span>
+                <input type="range" min="5" max="80" value={Math.round(watermarkOpacity*100)} onChange={e => setWatermarkOpacity(Number(e.target.value)/100)} className="w-24 accent-indigo-500" />
+                <span className="text-xs text-slate-400 w-8">{Math.round(watermarkOpacity*100)}%</span>
+              </div>
+              <button onClick={insertWatermark} className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-1.5 rounded-lg transition-colors">Apply</button>
+              <button onClick={() => setIsWatermarkOpen(false)} className="text-slate-500 hover:text-white"><X size={16}/></button>
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Toast Notification */}
+      {toast && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-sm font-semibold px-5 py-3 rounded-full shadow-2xl border border-slate-700 z-[200] pointer-events-none transition-all">{toast}</div>
+      )}
 
       <div className="flex flex-1 overflow-hidden">
         {/* Page Navigator Sidebar */}
