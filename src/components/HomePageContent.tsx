@@ -6,6 +6,7 @@ import SearchableToolGrid from "@/components/SearchableToolGrid";
 import Link from "next/link";
 import Image from "next/image";
 import { blogPosts } from "@/data/blogPosts";
+import OSINTHeroCard from "./OSINTHeroCard";
 
 // Animated counter hook
 function useCountUp(target: number, duration = 1200, start = false) {
@@ -144,8 +145,26 @@ export default function HomePageContent() {
       {/* ── Tool Grid ── */}
       <SearchableToolGrid searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
+      {/* ── OSINT Dashboard Special Entry ── */}
+      <section className="w-full py-16 px-4 relative">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-6 flex items-center justify-between">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] text-[#00ff88] uppercase mb-2">
+                <span className="w-4 h-px bg-[#00ff88]" />
+                Restricted Access
+              </div>
+              <h2 className="text-xl md:text-2xl font-black text-white tracking-tight">Intelligence &amp; Reconnaissance</h2>
+            </div>
+          </div>
+          <div className="w-full">
+            <OSINTHeroCard />
+          </div>
+        </div>
+      </section>
+
       {/* ── Blog Preview Section ── */}
-      <section className="w-full py-20 px-4 border-t border-white/5 mt-16">
+      <section className="w-full py-20 px-4 border-t border-white/5 mt-4">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-10">
             <div className="space-y-1">
