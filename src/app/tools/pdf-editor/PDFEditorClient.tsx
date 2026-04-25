@@ -303,9 +303,9 @@ export default function PDFEditorClient() {
       
       // Easter Egg
       try {
-        const msg = new SpeechSynthesisUtterance("Aaaaaahhhhh... Softly you human... I am a machine!");
+        const msg = new SpeechSynthesisUtterance("Heyy human, softlyyy, I am a machine");
         msg.pitch = 2.0; // Max pitch to force a feminine tone even on default voices
-        msg.rate = 0.6; // Slower for an exaggerated sigh
+        msg.rate = 0.8; // Slightly faster now since we removed the sigh
         const voices = window.speechSynthesis.getVoices();
         
         // Aggressively search for any known female voice
@@ -328,7 +328,7 @@ export default function PDFEditorClient() {
         
         const toast = document.createElement("div");
         toast.className = "fixed bottom-20 left-1/2 -translate-x-1/2 bg-pink-500 text-white px-6 py-3 rounded-full font-bold shadow-2xl z-[9999] animate-bounce pointer-events-none border-2 border-pink-400";
-        toast.innerText = "🤖 AHH! SOFTLY U HUMAN, I AM A MACHINE!";
+        toast.innerText = "🤖 HEYY HUMAN, SOFTLYYY, I AM A MACHINE!";
         document.body.appendChild(toast);
         setTimeout(() => { toast.style.opacity = "0"; toast.style.transition = "opacity 0.5s"; setTimeout(() => toast.remove(), 500); }, 2500);
       } catch (e) {}
