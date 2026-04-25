@@ -303,9 +303,14 @@ export default function PDFEditorClient() {
       
       // Easter Egg
       try {
-        const msg = new SpeechSynthesisUtterance("Ahhh. Softly you human, I am a machine!");
-        msg.pitch = 1.5;
-        msg.rate = 0.9;
+        const msg = new SpeechSynthesisUtterance("Aaaaaahhhhh... Softly you human... I am a machine!");
+        msg.pitch = 1.8; // Higher pitch for female tone
+        msg.rate = 0.6; // Slower for an exaggerated, funny sigh
+        const voices = window.speechSynthesis.getVoices();
+        // Try to select a known standard female voice
+        const femaleVoice = voices.find(v => v.name.includes("Zira") || v.name.includes("Samantha") || v.name.includes("Female") || v.name.includes("Victoria"));
+        if (femaleVoice) msg.voice = femaleVoice;
+        
         window.speechSynthesis.speak(msg);
         
         const toast = document.createElement("div");
