@@ -1,68 +1,44 @@
-import { Metadata } from 'next';
-import ResumeBuilderClient from './ResumeBuilderClient';
-import { generateWebAppJsonLd } from '@/lib/seo-helpers';
+import { generateToolMetadata, generateWebAppJsonLd } from "@/lib/seo-helpers";
+import ResumeBuilderClient from "./ResumeBuilderClient";
 
-export const metadata: Metadata = {
-  title: 'Resume Builder Pro | Create Professional ATS-Friendly Resumes',
-  description: 'Build a premium, professional resume in minutes with our high-quality builder. Privacy-focused, client-side generation with elite PDF templates.',
-  keywords: ['resume builder', 'cv maker', 'professional resume', 'ATS friendly resume', 'free resume creator', 'premium cv designer'],
-};
+export const metadata = generateToolMetadata({
+  toolName: "Resume Builder Pro",
+  slug: "resume-builder",
+  description: "Create a professional, ATS-friendly resume online for free. Beautiful templates, PDF export, privacy-first — all data stays in your browser. No signup required.",
+  keywords: [
+    "resume builder free",
+    "cv maker online",
+    "ats friendly resume builder",
+    "professional resume template",
+    "free resume creator",
+    "resume pdf download",
+    "cv builder no signup",
+    "free resume maker",
+  ],
+});
 
 export default function ResumeBuilderPage() {
-  const jsonLd = generateWebAppJsonLd({
-    toolName: 'Resume Builder Pro',
-    slug: 'resume-builder',
-    description: 'Elite professional resume and CV builder with high-quality PDF export and ATS optimization.',
-  });
+  const faqs = [
+    { question: "Is this resume builder really free?", answer: "Yes. Resume Builder Pro is part of CosmoxHub's free tool suite — no hidden subscriptions, no watermarks, no signup required." },
+    { question: "Can I save my resume and edit it later?", answer: "Yes. Your resume data is saved in your browser's local storage. As long as you use the same browser, your data will be there when you return." },
+    { question: "Is my personal data private?", answer: "Completely. All data stays in your browser. Nothing is uploaded to any server. Your name, contact information, and work history are never transmitted anywhere." },
+    { question: "Is this resume ATS-compatible?", answer: "Yes. Our builder uses standard fonts, clean hierarchy, and logical structure to ensure your resume passes ATS screening systems used by major employers." },
+  ];
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: generateWebAppJsonLd({
+            toolName: "Resume Builder Pro",
+            slug: "resume-builder",
+            description: "Free ATS-friendly professional resume builder with PDF export. No signup. 100% browser-based.",
+            faqs,
+          }),
+        }}
       />
-      
       <ResumeBuilderClient />
-
-      {/* SEO Content Section */}
-      <section className="mt-20 max-w-4xl mx-auto prose prose-invert">
-        <h2 className="text-3xl font-bold text-white mb-6">Why Use Our Resume Builder Pro?</h2>
-        <p className="text-zinc-400 leading-relaxed text-lg">
-          In today&apos;s competitive job market, your resume is your first impression. Our <strong>Resume Builder Pro</strong> is designed to help you stand out 
-          without the hassle of complex formatting tools. We combine beautiful, modern design with strict adherence to <strong>ATS (Applicant Tracking System)</strong> standards.
-        </p>
-        
-        <div className="grid md:grid-cols-2 gap-8 my-12">
-          <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800">
-            <h3 className="text-purple-400 font-bold mb-2">Privacy First</h3>
-            <p className="text-sm text-zinc-500">Your personal data never leaves your browser. All processing is done locally, ensuring 100% privacy and security for your sensitive information.</p>
-          </div>
-          <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800">
-            <h3 className="text-purple-400 font-bold mb-2">High-Quality Export</h3>
-            <p className="text-sm text-zinc-500">Generate professional, high-resolution PDF documents that look perfect on any screen or when printed for physical copies.</p>
-          </div>
-          <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800">
-            <h3 className="text-purple-400 font-bold mb-2">Modern Aesthetics</h3>
-            <p className="text-sm text-zinc-500">Forget outdated Word templates. Our builder uses elite design principles to create a visual identity that screams professionalism.</p>
-          </div>
-          <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800">
-            <h3 className="text-purple-400 font-bold mb-2">ATS Optimized</h3>
-            <p className="text-sm text-zinc-500">We use clear hierarchy, standard fonts, and logical structures to ensure your resume passes through automated screening systems flawlessly.</p>
-          </div>
-        </div>
-
-        <h2 className="text-2xl font-bold text-white mt-12 mb-4">Frequently Asked Questions</h2>
-        <div className="space-y-6">
-          <div>
-            <h4 className="text-white font-bold">Is this resume builder really free?</h4>
-            <p className="text-zinc-400">Yes, the Resume Builder Pro is part of the CosmoxHub suite of high-utility tools and is completely free to use with no hidden subscriptions.</p>
-          </div>
-          <div>
-            <h4 className="text-white font-bold">Can I save my resume and come back later?</h4>
-            <p className="text-zinc-400">Absolutely. We use browser local storage to keep your data synced. As long as you use the same browser, your data will be waiting for you.</p>
-          </div>
-        </div>
-      </section>
-    </div>
+    </>
   );
 }

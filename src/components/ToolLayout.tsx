@@ -86,12 +86,14 @@ export default function ToolLayout({
         </div>
 
         {/* ── Tool UI Area ─────────────────────────────────────────── */}
-        <div className="max-w-4xl mx-auto px-4 py-14">
+        <div className="max-w-4xl mx-auto px-4 py-16">
           {children}
         </div>
 
-        {/* ── Verified Quality & Privacy Signal ────────────────────────── */}
-        <div className="max-w-4xl mx-auto px-4 pt-10 pb-12 border-t border-white/5">
+        {/* ── Breathing Spacer ─────────────────────────────────────── */}
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="border-t border-white/5" />
+        </div>
           <div className="bg-gradient-to-br from-white/[0.03] to-transparent border border-white/[0.06] hover:border-green-500/20 rounded-[2rem] p-8 relative overflow-hidden group transition-all duration-500 hover:shadow-lg hover:shadow-green-500/5">
             <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-25 transition-opacity duration-500">
               <Wrench size={120} className="rotate-12 group-hover:rotate-[20deg] transition-transform duration-700" />
