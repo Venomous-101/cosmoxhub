@@ -304,12 +304,25 @@ export default function PDFEditorClient() {
       // Easter Egg
       try {
         const msg = new SpeechSynthesisUtterance("Aaaaaahhhhh... Softly you human... I am a machine!");
-        msg.pitch = 1.8; // Higher pitch for female tone
-        msg.rate = 0.6; // Slower for an exaggerated, funny sigh
+        msg.pitch = 2.0; // Max pitch to force a feminine tone even on default voices
+        msg.rate = 0.6; // Slower for an exaggerated sigh
         const voices = window.speechSynthesis.getVoices();
-        // Try to select a known standard female voice
-        const femaleVoice = voices.find(v => v.name.includes("Zira") || v.name.includes("Samantha") || v.name.includes("Female") || v.name.includes("Victoria"));
-        if (femaleVoice) msg.voice = femaleVoice;
+        
+        // Aggressively search for any known female voice
+        const femaleVoice = voices.find(v => {
+          const name = v.name.toLowerCase();
+          return name.includes("zira") || 
+                 name.includes("samantha") || 
+                 name.includes("victoria") || 
+                 name.includes("hazel") || 
+                 name.includes("susan") || 
+                 name.includes("female") || 
+                 name.includes("karen");
+        });
+        
+        if (femaleVoice) {
+          msg.voice = femaleVoice;
+        }
         
         window.speechSynthesis.speak(msg);
         
