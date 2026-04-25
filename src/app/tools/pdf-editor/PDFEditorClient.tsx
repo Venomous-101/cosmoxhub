@@ -254,23 +254,31 @@ export default function PDFEditorClient() {
     loadPdf();
   }, [file]);
 
-  // Render all pages when PDF or scale changes
+  // Render all pages when PDF or scale changes — lossless, pixel-perfect quality
   useEffect(() => {
     if (!pdfDocProxy || numPages === 0) return;
+    const dpr = window.devicePixelRatio || 1;
     const renderAll = async () => {
       const dims: {width: number, height: number}[] = [];
       for (let i = 1; i <= numPages; i++) {
         try {
           if (renderTaskRefs.current[i-1]) renderTaskRefs.current[i-1]?.cancel();
           const page = await pdfDocProxy.getPage(i);
-          const viewport = page.getViewport({ scale });
+          // Render at physical resolution (scale × DPR) for sharpness
+          const viewport = page.getViewport({ scale: scale * dpr });
           const canvas = canvasRefs.current[i-1];
-          if (!canvas) { dims.push({width: viewport.width, height: viewport.height}); continue; }
+          const cssW = viewport.width / dpr;
+          const cssH = viewport.height / dpr;
+          dims.push({ width: cssW, height: cssH });
+          if (!canvas) continue;
           const context = canvas.getContext("2d");
-          if (!context) { dims.push({width: viewport.width, height: viewport.height}); continue; }
-          canvas.height = viewport.height;
+          if (!context) continue;
+          // Physical canvas size = full resolution
           canvas.width = viewport.width;
-          dims.push({width: viewport.width, height: viewport.height});
+          canvas.height = viewport.height;
+          // CSS display size = layout size (avoids blur on retina)
+          canvas.style.width = `${cssW}px`;
+          canvas.style.height = `${cssH}px`;
           renderTaskRefs.current[i-1] = page.render({ canvasContext: context, viewport } as any);
           await renderTaskRefs.current[i-1]!.promise;
         } catch (err) {}
