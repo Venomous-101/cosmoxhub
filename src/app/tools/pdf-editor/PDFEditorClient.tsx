@@ -12,7 +12,7 @@ import Draggable from "react-draggable";
 import { saveAs } from "file-saver";
 import { Ann, Tool, pathD, hexToRgb01 } from "./types";
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 
 export default function PDFEditorClient() {
   const [file, setFile] = useState<File | null>(null);
@@ -28,6 +28,9 @@ export default function PDFEditorClient() {
   const [historyStep, setHistoryStep] = useState(0);
   const [selectedAnnId, setSelectedAnnId] = useState<string | null>(null);
   
+  // Canvas Size
+  const [canvasDim, setCanvasDim] = useState({ width: 0, height: 0 });
+
   // Default properties for new annotations
   const [currentColor, setCurrentColor] = useState("#1a1aff");
   const [currentFontSize, setCurrentFontSize] = useState(18);
@@ -42,6 +45,13 @@ export default function PDFEditorClient() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [isDraggingFile, setIsDraggingFile] = useState(false);
+
+  // Signature State
+  const [isSigning, setIsSigning] = useState(false);
+  const signCanvasRef = useRef<HTMLDivElement>(null);
+  const [signStroke, setSignStroke] = useState<{x: number, y: number}[]>([]);
+  const [signStrokes, setSignStrokes] = useState<{x: number, y: number}[][]>([]);
+  const [isSignDrawing, setIsSignDrawing] = useState(false);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -88,7 +98,8 @@ export default function PDFEditorClient() {
         setHistoryStep(0);
         setErrorMsg("");
       } catch (err: unknown) {
-        setErrorMsg("Failed to load PDF. " + (err instanceof Error ? err.message : String(err)));
+        console.error("PDF Load Error:", err);
+        setErrorMsg("Failed to load PDF. Please make sure it's a valid document.");
       }
     };
     loadPdf();
@@ -109,6 +120,7 @@ export default function PDFEditorClient() {
 
         canvas.height = viewport.height;
         canvas.width = viewport.width;
+        setCanvasDim({ width: viewport.width, height: viewport.height });
 
         const renderContext: any = { canvasContext: context, viewport };
         renderTaskRef.current = page.render(renderContext);
@@ -144,7 +156,7 @@ export default function PDFEditorClient() {
       id: Date.now().toString(),
       page: currentPage,
       type: "text",
-      x: 60, y: 60,
+      x: 60 / scale, y: 60 / scale, // Store normalized coordinates
       text: "Double click to edit",
       fontSize: currentFontSize,
       color: currentColor,
@@ -164,7 +176,7 @@ export default function PDFEditorClient() {
         id: Date.now().toString(),
         page: currentPage,
         type: "image",
-        x: 60, y: 60, w: 160, h: 100,
+        x: 60 / scale, y: 60 / scale, w: 160, h: 100, // Store normalized coordinates and dims
         imgSrc: ev.target?.result as string,
       };
       saveHistory([...annotations, ann]);
@@ -197,12 +209,13 @@ export default function PDFEditorClient() {
       clientX = (e as React.MouseEvent).clientX;
       clientY = (e as React.MouseEvent).clientY;
     }
-    return { x: clientX - rect.left, y: clientY - rect.top };
+    // Return coordinates normalized to scale=1
+    return { x: (clientX - rect.left) / scale, y: (clientY - rect.top) / scale };
   };
 
   const onPointerDown = (e: React.MouseEvent | React.TouchEvent) => {
     if (tool === "select") {
-      if (e.target === containerRef.current || e.target === canvasRef.current) {
+      if (e.target === containerRef.current || e.target === canvasRef.current || (e.target as HTMLElement).tagName === "svg") {
         setSelectedAnnId(null);
       }
       return;
@@ -286,17 +299,15 @@ export default function PDFEditorClient() {
         const pdfPage = pages[pNum - 1];
 
         for (const ann of pageAnns) {
-          const sx = (val: number) => val / scale;
-          const sy = (val: number) => pageHeight - (val / scale); // invert Y for pdf-lib
-
+          // ann is already stored in normalized (scale=1) coordinates!
           const rgbColor = ann.color ? rgb(...hexToRgb01(ann.color)) : rgb(0,0,0);
           const opacity = ann.opacity || 1;
 
           if (ann.type === "text" && ann.text && ann.x !== undefined && ann.y !== undefined) {
-            const fs = (ann.fontSize || 16) / scale;
+            const fs = ann.fontSize || 16;
             pdfPage.drawText(ann.text, {
-              x: sx(ann.x),
-              y: sy(ann.y) - fs, // adjust baseline
+              x: ann.x,
+              y: pageHeight - ann.y - fs, // pdf-lib Y is inverted, adjust baseline
               size: fs,
               color: rgbColor,
               opacity,
@@ -307,20 +318,16 @@ export default function PDFEditorClient() {
             if (ann.imgSrc.startsWith("data:image/png")) img = await pdfDoc.embedPng(ann.imgSrc);
             else img = await pdfDoc.embedJpg(ann.imgSrc);
             
-            const w = sx(ann.w);
-            const h = sx(ann.h);
-            pdfPage.drawImage(img, { x: sx(ann.x), y: sy(ann.y) - h, width: w, height: h, opacity });
+            pdfPage.drawImage(img, { x: ann.x, y: pageHeight - ann.y - ann.h, width: ann.w, height: ann.h, opacity });
           }
           else if ((ann.type === "pen" || ann.type === "highlight") && ann.strokes) {
-            // pdf-lib drawSvgPath is tricky with inverted Y. 
-            // Better to draw as lines
             for (const stroke of ann.strokes) {
               for (let i = 0; i < stroke.length - 1; i++) {
                 pdfPage.drawLine({
-                  start: { x: sx(stroke[i].x), y: sy(stroke[i].y) },
-                  end: { x: sx(stroke[i+1].x), y: sy(stroke[i+1].y) },
+                  start: { x: stroke[i].x, y: pageHeight - stroke[i].y },
+                  end: { x: stroke[i+1].x, y: pageHeight - stroke[i+1].y },
                   color: rgbColor,
-                  thickness: (ann.strokeW || 3) / scale,
+                  thickness: ann.strokeW || 3,
                   opacity,
                 });
               }
@@ -328,23 +335,23 @@ export default function PDFEditorClient() {
           }
           else if (ann.type === "rect" && ann.x !== undefined && ann.y !== undefined && ann.w && ann.h) {
             pdfPage.drawRectangle({
-              x: sx(ann.x),
-              y: sy(ann.y) - sx(ann.h),
-              width: sx(ann.w),
-              height: sx(ann.h),
+              x: ann.x,
+              y: pageHeight - ann.y - ann.h,
+              width: ann.w,
+              height: ann.h,
               borderColor: rgbColor,
-              borderWidth: (ann.strokeW || 3) / scale,
+              borderWidth: ann.strokeW || 3,
               opacity,
             });
           }
           else if (ann.type === "ellipse" && ann.x !== undefined && ann.y !== undefined && ann.w && ann.h) {
             pdfPage.drawEllipse({
-              x: sx(ann.x) + sx(ann.w)/2,
-              y: sy(ann.y) - sx(ann.h)/2,
-              xScale: sx(ann.w)/2,
-              yScale: sx(ann.h)/2,
+              x: ann.x + ann.w/2,
+              y: pageHeight - (ann.y + ann.h/2),
+              xScale: ann.w/2,
+              yScale: ann.h/2,
               borderColor: rgbColor,
-              borderWidth: (ann.strokeW || 3) / scale,
+              borderWidth: ann.strokeW || 3,
               opacity,
             });
           }
@@ -355,10 +362,77 @@ export default function PDFEditorClient() {
       const blob = new Blob([pdfBytes.buffer as ArrayBuffer], { type: "application/pdf" });
       saveAs(blob, `edited_${file.name}`);
     } catch (err: unknown) {
-      setErrorMsg("Export failed: " + (err instanceof Error ? err.message : String(err)));
+      setErrorMsg("Export failed. Something went wrong while saving the PDF.");
     } finally {
       setIsProcessing(false);
     }
+  };
+
+  // --- Signature Logic ---
+  const getSignPointerPos = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!signCanvasRef.current) return { x: 0, y: 0 };
+    const rect = signCanvasRef.current.getBoundingClientRect();
+    let clientX = 0, clientY = 0;
+    if ("touches" in e) {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else {
+      clientX = (e as React.MouseEvent).clientX;
+      clientY = (e as React.MouseEvent).clientY;
+    }
+    return { x: clientX - rect.left, y: clientY - rect.top };
+  };
+
+  const onSignPointerDown = (e: React.MouseEvent | React.TouchEvent) => {
+    setIsSignDrawing(true);
+    setSignStroke([getSignPointerPos(e)]);
+  };
+
+  const onSignPointerMove = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!isSignDrawing) return;
+    setSignStroke(prev => [...prev, getSignPointerPos(e)]);
+  };
+
+  const onSignPointerUp = () => {
+    if (!isSignDrawing) return;
+    setIsSignDrawing(false);
+    if (signStroke.length > 1) {
+      setSignStrokes(prev => [...prev, signStroke]);
+    }
+    setSignStroke([]);
+  };
+
+  const insertSignature = () => {
+    if (signStrokes.length === 0) return;
+    const canvas = document.createElement("canvas");
+    canvas.width = 400; canvas.height = 200;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.lineWidth = 3;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = "#000";
+    signStrokes.forEach(stroke => {
+      if (stroke.length === 0) return;
+      ctx.beginPath();
+      ctx.moveTo(stroke[0].x, stroke[0].y);
+      for (let i = 1; i < stroke.length; i++) {
+        ctx.lineTo(stroke[i].x, stroke[i].y);
+      }
+      ctx.stroke();
+    });
+    const ann: Ann = {
+      id: Date.now().toString(),
+      page: currentPage,
+      type: "image",
+      x: 60 / scale, y: 60 / scale, w: 200, h: 100,
+      imgSrc: canvas.toDataURL("image/png"),
+    };
+    saveHistory([...annotations, ann]);
+    setSelectedAnnId(ann.id);
+    setSignStrokes([]);
+    setIsSigning(false);
+    setTool("select");
   };
 
   const pageAnns = annotations.filter(a => a.page === currentPage);
@@ -470,9 +544,14 @@ export default function PDFEditorClient() {
           
           <label className="flex items-center gap-3 p-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition-all cursor-pointer">
             <ImageIcon size={18} className="shrink-0" />
-            <span className="hidden md:block text-sm font-semibold">Image / Sign</span>
+            <span className="hidden md:block text-sm font-semibold">Image</span>
             <input type="file" accept="image/png, image/jpeg" className="hidden" onChange={addImage} />
           </label>
+
+          <button onClick={() => setIsSigning(true)} className="flex items-center gap-3 p-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition-all">
+            <PenTool size={18} className="shrink-0" />
+            <span className="hidden md:block text-sm font-semibold">Signature</span>
+          </button>
 
           {/* Settings Panel */}
           {(tool === "pen" || tool === "rect" || tool === "ellipse" || selectedAnn?.type === "text") && (
@@ -522,7 +601,7 @@ export default function PDFEditorClient() {
         >
           <div
             className={`relative bg-white shadow-2xl shadow-black/50 ${tool !== "select" ? "cursor-crosshair" : ""}`}
-            style={{ width: canvasRef.current?.width || "auto", height: canvasRef.current?.height || "auto" }}
+            style={{ width: canvasDim.width || "auto", height: canvasDim.height || "auto" }}
             onMouseDown={onPointerDown}
             onMouseMove={onPointerMove}
             onMouseUp={onPointerUp}
@@ -533,45 +612,47 @@ export default function PDFEditorClient() {
           >
             <canvas ref={canvasRef} className="block pointer-events-none" />
 
-            {/* Render Annotations */}
+            {/* Render Annotations (Vectors) */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 10 }}>
-              {pageAnns.map(ann => {
-                if ((ann.type === "pen" || ann.type === "highlight") && ann.strokes) {
-                  return (
-                    <g key={ann.id}>
-                      {ann.strokes.map((stroke, i) => (
-                        <path key={i} d={pathD(stroke)} fill="none" stroke={ann.color} strokeWidth={ann.strokeW} strokeLinecap="round" strokeLinejoin="round" opacity={ann.opacity} />
-                      ))}
-                    </g>
-                  );
-                }
-                if (ann.type === "rect" && ann.x !== undefined) {
-                  return <rect key={ann.id} x={ann.x} y={ann.y} width={ann.w} height={ann.h} fill="none" stroke={ann.color} strokeWidth={ann.strokeW} opacity={ann.opacity} />;
-                }
-                if (ann.type === "ellipse" && ann.x !== undefined && ann.w) {
-                  return <ellipse key={ann.id} cx={ann.x + ann.w/2} cy={(ann.y||0) + (ann.h||0)/2} rx={ann.w/2} ry={(ann.h||0)/2} fill="none" stroke={ann.color} strokeWidth={ann.strokeW} opacity={ann.opacity} />;
-                }
-                return null;
-              })}
+              <g style={{ transform: `scale(${scale})`, transformOrigin: "0 0" }}>
+                {pageAnns.map(ann => {
+                  if ((ann.type === "pen" || ann.type === "highlight") && ann.strokes) {
+                    return (
+                      <g key={ann.id}>
+                        {ann.strokes.map((stroke, i) => (
+                          <path key={i} d={pathD(stroke)} fill="none" stroke={ann.color} strokeWidth={ann.strokeW} strokeLinecap="round" strokeLinejoin="round" opacity={ann.opacity} />
+                        ))}
+                      </g>
+                    );
+                  }
+                  if (ann.type === "rect" && ann.x !== undefined) {
+                    return <rect key={ann.id} x={ann.x} y={ann.y} width={ann.w} height={ann.h} fill="none" stroke={ann.color} strokeWidth={ann.strokeW} opacity={ann.opacity} />;
+                  }
+                  if (ann.type === "ellipse" && ann.x !== undefined && ann.w) {
+                    return <ellipse key={ann.id} cx={ann.x + ann.w/2} cy={(ann.y||0) + (ann.h||0)/2} rx={ann.w/2} ry={(ann.h||0)/2} fill="none" stroke={ann.color} strokeWidth={ann.strokeW} opacity={ann.opacity} />;
+                  }
+                  return null;
+                })}
 
-              {/* Active Drawing */}
-              {isDrawing && currentStroke.length > 0 && (tool === "pen" || tool === "highlight") && (
-                <path d={pathD(currentStroke)} fill="none" stroke={tool === "highlight" ? "#ffff00" : currentColor} strokeWidth={tool === "highlight" ? 15 : currentStrokeW} strokeLinecap="round" strokeLinejoin="round" opacity={tool === "highlight" ? 0.4 : 1} />
-              )}
-              {isDrawing && drawStart && drawCurrent && tool === "rect" && (
-                <rect x={Math.min(drawStart.x, drawCurrent.x)} y={Math.min(drawStart.y, drawCurrent.y)} width={Math.abs(drawCurrent.x - drawStart.x)} height={Math.abs(drawCurrent.y - drawStart.y)} fill="none" stroke={currentColor} strokeWidth={currentStrokeW} />
-              )}
-              {isDrawing && drawStart && drawCurrent && tool === "ellipse" && (
-                <ellipse cx={Math.min(drawStart.x, drawCurrent.x) + Math.abs(drawCurrent.x - drawStart.x)/2} cy={Math.min(drawStart.y, drawCurrent.y) + Math.abs(drawCurrent.y - drawStart.y)/2} rx={Math.abs(drawCurrent.x - drawStart.x)/2} ry={Math.abs(drawCurrent.y - drawStart.y)/2} fill="none" stroke={currentColor} strokeWidth={currentStrokeW} />
-              )}
+                {/* Active Drawing */}
+                {isDrawing && currentStroke.length > 0 && (tool === "pen" || tool === "highlight") && (
+                  <path d={pathD(currentStroke)} fill="none" stroke={tool === "highlight" ? "#ffff00" : currentColor} strokeWidth={tool === "highlight" ? 15 : currentStrokeW} strokeLinecap="round" strokeLinejoin="round" opacity={tool === "highlight" ? 0.4 : 1} />
+                )}
+                {isDrawing && drawStart && drawCurrent && tool === "rect" && (
+                  <rect x={Math.min(drawStart.x, drawCurrent.x)} y={Math.min(drawStart.y, drawCurrent.y)} width={Math.abs(drawCurrent.x - drawStart.x)} height={Math.abs(drawCurrent.y - drawStart.y)} fill="none" stroke={currentColor} strokeWidth={currentStrokeW} />
+                )}
+                {isDrawing && drawStart && drawCurrent && tool === "ellipse" && (
+                  <ellipse cx={Math.min(drawStart.x, drawCurrent.x) + Math.abs(drawCurrent.x - drawStart.x)/2} cy={Math.min(drawStart.y, drawCurrent.y) + Math.abs(drawCurrent.y - drawStart.y)/2} rx={Math.abs(drawCurrent.x - drawStart.x)/2} ry={Math.abs(drawCurrent.y - drawStart.y)/2} fill="none" stroke={currentColor} strokeWidth={currentStrokeW} />
+                )}
+              </g>
             </svg>
 
             {/* Draggable Overlays (Text / Images) */}
             {pageAnns.filter(a => a.type === "text" || a.type === "image").map(ann => (
               <Draggable
                 key={ann.id}
-                position={{ x: ann.x || 0, y: ann.y || 0 }}
-                onStop={(_, data) => updateAnn(ann.id, { x: data.x, y: data.y })}
+                position={{ x: (ann.x || 0) * scale, y: (ann.y || 0) * scale }}
+                onStop={(_, data) => updateAnn(ann.id, { x: data.x / scale, y: data.y / scale })}
                 disabled={tool !== "select"}
                 bounds="parent"
               >
@@ -581,23 +662,23 @@ export default function PDFEditorClient() {
                   className={`absolute z-20 ${tool === "select" ? "cursor-move" : "pointer-events-none"} ${selectedAnnId === ann.id ? "ring-2 ring-indigo-500 rounded" : ""}`}
                 >
                   {ann.type === "text" ? (
-                    <div style={{ fontSize: `${ann.fontSize}px`, color: ann.color, whiteSpace: "pre", padding: "2px" }}>
+                    <div style={{ fontSize: `${(ann.fontSize || 16) * scale}px`, color: ann.color, whiteSpace: "pre", padding: "2px" }}>
                       {selectedAnnId === ann.id ? (
                         <textarea
                           autoFocus
                           value={ann.text}
                           onChange={e => updateAnn(ann.id, { text: e.target.value }, true)}
                           onBlur={() => saveHistory([...annotations])}
-                          className="bg-transparent outline-none resize-none overflow-hidden m-0 p-0"
-                          style={{ color: ann.color, minWidth: "150px", height: `${(ann.fontSize||16)*1.5}px` }}
+                          className="bg-transparent outline-none resize-none overflow-hidden m-0 p-0 block"
+                          style={{ color: ann.color, minWidth: `${100 * scale}px`, height: `${(ann.fontSize||16) * 1.5 * scale}px`, lineHeight: 1.2 }}
                         />
                       ) : (
-                        <span>{ann.text}</span>
+                        <span style={{ lineHeight: 1.2, display: "block" }}>{ann.text}</span>
                       )}
                     </div>
                   ) : (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={ann.imgSrc} alt="" style={{ width: `${ann.w}px`, height: `${ann.h}px`, objectFit: "contain" }} draggable={false} />
+                    <img src={ann.imgSrc} alt="" style={{ width: `${(ann.w || 0) * scale}px`, height: `${(ann.h || 0) * scale}px`, objectFit: "contain" }} draggable={false} />
                   )}
                   
                   {/* Delete button for selected item */}
@@ -612,6 +693,51 @@ export default function PDFEditorClient() {
           </div>
         </main>
       </div>
+      {/* Signature Modal */}
+      {isSigning && (
+        <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-slate-900 rounded-3xl w-full max-w-lg overflow-hidden border border-slate-700 shadow-2xl">
+            <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+              <h3 className="text-lg font-bold text-white">Draw Signature</h3>
+              <button onClick={() => setIsSigning(false)} className="text-slate-400 hover:text-white">
+                <X size={20} />
+              </button>
+            </div>
+            <div className="p-6 bg-slate-800/30">
+              <div 
+                ref={signCanvasRef}
+                className="w-full h-48 bg-white rounded-2xl cursor-crosshair relative overflow-hidden shadow-inner border border-slate-300"
+                onMouseDown={onSignPointerDown}
+                onMouseMove={onSignPointerMove}
+                onMouseUp={onSignPointerUp}
+                onMouseLeave={onSignPointerUp}
+                onTouchStart={onSignPointerDown}
+                onTouchMove={onSignPointerMove}
+                onTouchEnd={onSignPointerUp}
+              >
+                <div className="absolute inset-x-8 bottom-12 border-b-2 border-dashed border-slate-300 pointer-events-none" />
+                <svg className="absolute inset-0 w-full h-full pointer-events-none">
+                  {signStrokes.map((stroke, i) => (
+                    <path key={i} d={pathD(stroke)} fill="none" stroke="#000" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
+                  ))}
+                  {isSignDrawing && signStroke.length > 0 && (
+                    <path d={pathD(signStroke)} fill="none" stroke="#000" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
+                  )}
+                </svg>
+              </div>
+              <div className="mt-4 flex gap-3 justify-end">
+                <button onClick={() => setSignStrokes([])} className="px-4 py-2 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">
+                  Clear
+                </button>
+                <button onClick={insertSignature} disabled={signStrokes.length === 0} className="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white rounded-xl text-sm font-bold shadow-lg transition-all">
+                  Insert Signature
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
