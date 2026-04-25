@@ -1,4 +1,4 @@
-export type Tool = "select" | "text" | "image" | "pen" | "highlight" | "rect" | "ellipse" | "whiteout";
+export type Tool = "select" | "text" | "image" | "pen" | "highlight" | "rect" | "ellipse" | "whiteout" | "arrow" | "line" | "stamp" | "watermark" | "date";
 
 export interface Ann {
   id: string;
@@ -6,6 +6,8 @@ export interface Ann {
   type: string;
   x?: number;
   y?: number;
+  x2?: number;
+  y2?: number;
   w?: number;
   h?: number;
   text?: string;
