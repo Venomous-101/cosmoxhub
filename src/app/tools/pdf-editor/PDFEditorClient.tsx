@@ -12,7 +12,7 @@ import Draggable from "react-draggable";
 import { saveAs } from "file-saver";
 import { Ann, Tool, pathD, hexToRgb01 } from "./types";
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
 
 export default function PDFEditorClient() {
   const [file, setFile] = useState<File | null>(null);
