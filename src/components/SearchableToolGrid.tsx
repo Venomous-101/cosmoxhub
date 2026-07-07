@@ -2,6 +2,9 @@
 
 import ToolCard from "./ToolCard";
 import { categories } from "@/lib/tools-data";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 
 interface SearchableToolGridProps {
   searchQuery: string;
@@ -9,6 +12,30 @@ interface SearchableToolGridProps {
 }
 
 export default function SearchableToolGrid({ searchQuery, setSearchQuery }: SearchableToolGridProps) {
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    if (!searchQuery) {
+      const ctx = gsap.context(() => {
+        gsap.utils.toArray<HTMLElement>("section").forEach((section) => {
+          gsap.from(section, {
+            scrollTrigger: {
+              trigger: section,
+              start: "top 90%",
+              toggleActions: "play none none none"
+            },
+            y: 50,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out"
+          });
+        });
+      }, gridRef);
+      return () => ctx.revert();
+    }
+  }, [searchQuery]);
 
   const filteredCategories = categories.map(cat => ({
     ...cat,
@@ -19,7 +46,7 @@ export default function SearchableToolGrid({ searchQuery, setSearchQuery }: Sear
   })).filter(cat => cat.tools.length > 0);
 
   return (
-    <div className="w-full">
+    <div className="w-full" ref={gridRef}>
       <div className="container mx-auto px-4 pb-16 min-h-[40vh]">
 
         {/* CHANGE 1: No ads between categories — clean browsing only */}

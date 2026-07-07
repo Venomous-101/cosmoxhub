@@ -3,6 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import { Search, X, Sparkles, Clock, ArrowRight } from "lucide-react";
 import SearchableToolGrid from "@/components/SearchableToolGrid";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import Link from "next/link";
 import Image from "next/image";
 import { blogPosts } from "@/data/blogPosts";
@@ -48,29 +50,74 @@ const latestPosts = [...blogPosts].reverse().slice(0, 3);
 export default function HomePageContent() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statsVisible, setStatsVisible] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setStatsVisible(true); },
-      { threshold: 0.3 }
-    );
-    if (statsRef.current) observer.observe(statsRef.current);
-    return () => observer.disconnect();
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Hero Animation
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline();
+
+      tl.from(".hero-badge", {
+        y: -20,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out"
+      })
+      .from(".hero-title span", {
+        y: 40,
+        opacity: 0,
+        stagger: 0.15,
+        duration: 1,
+        ease: "power4.out"
+      }, "-=0.4")
+      .from(".hero-description", {
+        y: 20,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out"
+      }, "-=0.6")
+      .from(".search-box", {
+        scale: 0.95,
+        opacity: 0,
+        duration: 0.8,
+        ease: "back.out(1.7)"
+      }, "-=0.4");
+
+      // Stats Animation
+      gsap.from(".stat-item", {
+        scrollTrigger: {
+          trigger: statsRef.current,
+          start: "top 85%",
+        },
+        y: 30,
+        opacity: 0,
+        stagger: 0.2,
+        duration: 0.8,
+        ease: "power3.out",
+        onStart: () => setStatsVisible(true)
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
   }, []);
 
   const tools = useCountUp(28, 1400, statsVisible);
 
   return (
-    <main className="min-h-screen w-full">
+    <main ref={containerRef} className="min-h-screen w-full">
 
       {/* ── Hero Section ── */}
-      <section className="w-full px-4 pt-16 pb-14 relative overflow-hidden">
+      <section ref={heroRef} className="w-full px-4 pt-16 pb-14 relative overflow-hidden">
         <div className="absolute -top-20 left-1/4 w-72 h-72 rounded-full bg-[#7C3AED]/6 blur-3xl pointer-events-none animate-float [animation-delay:0s]" />
         <div className="absolute top-10 right-1/5 w-48 h-48 rounded-full bg-indigo-500/5 blur-2xl pointer-events-none animate-float [animation-delay:1.5s]" />
 
         <div className="flex flex-col items-center w-full relative z-10">
-          <div className="animate-fade-down delay-75 relative inline-flex items-center gap-2 bg-[#7C3AED]/10 border border-[#7C3AED]/25 rounded-full px-4 py-1.5 mb-6">
+          <div className="hero-badge relative inline-flex items-center gap-2 bg-[#7C3AED]/10 border border-[#7C3AED]/25 rounded-full px-4 py-1.5 mb-6">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#7C3AED] opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#A78BFA]"></span>
@@ -81,23 +128,23 @@ export default function HomePageContent() {
             <Sparkles size={12} className="text-[#A78BFA]" />
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tight mb-6 text-white text-center">
-            <span className="inline-block animate-fade-up delay-100">Free Online Tools</span>
+          <h1 className="hero-title text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tight mb-6 text-white text-center">
+            <span className="inline-block">Free Online Tools</span>
             {' '}
-            <span className="inline-block animate-fade-up delay-200">—</span>
+            <span className="inline-block">—</span>
             {' '}
-            <span className="whitespace-nowrap inline-block animate-fade-up delay-300">
+            <span className="whitespace-nowrap inline-block">
               <span className="text-[#7C3AED]">PDF, Image, AI</span>
               <span className="text-white"> &amp; More</span>
             </span>
           </h1>
 
-          <p className="animate-fade-up delay-400 text-gray-400 text-base sm:text-lg max-w-lg text-center leading-relaxed mt-2 mb-10">
+          <p className="hero-description text-gray-400 text-base sm:text-lg max-w-lg text-center leading-relaxed mt-2 mb-10">
             28+ powerful browser-based utilities for PDF, image, AI &amp; text tasks.
             No signup. No limits. <span className="text-[#A78BFA] font-semibold">100% private.</span>
           </p>
 
-          <div className="animate-fade-up delay-500 relative w-full max-w-xl mb-12">
+          <div className="search-box relative w-full max-w-xl mb-12" ref={searchContainerRef}>
             <div className="relative flex items-center bg-[#0d0d24]/80 backdrop-blur-sm border-2 border-[#7C3AED]/25 hover:border-[#7C3AED]/50 focus-within:border-[#7C3AED] rounded-2xl pl-5 pr-4 py-4 shadow-lg shadow-[#7C3AED]/10 transition-all duration-300 group">
               <div className="absolute inset-0 rounded-2xl bg-[#7C3AED]/5 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none" />
               <Search className="text-[#7C3AED] shrink-0 relative z-10" size={22} strokeWidth={2.5} aria-hidden="true" />
@@ -126,18 +173,18 @@ export default function HomePageContent() {
 
       {/* ── Stats Bar ── */}
       <div ref={statsRef} className="w-full grid grid-cols-3 py-10 border-y border-white/5 mb-16">
-        <div className="text-center px-4 border-r border-white/10">
-          <p className={`text-4xl sm:text-5xl font-black text-white transition-all duration-300 ${statsVisible ? 'animate-fade-up' : 'opacity-0'}`}>
+        <div className="stat-item text-center px-4 border-r border-white/10">
+          <p className={`text-4xl sm:text-5xl font-black text-white transition-all duration-300`}>
             {statsVisible ? `${tools}+` : '0+'}
           </p>
           <p className="text-xs text-gray-500 uppercase tracking-[0.2em] mt-2">Free Utilities</p>
         </div>
-        <div className="text-center px-4 border-r border-white/10">
-          <p className={`text-4xl sm:text-5xl font-black text-white ${statsVisible ? 'animate-fade-up delay-150' : 'opacity-0'}`}>Zero</p>
+        <div className="stat-item text-center px-4 border-r border-white/10">
+          <p className={`text-4xl sm:text-5xl font-black text-white`}>Zero</p>
           <p className="text-xs text-gray-500 uppercase tracking-[0.2em] mt-2">Signup Needed</p>
         </div>
-        <div className="text-center px-4">
-          <p className={`text-4xl sm:text-5xl font-black text-white ${statsVisible ? 'animate-fade-up delay-300' : 'opacity-0'}`}>100%</p>
+        <div className="stat-item text-center px-4">
+          <p className={`text-4xl sm:text-5xl font-black text-white`}>100%</p>
           <p className="text-xs text-gray-500 uppercase tracking-[0.2em] mt-2">Secure &amp; Private</p>
         </div>
       </div>
