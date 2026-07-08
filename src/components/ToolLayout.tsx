@@ -8,6 +8,8 @@ import RelatedTools from "./RelatedTools";
 import type { LucideIcon } from "lucide-react";
 import { Wrench } from "lucide-react";
 import { allTools } from "@/lib/tools-data";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
 
 interface ToolLayoutProps {
   title: string;
@@ -40,10 +42,24 @@ export default function ToolLayout({
   children,
 }: ToolLayoutProps) {
   const pathname = usePathname();
+  const headerRef = useRef<HTMLDivElement>(null);
   const toolFromPath = allTools.find((t) => t.href === pathname);
   const Icon: LucideIcon = IconProp ?? toolFromPath?.icon ?? Wrench;
   const resolvedBadge = badge ?? toolFromPath?.badge;
   const styles = colorMap[color] || colorMap["default"];
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(".tool-header-content > *", {
+        y: 20,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power3.out"
+      });
+    }, headerRef);
+    return () => ctx.revert();
+  }, [pathname]);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#050510] text-[#f1f5f9]">
@@ -51,11 +67,11 @@ export default function ToolLayout({
 
       <main className="flex-grow">
         {/* ── Tool Header ─────────────────────────────────────────── */}
-        <div className="border-b border-white/5 px-4 py-12">
-          <div className="max-w-4xl mx-auto">
+        <div className="border-b border-white/5 px-4 py-12" ref={headerRef}>
+          <div className="max-w-4xl mx-auto tool-header-content">
             <Link
               href="/"
-              className="animate-fade-down text-gray-500 hover:text-white text-sm flex items-center gap-2 mb-8 transition-colors w-fit group"
+              className="text-gray-500 hover:text-white text-sm flex items-center gap-2 mb-8 transition-colors w-fit group"
             >
               <span className="group-hover:-translate-x-1.5 transition-transform duration-200 inline-block">←</span>
               <span className="relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-white group-hover:after:w-full after:transition-all after:duration-300">
@@ -65,21 +81,21 @@ export default function ToolLayout({
 
             <div className="flex items-start gap-5">
               <div
-                className={`animate-scale-in w-14 h-14 ${styles.iconBg} ${styles.iconShadow} rounded-2xl flex items-center justify-center shrink-0`}
+                className={`w-14 h-14 ${styles.iconBg} ${styles.iconShadow} rounded-2xl flex items-center justify-center shrink-0`}
               >
                 <Icon size={24} className={styles.iconText} strokeWidth={1.8} />
               </div>
 
               <div>
                 <div className="flex items-center gap-3 mb-2">
-                  <h1 className="animate-fade-up delay-100 text-3xl font-bold text-white">{title}</h1>
+                  <h1 className="text-3xl font-bold text-white">{title}</h1>
                   {resolvedBadge && (
-                    <span className="animate-fade-up delay-200 text-xs font-semibold bg-[#7C3AED]/20 text-[#A78BFA] border border-[#7C3AED]/30 px-2.5 py-1 rounded-full uppercase tracking-wider">
+                    <span className="text-xs font-semibold bg-[#7C3AED]/20 text-[#A78BFA] border border-[#7C3AED]/30 px-2.5 py-1 rounded-full uppercase tracking-wider">
                       {resolvedBadge}
                     </span>
                   )}
                 </div>
-                <p className="animate-fade-up delay-200 text-gray-400 text-sm leading-relaxed max-w-xl">{description}</p>
+                <p className="text-gray-400 text-sm leading-relaxed max-w-xl">{description}</p>
               </div>
             </div>
           </div>
@@ -91,9 +107,8 @@ export default function ToolLayout({
         </div>
 
         {/* ── Breathing Spacer ─────────────────────────────────────── */}
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="border-t border-white/5" />
-        </div>
+        <div className="max-w-4xl mx-auto px-4 mb-12">
+          <div className="border-t border-white/5 mb-12" />
           <div className="bg-gradient-to-br from-white/[0.03] to-transparent border border-white/[0.06] hover:border-green-500/20 rounded-[2rem] p-8 relative overflow-hidden group transition-all duration-500 hover:shadow-lg hover:shadow-green-500/5">
             <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-25 transition-opacity duration-500">
               <Wrench size={120} className="rotate-12 group-hover:rotate-[20deg] transition-transform duration-700" />
