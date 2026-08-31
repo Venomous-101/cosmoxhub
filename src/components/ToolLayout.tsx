@@ -90,36 +90,35 @@ export default function ToolLayout({
           {children}
         </div>
 
-        {/* ── Breathing Spacer ─────────────────────────────────────── */}
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="border-t border-white/5" />
-        </div>
-          <div className="bg-gradient-to-br from-white/[0.03] to-transparent border border-white/[0.06] hover:border-green-500/20 rounded-[2rem] p-8 relative overflow-hidden group transition-all duration-500 hover:shadow-lg hover:shadow-green-500/5">
+        {/* ── Breathing Spacer & Quality Seal ─────────────────────────────── */}
+        <div className="max-w-4xl mx-auto px-4 py-8">
+          <div className="border-t border-white/5 mb-8" />
+          <div className="bg-gradient-to-br from-white/[0.03] to-transparent border border-white/[0.06] hover:border-emerald-500/20 rounded-[2rem] p-8 relative overflow-hidden group transition-all duration-500 hover:shadow-lg hover:shadow-emerald-500/5">
             <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-25 transition-opacity duration-500">
               <Wrench size={120} className="rotate-12 group-hover:rotate-[20deg] transition-transform duration-700" />
             </div>
             
             <div className="flex flex-col md:flex-row items-center md:items-start gap-6 relative z-10">
-              <div className="relative w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center border border-green-500/20 shrink-0">
-                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                <span className="absolute inset-0 rounded-full border border-green-500/40 animate-ping opacity-30" />
+              <div className="relative w-12 h-12 bg-emerald-500/10 rounded-full flex items-center justify-center border border-emerald-500/20 shrink-0">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="absolute inset-0 rounded-full border border-emerald-500/40 animate-ping opacity-30" />
               </div>
               
               <div className="text-center md:text-left">
                 <h3 className="text-white font-bold mb-2 flex items-center justify-center md:justify-start gap-2">
                   Verified Tool Quality
-                  <span className="text-[10px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full uppercase tracking-tighter">Live & Secure</span>
+                  <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full uppercase tracking-tighter">Live &amp; Secure</span>
                 </h3>
-                <p className="text-sm text-gray-400 leading-relaxed max-w-2xl mb-4">
-                  This tool has been extensively tested for accuracy and performance. On <span className="text-gray-200 font-medium">{new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>, 
+                <p className="text-sm text-slate-400 leading-relaxed max-w-2xl mb-4">
+                  This tool has been extensively tested for accuracy and performance. On <span className="text-slate-200 font-medium">{new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>, 
                   our engineers verified the core logic to ensure 100% reliability and precision. 
-                  Like all CosmoxHub utilities, this tool runs <span className="text-purple-400 font-bold">entirely in your browser</span>. No data is ever sent to a server.
+                  Like all CosmoxHub utilities, this tool runs <span className="text-indigo-400 font-bold">entirely in your browser</span>. No data is ever sent to a server.
                 </p>
-                <div className="flex flex-wrap justify-center md:justify-start gap-4 text-[10px] font-black uppercase tracking-widest text-gray-500">
-                  <div className="flex items-center gap-1.5"><span className="w-1 h-1 bg-purple-500 rounded-full" /> No Uploads</div>
-                  <div className="flex items-center gap-1.5"><span className="w-1 h-1 bg-purple-500 rounded-full" /> No Logs</div>
-                  <div className="flex items-center gap-1.5"><span className="w-1 h-1 bg-purple-500 rounded-full" /> HIPAA & GDPR Ready</div>
-                  <div className="flex items-center gap-1.5"><span className="w-1 h-1 bg-purple-500 rounded-full" /> Open Source Logic</div>
+                <div className="flex flex-wrap justify-center md:justify-start gap-4 text-[10px] font-black uppercase tracking-widest text-slate-500">
+                  <div className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 bg-indigo-500 rounded-full" /> No Uploads</div>
+                  <div className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 bg-indigo-500 rounded-full" /> No Logs</div>
+                  <div className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 bg-indigo-500 rounded-full" /> HIPAA &amp; GDPR Ready</div>
+                  <div className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 bg-indigo-500 rounded-full" /> Client-Side Execution</div>
                 </div>
               </div>
             </div>
@@ -128,12 +127,37 @@ export default function ToolLayout({
 
         {/* ── Related Tools ─────────────────────────────────────────── */}
         <div className="max-w-4xl mx-auto px-4 pt-10 pb-20 border-t border-white/5">
-          <h3 className="text-sm font-bold text-gray-500 uppercase tracking-[0.2em] mb-8 flex items-center gap-3">
-            <span className="w-1 h-3 bg-[#7C3AED] rounded-full"></span>
-            Related Tools
+          <h3 className="text-sm font-bold text-slate-400 uppercase tracking-[0.2em] mb-8 flex items-center gap-3">
+            <span className="w-1 h-3 bg-indigo-500 rounded-full"></span>
+            Related Utilities
           </h3>
           <RelatedTools currentPath={pathname} isSidebar={false} />
         </div>
+
+        {/* ── JSON-LD Schema.org for Search Engines & AI Crawlers (AEO) ── */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              "name": title,
+              "description": description,
+              "applicationCategory": "WebApplication",
+              "operatingSystem": "All",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD"
+              },
+              "author": {
+                "@type": "Organization",
+                "name": "CosmoxHub",
+                "url": "https://cosmoxhub.com"
+              }
+            })
+          }}
+        />
       </main>
 
       <Footer />

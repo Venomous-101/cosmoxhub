@@ -1,7 +1,4 @@
-import { generateToolMetadata, generateWebAppJsonLd } from "@/lib/seo-helpers";
-import dynamic from "next/dynamic";
-
-const PDFEditorClient = dynamic(() => import("./PDFEditorClient"), { ssr: false });
+import PDFEditorWrapper from "./PDFEditorWrapper";
 
 export const metadata = generateToolMetadata({
   toolName: "PDF Editor",
@@ -40,7 +37,7 @@ export default function PDFEditorPage() {
           }),
         }}
       />
-      <PDFEditorClient />
+      <PDFEditorWrapper />
     </>
   );
 }
