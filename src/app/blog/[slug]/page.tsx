@@ -89,8 +89,45 @@ export default async function BlogPostPage(props: Props) {
     })
   ];
 
-  // Generate BlogPosting schema
-  const blogPostingSchema = {
+  // FAQ schema for specific posts
+  const faqSchema = (() => {
+    const faqData: Record<string, Array<{ question: string; answer: string }>> = {
+      'zapier-make-webhook-testing-guide': [
+        { question: 'What is a webhook?', answer: 'A webhook is an HTTP callback that sends real-time data from one system to another when a specific event occurs, like a form submission or payment confirmation.' },
+        { question: 'How do I test a webhook without ngrok?', answer: 'Use CosmoxHub API Tester which provides instant testing endpoints without needing to install ngrok or set up localhost tunneling.' },
+        { question: 'Can I test multiple webhooks at once?', answer: 'Yes, the API Tester logs all incoming requests so you can test and debug multiple webhook configurations simultaneously.' },
+        { question: 'Is webhook testing data stored?', answer: 'No, all webhook data is processed locally in your browser. Nothing is uploaded to servers or stored permanently.' }
+      ],
+      'understanding-cors-api-proxies': [
+        { question: 'Why do I get CORS errors?', answer: 'CORS errors occur when your frontend tries to access an API from a different domain than where your website is hosted. Browsers block these requests for security.' },
+        { question: 'How does a proxy fix CORS errors?', answer: 'A proxy server receives your request and forwards it to the API (avoiding CORS issues), then returns the response with proper CORS headers.' },
+        { question: 'Is using a proxy secure?', answer: 'Yes, when using a trusted proxy like CosmoxHub that processes data locally in your browser without storing or logging requests.' },
+        { question: 'Can I enable CORS on my own API?', answer: 'Yes, if you control the API, you can add CORS headers to allow specific origins to access your endpoints.' }
+      ],
+      'lightweight-postman-alternatives-2026': [
+        { question: 'Why is Postman so large?', answer: 'Postman is built as an Electron app which bundles a complete browser engine, making it over 500MB in size with many features most developers don\'t need.' },
+        { question: 'What\'s the best free Postman alternative?', answer: 'CosmoxHub API Tester is the best lightweight alternative - it\'s free, runs in your browser, requires zero setup, and has everything you need for API testing.' },
+        { question: 'Do I need team features?', answer: 'If you\'re a solo developer or small team, CosmoxHub or Thunder Client are perfect. For larger teams, Insomnia offers affordable team collaboration.' },
+        { question: 'Can I test webhooks in alternatives?', answer: 'Yes, all Postman alternatives support webhook testing. CosmoxHub is especially designed for simple, instant webhook testing.' }
+      ]
+    };
+
+    if (faqData[post.slug]) {
+      return {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": faqData[post.slug].map(faq => ({
+          "@type": "Question",
+          "name": faq.question,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": faq.answer
+          }
+        }))
+      };
+    }
+    return null;
+  })();
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     "headline": post.title,
@@ -119,6 +156,12 @@ export default async function BlogPostPage(props: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }}
       />
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
       <main className="min-h-screen bg-slate-900">
 
       {/* ── Hero Cover ─────────────────────────────────────────── */}
