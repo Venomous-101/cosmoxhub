@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import ToolLayout from "@/components/ToolLayout";
 import ToolGuide from "@/components/ToolGuide";
-import DownloadAdModal from "@/components/DownloadAdModal";
+import { triggerDownload } from "@/lib/download-utils";
 import { motion, AnimatePresence } from "framer-motion";
 import imageCompression from 'browser-image-compression';
 import JSZip from 'jszip';
@@ -40,11 +40,6 @@ export default function ImageCompressorClient() {
   const [maxSizeMB, setMaxSizeMB] = useState(1);
   const [maxWidthHeight, setMaxWidthHeight] = useState(1920);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Ad Intercept State
-  const [isAdModalOpen, setIsAdModalOpen] = useState(false);
-  const [pendingDownloadAction, setPendingDownloadAction] = useState<(() => void) | null>(null);
-  const [adModalFileName, setAdModalFileName] = useState("");
 
   const guideSections = [
     {
@@ -155,33 +150,26 @@ export default function ImageCompressorClient() {
     const completedImages = images.filter(i => i.status === "completed" && i.compressedBlob);
     if (completedImages.length === 0) return;
 
-    setAdModalFileName(`${completedImages.length} compressed_images.zip`);
-    
-    setPendingDownloadAction(() => async () => {
-      try {
-        const zip = new JSZip();
-        completedImages.forEach(img => {
-          zip.file(`compressed_${img.name}`, img.compressedBlob!);
-        });
-        
-        const content = await zip.generateAsync({ type: "blob" });
-        const { saveAs } = await import('file-saver');
-        saveAs(content, "compressed_images_CosmoxHub.zip");
-      } catch (e) {
-        console.error("Zipping failed", e);
-      }
-    });
-
-    setIsAdModalOpen(true);
+    try {
+      const zip = new JSZip();
+      completedImages.forEach(img => {
+        zip.file(`compressed_${img.name}`, img.compressedBlob!);
+      });
+      
+      const content = await zip.generateAsync({ type: "blob" });
+      await triggerDownload(content, "compressed_images_CosmoxHub.zip");
+    } catch (e) {
+      console.error("Zipping failed", e);
+    }
   };
 
   const triggerDownloadSingle = async (img: ImageFile) => {
-    setAdModalFileName(`min_${img.name}`);
-    setPendingDownloadAction(() => async () => {
-      const { saveAs } = await import('file-saver');
-      saveAs(img.compressedBlob!, `min_${img.name}`);
-    });
-    setIsAdModalOpen(true);
+    if (!img.compressedBlob) return;
+    try {
+      await triggerDownload(img.compressedBlob, `min_${img.name}`);
+    } catch (e) {
+      console.error("Download failed", e);
+    }
   };
 
   const formatSize = (bytes: number) => {
@@ -433,18 +421,6 @@ export default function ImageCompressorClient() {
           </p>
         </div>
       </div>
-
-      <DownloadAdModal
-        isOpen={isAdModalOpen}
-        onClose={() => setIsAdModalOpen(false)}
-        onComplete={() => {
-          if (pendingDownloadAction) {
-            pendingDownloadAction();
-            setPendingDownloadAction(null);
-          }
-        }}
-        fileName={adModalFileName}
-      />
     </ToolLayout>
   );
 }

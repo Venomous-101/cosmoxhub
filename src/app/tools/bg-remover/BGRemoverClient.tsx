@@ -18,7 +18,7 @@ import {
   AlertTriangle
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import DownloadAdModal from "@/components/DownloadAdModal";
+import { triggerDownload } from "@/lib/download-utils";
 
 
 // Client-side only import type
@@ -77,11 +77,6 @@ export default function BGRemoverClient() {
   const [sliderPos, setSliderPos] = useState(50);
   const sliderRef = useRef<HTMLDivElement>(null);
   const [isHoveringSlider, setIsHoveringSlider] = useState(false);
-
-  // Ad Intercept State
-  const [isAdModalOpen, setIsAdModalOpen] = useState(false);
-  const [pendingDownloadAction, setPendingDownloadAction] = useState<(() => void) | null>(null);
-  const [adModalFileName, setAdModalFileName] = useState("");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const removeBgRef = useRef<RemoveBgFn | null>(null);
@@ -185,56 +180,52 @@ export default function BGRemoverClient() {
     }
   };
 
-  const triggerDownload = async () => {
+  const handleDownload = async () => {
     if (!result || !file) return;
 
-    let extension = "png";
     let calculatedFileName = `nobg-${file.name.replace(/\.[^/.]+$/, "")}.png`;
     if (bgMode !== "transparent") {
       calculatedFileName = `${bgMode}-bg-${file.name.replace(/\.[^/.]+$/, "")}.jpg`;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      extension = "jpg";
     }
 
-    setAdModalFileName(calculatedFileName);
-
-    setPendingDownloadAction(() => () => {
+    try {
       if (bgMode === "transparent") {
-        const link = document.createElement("a");
-        link.href = result;
-        link.download = calculatedFileName;
-        link.click();
-        return;
-      }
-
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      const img = new Image();
-      
-      img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
+        // For transparent PNG, fetch from data URL and convert to blob
+        const response = await fetch(result);
+        const blob = await response.blob();
+        await triggerDownload(blob, calculatedFileName);
+      } else {
+        // For colored background, create canvas and download
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        const img = new Image();
         
-        if (ctx) {
-          if (bgMode === "white") {
-            ctx.fillStyle = "#ffffff";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-          } else if (bgMode === "blue") {
-            ctx.fillStyle = "#0055ff";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-          }
-          ctx.drawImage(img, 0, 0);
+        img.onload = async () => {
+          canvas.width = img.width;
+          canvas.height = img.height;
           
-          const link = document.createElement("a");
-          link.href = canvas.toDataURL("image/jpeg", 1.0); // 100% Quality Output
-          link.download = calculatedFileName;
-          link.click();
-        }
-      };
-      img.src = result;
-    });
-
-    setIsAdModalOpen(true);
+          if (ctx) {
+            if (bgMode === "white") {
+              ctx.fillStyle = "#ffffff";
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+            } else if (bgMode === "blue") {
+              ctx.fillStyle = "#0055ff";
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+            ctx.drawImage(img, 0, 0);
+            
+            canvas.toBlob(async (blob) => {
+              if (blob) {
+                await triggerDownload(blob, calculatedFileName);
+              }
+            }, "image/jpeg", 1.0);
+          }
+        };
+        img.src = result;
+      }
+    } catch (e) {
+      console.error("Download failed:", e);
+    }
   };
 
   const resetAll = () => {
@@ -497,7 +488,7 @@ export default function BGRemoverClient() {
 
               {status === "completed" && (
                 <button
-                  onClick={triggerDownload}
+                  onClick={handleDownload}
                   className="w-full md:w-auto flex items-center justify-center gap-3 px-12 py-4 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:opacity-90 text-white transition-all font-black text-xs shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_40px_rgba(139,92,246,0.5)] hover:-translate-y-1 uppercase tracking-[0.2em]"
                 >
                   <Download className="w-5 h-5" />
@@ -532,17 +523,6 @@ export default function BGRemoverClient() {
           onChange={handleUpload}
         />
 
-        <DownloadAdModal 
-          isOpen={isAdModalOpen}
-          onClose={() => setIsAdModalOpen(false)}
-          onComplete={() => {
-            if (pendingDownloadAction) {
-              pendingDownloadAction();
-              setPendingDownloadAction(null);
-            }
-          }}
-          fileName={adModalFileName}
-        />
       </div>
     </ToolLayout>
   );
