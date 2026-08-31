@@ -67,8 +67,33 @@ export default async function BlogPostPage(props: Props) {
     .filter(p => p.slug !== post.slug)
     .slice(0, 3);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": post.title,
+    "description": post.description,
+    "image": `https://cosmoxhub.com${meta.cover}`,
+    "datePublished": post.date,
+    "author": {
+      "@type": "Person",
+      "name": post.author
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "CosmoxHub",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://cosmoxhub.com/icon.png"
+      }
+    }
+  };
+
   return (
     <main className="min-h-screen bg-slate-900">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
       {/* ── Hero Cover ─────────────────────────────────────────── */}
       <div className="relative w-full h-72 md:h-96 overflow-hidden">
