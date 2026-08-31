@@ -1,3 +1,4 @@
+import { generateToolMetadata, generateWebAppJsonLd } from "@/lib/seo-helpers";
 import PDFEditorWrapper from "./PDFEditorWrapper";
 
 export const metadata = generateToolMetadata({
