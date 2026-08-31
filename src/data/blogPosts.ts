@@ -1180,5 +1180,388 @@ Instead of writing a Node and Axios script merely to hit an endpoint, leverage o
 
 Inside your Zapier or Make dashboard, you should see the new data arrive instantly! You can now map out the rest of your automation logic flawlessly without relying on production systems.
     `
+  },
+  // NEW POST #1: Zapier & Make Webhook Testing
+  {
+    slug: 'zapier-make-webhook-testing-guide',
+    title: 'How to Instantly Test Zapier & Make Webhook Catchers',
+    description: 'Learn exactly how to test Zapier and Make.com webhooks in real-time without installing software or using localhost tunneling.',
+    date: '2026-08-31',
+    author: 'Ali Abdullah',
+    readingTime: '5 min read',
+    content: `
+## Why Webhook Testing is Critical
+
+When you connect Zapier or Make.com to your application, you send HTTP POST requests to capture real-time data—orders, form submissions, payment confirmations. If a single request fails, entire automation workflows break silently.
+
+The problem? Most developers test webhooks blindly. They trigger an action in Zapier, wait 5 seconds, and hope the data arrived. If it didn't, debugging is a nightmare.
+
+You need a **real-time webhook testing tool**.
+
+## The Traditional (Slow) Approach
+
+Most developers use **ngrok**, which requires:
+1. Installing ngrok locally
+2. Running ngrok tunnel
+3. Copying the public URL
+4. Configuring it in Zapier
+5. Testing via the UI
+
+This takes 10 minutes just to set up. If the tunnel crashes, you start over.
+
+## The Instant Method: CosmoxHub API Tester
+
+The [CosmoxHub API Tester](/tools/api-tester) solves this instantly. It gives you a **permanent testing endpoint** that:
+- Captures all webhook payloads in real-time
+- Shows headers, body, and query parameters
+- Logs historical requests
+- Tests before deploying
+
+### Step-by-Step: Zapier Webhook Testing
+
+**1. Get Your Testing Endpoint**
+Open the [API Tester](/tools/api-tester) and note the provided endpoint URL.
+
+**2. Configure in Zapier**
+- In Zapier, add a "Webhook by Zapier" action
+- Set method to POST
+- Paste the testing endpoint
+- Add headers and payload (your form data, order info, etc.)
+
+**3. Test the Connection**
+- Click "Test" in Zapier
+- Immediately see the incoming request in CosmoxHub
+- Verify all fields are captured correctly
+- Check response codes and timing
+
+**4. Validate the Payload**
+The API Tester shows you:
+- Raw JSON payload
+- Headers sent
+- Response status
+- Timestamp of receipt
+- Full request/response history
+
+## Pro Tips for Webhook Testing
+
+**1. Test Multiple Scenarios**
+Don't just test the "happy path." Test error cases:
+- What if the customer name is missing?
+- What if the amount is negative?
+- What if the timestamp is invalid?
+
+**2. Validate Response Times**
+Use the API Tester's timestamp logs to ensure Zapier is sending webhooks promptly.
+
+**3. Save Test Payloads**
+The API Tester logs all historical requests. Use these as templates for future testing.
+
+**4. Test Before Production**
+Always verify your webhook configuration with CosmoxHub before deploying to production.
+
+## Conclusion
+
+Stop wasting time with ngrok and localhost tunneling. Use the [CosmoxHub API Tester](/tools/api-tester) to **instantly validate your Zapier and Make.com webhooks in real-time**, with full logging and debugging capabilities.
+
+Test faster. Deploy with confidence. Automate without fear.
+    `
+  },
+  // NEW POST #2: CORS & API Proxies
+  {
+    slug: 'understanding-cors-api-proxies',
+    title: 'Understanding CORS & How API Proxies Solve the Browser Blockade',
+    description: 'CORS errors blocking your API calls? Learn what CORS actually is, why browsers enforce it, and how API proxies solve the problem.',
+    date: '2026-08-31',
+    author: 'Ali Abdullah',
+    readingTime: '6 min read',
+    content: `
+## The Frustrating CORS Error
+
+You're building a web app. You call an API from your frontend JavaScript. The request goes out, but you get this error:
+
+\`\`\`
+Access to XMLHttpRequest at 'https://api.example.com/data' 
+from origin 'http://localhost:3000' has been blocked by CORS policy
+\`\`\`
+
+Infuriating, right? The API works fine in Postman, curl, and backend code. But from the browser? Blocked.
+
+This isn't a bug. It's a security feature. And once you understand it, you'll be able to solve any CORS problem in minutes.
+
+## What is CORS, Actually?
+
+**CORS** stands for **Cross-Origin Resource Sharing**.
+
+An "origin" is the combination of:
+- Protocol (http vs https)
+- Domain (example.com)
+- Port (8000, 3000, etc.)
+
+When your frontend (origin: localhost:3000) tries to fetch data from an API (origin: api.example.com), the browser says:
+**"Wait! I don't know if api.example.com trusts localhost:3000. Let me ask."**
+
+This is the browser's **same-origin policy**. It's there to prevent malicious scripts from stealing your data.
+
+## How CORS Works (The Technical Part)
+
+When your frontend makes a cross-origin request:
+
+**1. Preflight Request (OPTIONS)**
+The browser automatically sends a preflight request to check permissions.
+
+**2. Server Response**
+The server either allows or denies with CORS headers.
+
+**3. Actual Request**
+If the server approves, the browser sends the real request.
+
+If the server doesn't send CORS headers, the browser blocks the response (even though it arrived successfully).
+
+## Common CORS Errors & Solutions
+
+### Error 1: "Access-Control-Allow-Origin is missing"
+**Problem**: The API doesn't send CORS headers at all.
+
+**Solutions**:
+1. **Contact the API owner** - Ask them to add CORS headers
+2. **Use an API proxy** - Route requests through a proxy that adds CORS headers
+3. **Use CosmoxHub API Tester** - Test without CORS issues
+
+### Error 2: "Origin not in Allow list"
+**Problem**: Your specific origin isn't whitelisted.
+
+**Solution**: 
+If you control the API, whitelist your origin in the CORS configuration.
+
+### Error 3: "Credentials mode is not allowed"
+**Problem**: You're sending cookies, but the API doesn't allow it.
+
+**Solution**: Both your frontend and backend must explicitly allow credentials.
+
+## Why CORS Exists (And Why You Should Care)
+
+Without CORS, malicious websites could steal your banking information and other sensitive data through the browser.
+
+But WITH CORS:
+1. evil.com's script makes the request
+2. Bank's server sends back data
+3. **Browser checks**: "Does bank.com allow requests from evil.com?"
+4. **Answer**: No
+5. **Browser blocks** the response before JavaScript can see it
+
+CORS protects you. It's a feature, not a bug.
+
+## How API Proxies Solve CORS
+
+Sometimes you need to call an API that doesn't support CORS. The solution: **route through a proxy**.
+
+A proxy is a middle server that:
+1. Receives your request
+2. Calls the real API (server-to-server, no CORS issues)
+3. Adds CORS headers
+4. Sends the response back to you
+
+### Using CosmoxHub API Proxy
+
+The [CosmoxHub API Tester](/tools/api-tester) includes a built-in proxy that handles CORS automatically.
+
+No preflight checks. No origin headers. Just works.
+
+## Best Practices
+
+1. **Prefer server-side proxies** - Your backend should call external APIs, not your frontend
+2. **Never expose sensitive keys** - If you're proxying, use your backend
+3. **Test with CosmoxHub first** - Validate API response before production
+4. **Cache responses** - Reduce API calls and CORS requests
+5. **Whitelist specific origins** - Don't use Access-Control-Allow-Origin: * in production
+
+## Conclusion
+
+CORS is a security feature that protects you from malicious scripts. When you hit a CORS error:
+
+1. Understand that the API is working (it's the browser blocking)
+2. Ask: Can I control the API? (Add CORS headers)
+3. If not: Use a proxy (like [CosmoxHub API Tester](/tools/api-tester))
+
+Stop fighting the browser. Use these tools and test properly.
+    `
+  },
+  // NEW POST #3: Postman Alternatives
+  {
+    slug: 'lightweight-postman-alternatives-2026',
+    title: 'Top Lightweight Postman Alternatives for API Testing in 2026',
+    description: 'Postman is bloated and expensive. Discover the best free, lightweight API testing tools that work directly in your browser.',
+    date: '2026-08-31',
+    author: 'Ali Abdullah',
+    readingTime: '6 min read',
+    content: `
+## Why Postman Isn't The Best Anymore
+
+Postman started as a lightweight Chrome extension for API testing. It was perfect.
+
+Then it became:
+- A massive Electron app (500MB+)
+- Cloud-required with mandatory accounts
+- Expensive for teams ($12-30/user/month)
+- Bloated with features most developers don't need
+
+For simple API testing, Postman is overkill.
+
+## What You Actually Need
+
+A good API testing tool should:
+✅ Test HTTP requests instantly  
+✅ Save request history  
+✅ No account required  
+✅ Support headers, auth, cookies  
+✅ Show response time  
+✅ Lightweight (<10MB)  
+✅ Work offline  
+
+You don't need:
+❌ Team collaboration (unless you have a team)  
+❌ Mocking servers  
+❌ API documentation generation  
+❌ Cloud synchronization  
+
+## Best Alternatives to Postman
+
+### 1. CosmoxHub API Tester ⭐ (Best for Developers)
+
+**Price**: Free  
+**Setup**: Zero  
+**Size**: <1MB  
+**Browser**: Chrome, Firefox, Safari  
+
+The [CosmoxHub API Tester](/tools/api-tester) is built for developers who want to test APIs without the bloat.
+
+**Features**:
+- Test GET, POST, PUT, DELETE, PATCH
+- Custom headers and authentication
+- Request history saved locally
+- JSON/form-data support
+- Response time metrics
+- Cookie management
+- Zero sign-up
+
+**Best for**: Developers, QA testers, quick API validation
+
+**Pros**:
+- Runs entirely in browser (offline)
+- No account required
+- Instant results
+- Privacy-first (requests don't leave your device)
+
+**Cons**:
+- No team collaboration
+- No mock servers
+- No API documentation generation
+
+**Verdict**: If you're a solo developer or small team, this is all you need.
+
+---
+
+### 2. Insomnia
+
+**Price**: Free (Core) / $10-20/month (Cloud)  
+**Setup**: 5 minutes  
+**Size**: 200MB  
+**Browser**: Desktop app (macOS, Linux, Windows)  
+
+Insomnia is Postman's most popular competitor. It has:
+- Beautiful UI
+- Team collaboration (paid)
+- GraphQL support
+- WebSocket testing
+- Plugin ecosystem
+
+**Best for**: Teams needing more features than CosmoxHub
+
+**Pros**:
+- Cleaner UI than Postman
+- Great documentation
+- Open-source core
+- Lightweight compared to Postman
+
+**Cons**:
+- Still requires installation
+- Team features are expensive
+- Uses more resources than browser tools
+
+**Verdict**: Good middle ground, but overkill for solo developers.
+
+---
+
+### 3. Thunder Client (VS Code)
+
+**Price**: Free  
+**Setup**: 1 minute (VS Code extension)  
+**Size**: 5MB  
+**Environment**: VS Code only  
+
+Thunder Client brings API testing directly into your code editor.
+
+**Features**:
+- Lightweight extension
+- Request history
+- Collections and environments
+- No sign-up required
+- Right in VS Code
+
+**Best for**: Developers who live in VS Code
+
+**Pros**:
+- Instant installation
+- No separate app
+- Integrated with your editor
+- Lightweight
+
+**Cons**:
+- Only works in VS Code
+- Limited team features
+- Smaller community than Postman
+
+**Verdict**: Excellent if you already use VS Code daily.
+
+## Comparison Table
+
+| Feature | CosmoxHub | Insomnia | Thunder | Postman |
+|---------|-----------|----------|---------|---------|
+| Free Tier | ✅ Full | ✅ Core | ✅ Full | ⚠️ Limited |
+| Size | <1MB | 200MB | 5MB | 500MB+ |
+| Browser-based | ✅ Yes | ❌ No | ❌ No | ⚠️ Web version |
+| Offline | ✅ Yes | ✅ Yes | ✅ Yes | ❌ No |
+| Auth Support | ✅ | ✅ | ✅ | ✅ |
+| Team Features | ❌ | ✅ | ⚠️ | ✅ |
+| Learning Curve | ⭐ Easy | ⭐⭐ Medium | ⭐⭐ Medium | ⭐⭐⭐ Steep |
+
+## My Recommendation
+
+**For Solo Developers**: Use [CosmoxHub API Tester](/tools/api-tester)
+- Free forever
+- Zero setup
+- Everything you need for API testing
+
+**For Teams**: Use Insomnia
+- Affordable team pricing
+- Better than Postman's bloat
+- Still lightweight
+
+**For VS Code Users**: Use Thunder Client
+- Integrated workflow
+- Lightweight
+- No separate app needed
+
+**Avoid**: Postman (unless your enterprise requires it)
+- Too expensive
+- Too bloated
+- Too many unnecessary features
+
+## Conclusion
+
+Stop paying $30/month for a bloated app. Test your APIs with [CosmoxHub API Tester](/tools/api-tester) for free, instantly, without setup.
+
+Your APIs deserve better. Your wallet deserves better.
+    `
   }
 ];

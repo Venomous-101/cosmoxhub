@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft, Clock, Calendar, User } from 'lucide-react';
+import Head from 'next/head';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -67,8 +68,37 @@ export default async function BlogPostPage(props: Props) {
     .filter(p => p.slug !== post.slug)
     .slice(0, 3);
 
+  // Generate BlogPosting schema
+  const blogPostingSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": post.title,
+    "description": post.description,
+    "image": meta.cover,
+    "datePublished": new Date(post.date).toISOString(),
+    "dateModified": new Date(post.date).toISOString(),
+    "author": {
+      "@type": "Person",
+      "name": post.author,
+      "url": "https://www.cosmoxhub.com"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "CosmoxHub",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.cosmoxhub.com/logo.png"
+      }
+    }
+  };
+
   return (
-    <main className="min-h-screen bg-slate-900">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }}
+      />
+      <main className="min-h-screen bg-slate-900">
 
       {/* ── Hero Cover ─────────────────────────────────────────── */}
       <div className="relative w-full h-72 md:h-96 overflow-hidden">
@@ -186,5 +216,6 @@ export default async function BlogPostPage(props: Props) {
 
       </article>
     </main>
+    </>
   );
 }
