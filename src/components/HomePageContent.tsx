@@ -59,7 +59,7 @@ export default function HomePageContent() {
     return () => observer.disconnect();
   }, []);
 
-  const tools = useCountUp(28, 1400, statsVisible);
+  const tools = useCountUp(35, 1400, statsVisible);
 
   return (
     <main className="min-h-screen w-full">
@@ -76,7 +76,7 @@ export default function HomePageContent() {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#A78BFA]"></span>
             </span>
             <span className="text-[11px] font-bold tracking-[0.2em] text-[#A78BFA] uppercase">
-              28+ Tools · 100% Free · No Signup
+              35+ Verified Tools · 100% Free · No Signup
             </span>
             <Sparkles size={12} className="text-[#A78BFA]" />
           </div>
@@ -93,7 +93,7 @@ export default function HomePageContent() {
           </h1>
 
           <p className="animate-fade-up delay-400 text-gray-400 text-base sm:text-lg max-w-lg text-center leading-relaxed mt-2 mb-10">
-            28+ powerful browser-based utilities for PDF, image, AI &amp; text tasks.
+            35+ verified browser-based utilities for PDF, image, AI &amp; text tasks.
             No signup. No limits. <span className="text-[#A78BFA] font-semibold">100% private.</span>
           </p>
 
