@@ -6,6 +6,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft, Clock, Calendar, User } from 'lucide-react';
 import Head from 'next/head';
+import { getBlogInternalLinks } from '@/lib/blog-internal-links';
+import { BlogRelatedContent } from '@/components/BlogRelatedContent';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -67,6 +69,25 @@ export default async function BlogPostPage(props: Props) {
   const related = blogPosts
     .filter(p => p.slug !== post.slug)
     .slice(0, 3);
+
+  // Get internal links for this post
+  const internalLinks = getBlogInternalLinks(post.slug);
+  const relatedItems = [
+    ...internalLinks.relatedTools.map(tool => ({
+      ...tool,
+      type: 'tool' as const,
+      path: tool.path
+    })),
+    ...internalLinks.relatedPosts.map(postSlug => {
+      const relatedPost = blogPosts.find(p => p.slug === postSlug);
+      return {
+        name: relatedPost?.title || 'Related Article',
+        path: `/blog/${postSlug}`,
+        description: relatedPost?.description || '',
+        type: 'post' as const,
+      };
+    })
+  ];
 
   // Generate BlogPosting schema
   const blogPostingSchema = {
@@ -203,6 +224,9 @@ export default async function BlogPostPage(props: Props) {
             })}
           </div>
         </div>
+
+        {/* Related Content */}
+        <BlogRelatedContent items={relatedItems} />
 
         {/* Back CTA */}
         <div className="mt-12 pb-12 text-center">
